@@ -4,6 +4,9 @@ import theme from './theme'
 import 'vuetify/dist/vuetify.min.css'
 import '@mdi/font/css/materialdesignicons.css'
 
+import VuetifyDialog from 'vuetify-dialog'
+Vue.use(VuetifyDialog)
+
 Vue.use(Vuetify, {
   iconfont: 'mdi',
   theme

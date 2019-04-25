@@ -7,22 +7,44 @@
             <v-container py-0>
               <v-layout wrap>
                 <v-flex xs12 md6>
-                  <v-text-field label="ชื่อ" class="purple-input"/>
+                  <v-text-field label="ชื่อ" class="purple-input" v-model="firstName"     
+                    data-vv-name="กรุณากรอกชื่อ" v-validate="'required|min:2'" 
+                    :error-messages="errors.collect('กรุณากรอกชื่อ')" required/>
                 </v-flex>
                 <v-flex xs12 md6>
-                  <v-text-field label="นามสกุล" class="purple-input"/>
+                  <v-text-field label="นามสกุล" class="purple-input" v-model="lastName"
+                    data-vv-name="กรุณากรอกนามสกุล" v-validate="'required|min:2'"
+                    :error-messages="errors.collect('กรุณากรอกนามสกุล')" required/>
+                </v-flex>
+                <v-flex xs12 md6>
+                  <v-text-field label="รหัสพนักงาน" class="purple-input" v-model="staffCode"
+                    data-vv-name="กรุณากรอกรหัสพนักงาน" v-validate="'numeric'"
+                    :error-messages="errors.collect('กรุณากรอกรหัสพนักงาน')" required/>
+                </v-flex>
+                <v-flex xs12 md6>
+                  <v-select
+                    v-model="userStatusSelect"
+                    :items="userStatus"
+                    item-text="RoleName"
+                    item-value="Id"
+                    label="เลือกประเภทพนักงาน"
+                    return-object
+                  ></v-select>
+                </v-flex>
+                <v-flex xs12 md6>
+                  <v-text-field label="๊Login (Email)" class="purple-input" v-model="email"
+                  data-vv-name="กรุณากรอกอีเมล" v-validate="'email'"
+                  :error-messages="errors.collect('กรุณากรอกอีเมล')" required/>
+                </v-flex>
+                <v-flex xs12 md6>
+                  <v-text-field label="Password" class="purple-input" type="password" v-model="password"
+                    data-vv-name="กรุณากรอกรหัสผ่าน" v-validate="'required|min:8'"
+                    :error-messages="errors.collect('กรุณากรอกรหัสผ่าน')" required/>
                 </v-flex>
                 <v-flex xs12>
-                  <v-text-field label="รหัสพนักงาน" class="purple-input"/>
-                </v-flex>
-                <v-flex xs12 md6>
-                  <v-text-field label="๊Login" class="purple-input"/>
-                </v-flex>
-                <v-flex xs12 md6>
-                  <v-text-field label="Password" class="purple-input"/>
-                </v-flex>
-                <v-flex xs12>
-                  <v-textarea class="purple-input" label="รายละเอียดอื่นๆ"/>
+                  <v-textarea class="purple-input" label="รายละเอียดอื่นๆ" v-model="description"
+                    data-vv-name="กรุณากรอกรายละเอียดอื่นๆ" v-validate="'required|min:2'" 
+                    :error-messages="errors.collect('กรุณากรอกรายละเอียดอื่นๆ')" required/>
                 </v-flex>
                 <v-flex xs12 text-xs-center>
                   <v-avatar size="120" color="grey lighten-4">
@@ -37,7 +59,7 @@
           </v-form>
           <v-card-text class="text-xs-right">
             <v-btn color="primary" to="/driver">ยกเลิก</v-btn>
-            <v-btn color="secondary" @click="createDriver">เพิ่ม</v-btn>
+            <v-btn color="secondary" @click.stop="createDriverNew()" :loading="loading">เพิ่ม</v-btn>
           </v-card-text>
         </material-card>
       </v-flex>
@@ -46,34 +68,78 @@
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
+import store from "@/store";
 
 export default {
+  data() {
+    return {
+      userStatus:[],
+      userStatusSelect:{ Id : 1 },
+
+      email: null,
+      password: null,
+      firstName: null,
+      lastName: null,
+      staffCode: null,
+      imageUrl: "Image Url",
+      description: null,
+      roleId: null,
+      active: true,
+
+      description: null,
+
+      loading : false,
+    };
+  },
   computed: {
-    ...mapState("tms", ["drivers"])
+    
   },
   methods: {
-    createDriver() {
-      
-      const { User } = this.$FeathersVuex;
+    async createDriverNew() {
+      try {
+        const valid = await this.$validator.validateAll();
+        if (!valid) {
+          alert("กรุณากรอกข้อมูลให้สมบรูณ์");
+          return;
+        }
+        this.loading = true;
 
-      const user = new User({
-        email: "doi@gmail.com",
-        password: "Sinetong9977"
-      });
+        var data = {
+          Email: this.email,
+          Password: this.password,
+          FirstName: this.firstName,
+          LastName: this.lastName,
+          StaffCode: this.staffCode,
+          ImageUrl: this.imageUrl,
+          Description: this.description,
+          RoleId: this.userStatusSelect.Id,
+          Active: this.active
+        };
 
-      user.save().then( user =>{
-          alert('สร้างเสร็จแล้ว');
-      });
-      
-      /*
-      const { Job } = this.$FeathersVuex;
-      const q = {};
-      q.name = "tong997733@gmail.com";
+        // console.table(data);
+        store.dispatch("user/create", data);
 
-      Job.find({ query: q}).then(res =>
-        console.log(res)
-      );
-      */
+        this.$router.push({
+          name: "Driver",
+        });
+      } catch (err) {
+        alert("ไม่สามารถต่อ server ได้");
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
+  async mounted() {
+    try {
+      const { Role } = this.$FeathersVuex;
+      //Role
+      // let res = await Role.find();
+      // this.userStatus = res.data;
+      //หรือเขียนแบบ dispatch
+      var role = await this.$store.dispatch("role/find", {});
+      this.userStatus = role.data;
+    } catch (err) {
+        alert("ไม่สามารถต่อ server ได้");
     }
   }
 };

@@ -81,6 +81,16 @@ export default [
     view: 'DriverAdd'
   },
   {
+    path: '/driveredit/:Id',
+    name: 'DriverEdit',
+    view: 'DriverEdit'
+  },
+  {
+    path: '/role',
+    name: 'Role',
+    view: 'Role'
+  },
+  {
     path: '/login',
     name: 'Login',
     view: 'Login'

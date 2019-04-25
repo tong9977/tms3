@@ -7,23 +7,30 @@
             <v-icon>mdi-plus</v-icon>เพิ่ม
           </v-btn>
 
-          <v-data-table :headers="headers" :items="drivers" hide-actions>
+          <v-data-table :headers="headers" :items="user" hide-actions>
             <template slot="headerCell" slot-scope="{ header }">
               <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
             </template>
             <template slot="items" slot-scope="{ item }">
-              <td>{{ item.DriverId }}</td>
+              <td>{{ item.Id }}</td>
               <td>
                 <v-avatar size="64" color="grey lighten-4">
                   <img :src="item.ImageUrl" alt="avatar">
                 </v-avatar>
               </td>
+              <td>{{ item.StaffCode }}</td>
               <td>{{ item.FirstName}} {{ item.LastName}} </td>
-              <td>{{ item.StaffId }}</td>
-              <td>{{ item.UserName }}</td>
+              <td>{{ item.Email }}</td>
+              <td>{{ item.role.RoleName }}</td>
+              <td>{{ item.Description }}</td>
               <td>
-                <v-btn color="secondary" class="font-weight-light">
+                <v-btn :to="'/driveredit/'+ item.Id" color="secondary" class="font-weight-light">
                     <v-icon>mdi-pencil</v-icon>แก้ไข
+                </v-btn>
+              </td>
+              <td>
+                <v-btn @click="onDelete(item.Id)" color="secondary" class="font-weight-light">
+                    <v-icon>mdi-delete</v-icon>ลบ
                 </v-btn>
               </td>
             </template>
@@ -34,21 +41,55 @@
   </v-container>
 </template>
 <script>
-import { mapMutations, mapState } from "vuex";
+
+import { mapGetters, mapMutations, mapState } from "vuex";
+import store from "@/store";
 
 export default {
   data: () => ({
+    user:[],
     headers: [
-      { value: "DriverId", text: "Id", sortable: true },
+      { value: "Id", text: "Id", sortable: true },
       { value: "ImageUrl", text: "", sortable: false },
-      { value: "Name", text: "ชื่อพนักงาน", sortable: true },
-      { value: "StaffId", text: "รหัสพนักงาน", sortable: false },
-      { value: "UserName", text: "UserName", sortable: false },
+      { value: "StaffCode", text: "รหัสพนักงาน", sortable: false },
+      { value: "FirstName", text: "ชื่อ-สกุล", sortable: true },
+      { value: "Email", text: "UserName", sortable: false },
+      { value: "RoleName", text: "ตำแหน่ง", sortable: false },
+      { value: "Description", text: "รายละเอียด", sortable: false },
       { text: "", sortable: false }
     ]
   }),
   computed: {
-    ...mapState("tms", ["drivers"])
-  }
+  
+  },
+  mounted: function() {
+    this.renderUI();
+  },
+
+  methods:{
+    async onDelete(id) {
+      try {
+        await this.$store.dispatch("user/remove", id);
+        this.renderUI();
+      } catch (err) {
+        alert("ไม่สามารถต่อ server ได้");
+      }
+    },
+
+    async renderUI() {
+      try {
+        const { User } = this.$FeathersVuex;
+        //User
+        User.find({ query: { $eager:"role" } }).then(res => {
+          this.user = res.data;
+        });
+
+        var role = await this.$store.dispatch("role/find", {});
+        this.userStatus = role;
+      } catch (err) {
+        alert("ไม่สามารถต่อ server ได้");
+      }
+    }
+  } 
 };
 </script>
