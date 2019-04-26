@@ -69,7 +69,18 @@ export default [
     path: '/vehicleadd',
     name: 'VehicleAdd',
     view: 'VehicleAdd'
+  }
+  ,
+  {
+    path: '/vehicleedit/:id',
+    name: 'VehicleEdit',
+    view: 'VehicleEdit'
   },  
+  {
+    path: '/vehicletype',
+    name: 'VehicleType',
+    view: 'VehicleType'
+  },
   {
     path: '/driver',
     name: 'Driver',

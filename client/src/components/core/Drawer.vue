@@ -68,6 +68,11 @@ const menuAdmin = [
     text: "จัดการรถ"
   },
   {
+    to: "/vehicletype",
+    icon: "mdi-car-estate",
+    text: "จัดการประเภทรถ"
+  },
+  {
     to: "/role",
     icon: "mdi-account",
     text: "จัดการประเภทพนักงาน"
