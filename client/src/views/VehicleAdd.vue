@@ -11,9 +11,9 @@
                     label="ทะเบียนรถ"
                     class="purple-input"
                     v-model="LicensePlate"
-                    data-vv-name="LicensePlate"
+                    data-vv-name="ทะเบียนรถ"
                     v-validate="'required'"
-                    :error-messages="errors.collect('LicensePlate')"
+                    :error-messages="errors.collect('ทะเบียนรถ')"
                   />
                   <!-- -->
                 </v-flex>
@@ -43,9 +43,9 @@
                     label="๊ปริมาตรที่ขนได้ (CC)"
                     class="purple-input"
                     v-model="LimitCC"
-                    data-vv-name="LimitCC"
+                    data-vv-name="ปริมาตรที่ขนได้"
                     v-validate="'required'"
-                    :error-messages="errors.collect('LimitCC')"
+                    :error-messages="errors.collect('ปริมาตรที่ขนได้')"
                   />
 
                   <!---->
@@ -58,9 +58,9 @@
                     class="purple-input"
                     label="รายละเอียดอื่นๆ"
                     v-model="Desciption"
-                    data-vv-name="Desciption"
+                    data-vv-name="รายละเอียด"
                     v-validate="'required'"
-                    :error-messages="errors.collect('Desciption')"
+                    :error-messages="errors.collect('รายละเอียด')"
                   />
 
                   <!---->
@@ -116,7 +116,7 @@ export default {
       try {
         var data = {
           LicensePlate: this.LicensePlate,
-          VehicleTypeId: this.VehicleTypesSelete,
+          VehicleTypeId: this.VehicleTypesSelete.Id,
           Limit: this.Limit,
           LimitCC: this.LimitCC,
           Desciption: this.Desciption,
