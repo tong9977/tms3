@@ -2,10 +2,35 @@
   <v-container fill-height fluid grid-list-xl>
     <v-layout justify-center wrap>
       <v-flex md12>
-        <material-card color="blue" title="จัดการประเภทรถ" text="รายการประเภทรถทั้งหมด">
-          <v-btn flat slot="menu" @click.stop="add">
+        <material-card
+          color="blue"
+          :title="'จัดการ'+objectName"
+          :text="'รายการ'+objectName+'ทั้งหมด'"
+        >
+          <v-btn flat slot="menu" @click.stop="addItem()">
             <v-icon>mdi-plus</v-icon>เพิ่ม
           </v-btn>
+          <v-subheader>มีทั้งหมด {{total}} รายการ</v-subheader>
+          <v-data-table :headers="headers" :items="items" hide-actions>
+            <template slot="headerCell" slot-scope="{ header }">
+              <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
+            </template>
+            <!-- set column แสดงผลที่นี้ -->
+            <template slot="items" slot-scope="{ item }">
+              <td>{{ item.Id }}</td>
+              <td>{{ item.TypeName }}</td>
+              <td>
+                <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
+                  <v-icon>mdi-pencil</v-icon>แก้ไข
+                </v-btn>
+                <v-btn color="red" @click="deleteItem(item)" class="font-weight-light">
+                  <v-icon>mdi-delete</v-icon>ลบ
+                </v-btn>
+              </td>
+            </template>
+          </v-data-table>
+
+          <!-- dialog สำหรับ เพิ่ม แก้ไข -->
           <v-dialog v-model="dialog" max-width="500px">
             <v-card>
               <v-card-title>
@@ -15,6 +40,7 @@
               <v-card-text>
                 <v-container grid-list-md>
                   <v-layout wrap>
+                    <!-- set form กรอกข้อมูลที่นี้ -->
                     <v-flex>
                       <v-text-field
                         v-model="formModel.TypeName"
@@ -30,33 +56,13 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-                <v-btn color="blue darken-1" :loading="loading" flat @click="save">Save</v-btn>
+                <v-btn color="blue darken-1" flat @click="closeDialog">Cancel</v-btn>
+                <v-btn color="blue darken-1" :loading="loading" flat @click="saveToServer">Save</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
 
-          <v-data-table :headers="headers" :items="vehicletype" hide-actions>
-            <template slot="headerCell" slot-scope="{ header }">
-              <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
-            </template>
-
-            <template slot="items" slot-scope="{ item }">
-              <td>{{ item.Id }}</td>
-
-              <td>{{ item.TypeName }}</td>
-              <!-- @click="onEdit(item.Id, item.TypeName)" -->
-              <td>
-                <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
-                  <v-icon>mdi-pencil</v-icon>แก้ไข
-                </v-btn>
-                <v-btn color="red" @click="deleteItem(item)" class="font-weight-light">
-                  <v-icon>mdi-delete</v-icon>ลบ
-                </v-btn>
-              </td>
-            </template>
-          </v-data-table>
-
+          <!-- dialog สำหรับลบ -->
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title>
@@ -66,15 +72,15 @@
               <v-card-text>
                 <v-container grid-list-md>
                   <v-layout wrap>
-                    <v-flex>ต้องการลบ "{{formModel.TypeName}}" ออกจากรายการหรือไม่ ?</v-flex>
+                    <v-flex>ต้องการลบ "{{formModel[Object.keys(formModel)[1]]}}" ออกจากรายการหรือไม่ ?</v-flex>
                   </v-layout>
                 </v-container>
               </v-card-text>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-                <v-btn color="blue darken-1" flat :loading="loading" @click="deletedata">ลบ</v-btn>
+                <v-btn color="blue darken-1" flat @click="closeDialog">Cancel</v-btn>
+                <v-btn color="blue darken-1" flat :loading="loading" @click="deleteToServer">ลบ</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -83,182 +89,125 @@
     </v-layout>
   </v-container>
 </template>
-<script>
-import { mapMutations, mapState } from "vuex";
-import store from "@/store";
-import VuetifyDialog from "vuetify-dialog";
 
+
+<script>
 export default {
   data: () => ({
-    vehicletype: [],
-    loading: false,
-    dialog: false,
-    dialogDelete: false,
-    q: { $sort: { Id: -1 } },
+    //--start config
+    service: "vehicletype",
+    objectName: "ประเภทรถ",
     headers: [
       { value: "Id", text: "Id", sortable: true },
       { value: "TypeName", text: "รายละเอียดรถ", sortable: true },
       { text: "", sortable: false }
     ],
-    formModel: {
-      TypeName: ""
-    },
     defaultValue: {
       TypeName: ""
     },
+    query: { $sort: { Id: -1 } },
+    //--end config
 
-    mode: -1
+    items: [],
+    total: 0,
+    loading: false,
+    dialog: false,
+    dialogDelete: false,
+    formModel: {},
+    mode: "" // มีได้ 2 แบบคือ create กับ edit
   }),
   computed: {
     formTitle() {
-      return this.mode === -1 ? "เพิ่มประเภทรถ" : "แก้ไขประเภทรถ";
+      return this.mode === "create"
+        ? "เพิ่ม" + this.objectName
+        : "แก้ไข" + this.objectName;
     }
   },
-  mounted: function() {
+  async mounted() {
+    //init here
+
     this.renderUI();
   },
   methods: {
     async renderUI() {
       try {
-        var res = await this.$store.dispatch("vehicletype/find", {});
-        this.vehicletype = res.data;
+        var res = await this.$store.dispatch(
+          this.service + "/find",
+          this.query
+        );
+        this.total = res.total;
+        this.items = res.data;
       } catch (error) {
         console.log(error);
-        alert("ไม่สามารถติดต่อ server ได้");
+        alert("ไม่สามารถขอข้อมูลจาก server ได้");
       }
     },
-    /*async onDelete(id) {
-      let res = await this.$dialog.confirm({
-        text: "ต้องการลบข้อมูลออกจากรายการหรือไม่ ?",
-        title: "ยืนยันการลบข้อมูล",
-        actions: {
-          false: "ยกเลิก",
-          true: {
-            color: "red",
-            text: "ตกลง"
-          }
-        }
-      });
-      try {
-        await this.$store.dispatch("vehicletype/remove", id);
-        this.renderUI();
-      } catch (err) {
-        alert("ไม่สามารถต่อ server ได้");
-      }
-      //this.renderUI();
-    },*/
-
-    /* async DialogAdd() {
-      let res = await this.$dialog.prompt({
-        text: "กรอกประเภทรถ",
-        title: "เพิ่มประเภทรถ"
-      });
-      if (res) {
-        try {
-          var data = {
-            TypeName: res
-          };
-          // alert(JSON.stringify(data))
-          store.dispatch("vehicletype/create", data);
-          this.$dialog.notify.success("ประเภทรถ : " + res);
-          this.renderUI();
-        } catch (err) {
-          alert("ไม่สามารถต่อ server ได้");
-        }
-      }
-    }, */
-
-    /*async onEdit(id, typeName) {
-      let res = await this.$dialog.prompt({
-        text: "ชื่อประเภทรถ",
-        title: "แก้ไขประเภทรถ",
-        value: typeName
-      });
-      if (res) {
-        try {
-          let data = {
-            TypeName: res
-          };
-          // alert(JSON.stringify(data));
-          await this.$store.dispatch("vehicletype/patch", [id, data]);
-          this.$dialog.notify.success("ประเภทรถ : " + res);
-          this.renderUI();
-        } catch (err) {
-          alert("ไม่สามารถต่อ server ได้");
-        }
-      }
-    },*/
+    async addItem() {
+      this.mode = "create";
+      this.formModel = Object.assign({}, this.defaultValue);
+      this.dialog = true;
+    },
 
     async editItem(item) {
-      this.mode = this.vehicletype.indexOf(item);
+      this.mode = "edit";
       this.formModel = Object.assign({}, item);
       this.dialog = true;
     },
     async deleteItem(item) {
       this.formModel = Object.assign({}, item);
-      //alert(JSON.stringify(this.formModel.Id))
       this.dialogDelete = true;
     },
 
-    async close() {
+    closeDialog() {
       this.dialog = false;
       this.dialogDelete = false;
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultValue);
-        this.mode = -1;
-      }, 30000);
     },
-    async save() {
+    async saveToServer() {
       const valid = await this.$validator.validateAll();
       if (!valid) {
         alert("กรุณากรอกข้อมูลให้สมบรูณ์");
         return;
       }
       this.loading = true;
-      if (this.mode > -1) {
-        //Edit Data
-        //alert(JSON.stringify( this.formModel));
+      if (this.mode === "edit") {
         try {
-          await this.$store.dispatch("vehicletype/patch", [
+          await this.$store.dispatch(this.service + "/patch", [
             this.formModel.Id,
             this.formModel
           ]);
           this.renderUI();
         } catch (err) {
-          alert("ไม่สามารถต่อ server ได้");
+          console.log(err);
+          alert("ไม่สามารถแก้ไขข้อมูลได้");
         } finally {
           this.loading = false;
         }
       } else {
         //Add Data
-        //alert(this.editedIndex);
         try {
-          //alert(JSON.stringify(this.formModel))
-          store.dispatch("vehicletype/create", this.formModel);
+          this.$store.dispatch(this.service + "/create", this.formModel);
           this.renderUI();
         } catch (err) {
-          alert("ไม่สามารถต่อ server ได้");
+          console.log(err);
+          alert("ไม่สามารถเพิ่มข้อมูลได้");
         } finally {
           this.loading = false;
         }
       }
-      this.close();
+      this.closeDialog();
     },
-    async deletedata() {
+    async deleteToServer() {
       this.loading = true;
       try {
-        await this.$store.dispatch("vehicletype/remove", this.formModel.Id);
+        await this.$store.dispatch(this.service + "/remove", this.formModel.Id);
         this.renderUI();
       } catch (err) {
-        alert("ไม่สามารถต่อ server ได้");
+        console.log(err);
+        alert("ไม่สามารถลบข้อมูลได้");
       } finally {
         this.loading = false;
         this.dialogDelete = false;
       }
-    },
-    add() {
-      this.formModel = Object.assign({}, this.defaultValue);
-      this.dialog = true;
     }
   }
 };
