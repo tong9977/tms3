@@ -28,7 +28,9 @@ const store = new Vuex.Store({
         service('company',{modelName:'Company',idField: 'CompanyID'}),
         service('jobtype',{modelName:'JobType',idField: 'JobTypeID'}),
         service('role',{modelName:'Role',idField: 'Id'}),
-        service('user',{modelName:'User',idField: 'Id'}),
+        service('user',{modelName:'User',idField: 'Id'}), 
+        service('vehicle',{modelName:'Vehicle',idField: 'VehicleId'}),
+        service('vehicletype',{modelName:'VehicleType',idField: 'Id'})
     ]
 })
 

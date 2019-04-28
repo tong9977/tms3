@@ -1,8 +1,9 @@
+
 <template>
   <v-container fill-height fluid grid-list-xl>
     <v-layout justify-center wrap>
       <v-flex md12>
-        <material-card color="blue" title="เพิ่มรถ" text="กรอกรายละเอียดรถ">
+        <material-card color="blue" title="แก้ไขข้อมูลรถ" text="กรอกรายละเอียดรถ">
           <v-form>
             <v-container py-0>
               <v-layout wrap>
@@ -11,10 +12,11 @@
                     label="ทะเบียนรถ"
                     class="purple-input"
                     v-model="LicensePlate"
-                    data-vv-name="ทะเบียนรถ"
+                    data-vv-name="LicensePlate"
                     v-validate="'required'"
-                    :error-messages="errors.collect('ทะเบียนรถ')"
+                    :error-messages="errors.collect('LicensePlate')"
                   />
+
                   <!-- -->
                 </v-flex>
                 <v-flex xs12 md6>
@@ -32,9 +34,9 @@
                     label="๊น้ำหนักที่รับได้ (kg)"
                     class="purple-input"
                     v-model="Limit"
-                    data-vv-name="น้ำหนักที่รับได้"
-                    v-validate="'required|numeric'"
-                    :error-messages="errors.collect('น้ำหนักที่รับได้')"
+                    data-vv-name="Limit"
+                    v-validate="'required'"
+                    :error-messages="errors.collect('Limit')"
                   />
                   <!--  -->
                 </v-flex>
@@ -43,12 +45,12 @@
                     label="๊ปริมาตรที่ขนได้ (CC)"
                     class="purple-input"
                     v-model="LimitCC"
-                    data-vv-name="ปริมาตรที่ขนได้"
+                    data-vv-name="LimitCC"
                     v-validate="'required'"
-                    :error-messages="errors.collect('ปริมาตรที่ขนได้')"
+                    :error-messages="errors.collect('LimitCC')"
                   />
 
-                  <!---->
+                  <!-- -->
                 </v-flex>
                 <v-flex xs12 md6>
                   <v-checkbox v-model="enable" label="ใช้งาน"></v-checkbox>
@@ -58,33 +60,32 @@
                     class="purple-input"
                     label="รายละเอียดอื่นๆ"
                     v-model="Desciption"
-                    data-vv-name="รายละเอียด"
+                    data-vv-name="Desciption"
                     v-validate="'required'"
-                    :error-messages="errors.collect('รายละเอียด')"
+                    :error-messages="errors.collect('Desciption')"
                   />
 
-                  <!---->
+                  <!-- -->
                 </v-flex>
               </v-layout>
             </v-container>
           </v-form>
           <v-card-text class="text-xs-right">
             <v-btn color="primary" to="/vehicle">ยกเลิก</v-btn>
-            <v-btn color="blue" :loading="loading" @click.stop="save()">เพิ่ม</v-btn>
+            <v-btn color="blue" :loading="loading" @click.stop="save()">แก้ไข</v-btn>
           </v-card-text>
         </material-card>
       </v-flex>
     </v-layout>
   </v-container>
 </template>
-
 <script>
 import { mapMutations, mapState } from "vuex";
-
+import store from "@/store";
 export default {
   data: () => ({
     enable: true,
-    VehicleStatus: [],
+   VehicleStatus: [],
     VehicleTypesSelete: { Id: 1 },
     LicensePlate: "",
     Limit: "",
@@ -92,18 +93,30 @@ export default {
     Desciption: "",
     loading: false
   }),
+  computed: {
+   
+  },
+  async mounted() {
 
- async mounted() {
-
-   try{
-   var res = await this.$store.dispatch("vehicletype/find", {}) 
+ try{
+   let res = await this.$store.dispatch("vehicletype/find", {}) 
       this.VehicleStatus = res.data;
   
    }catch (error) {
         console.log(error);
         alert("ไม่สามารถติดต่อ server ได้");
       } 
-  
+
+    const { Vehicle } = this.$FeathersVuex;
+    var q = this.$route.params.id;
+    const response = await Vehicle.get(q);
+
+    (this.LicensePlate = response.LicensePlate),
+      (this.VehicleTypesSelete = response.VehicleTypeId),
+      (this.Limit = response.Limit),
+      (this.LimitCC = response.LimitCC),
+      (this.Desciption = response.Desciption),
+      (this.Active = response.enable);
   },
   methods: {
     async save() {
@@ -114,23 +127,21 @@ export default {
       }
       this.loading = true;
       try {
-        var data = {
+        let data = {
           LicensePlate: this.LicensePlate,
           VehicleTypeId: this.VehicleTypesSelete.Id,
           Limit: this.Limit,
           LimitCC: this.LimitCC,
           Desciption: this.Desciption,
           Active: this.enable
-        
         };
-       
-        this.loading = true;
-        await this.$store.dispatch("vehicle/create", data);
+        //alert(JSON.stringify(data))
+        let r = await store.dispatch("vehicle/patch", [ this.$route.params.id, data]);
         this.$router.push("/vehicle");
-        this.loading = false;
+        
       } catch (error) {
         console.log(error);
-        alert("ไม่สามารถติดต่อ server ได้" + error);
+        alert("ไม่สามารถติดต่อ server ได้");
       } finally {
         this.loading = false;
       }
