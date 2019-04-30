@@ -51,6 +51,16 @@ export default [
     view: 'JobNew'
   },
   {
+    path: '/jobtype',
+    name: 'JobType',
+    view: 'JobType'
+  },
+  {
+    path: '/jobdetail',
+    name: 'JobDetail',
+    view: 'JobDetail'
+  },
+  {
     path: '/jobassigned',
     name: 'JobAssigned',
     view: 'JobAssigned'
