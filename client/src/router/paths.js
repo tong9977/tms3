@@ -56,7 +56,7 @@ export default [
     view: 'JobType'
   },
   {
-    path: '/jobdetail',
+    path: '/jobdetail/:id',
     name: 'JobDetail',
     view: 'JobDetail'
   },
@@ -130,10 +130,5 @@ export default [
     path: '/company',
     name: 'Company',
     view: 'Company'
-  },
-  {
-    path: '/jobtype',
-    name: 'Jobtype',
-    view: 'Jobtype'
-  }            
+  }          
 ]
