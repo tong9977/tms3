@@ -3,7 +3,7 @@
     <v-layout justify-center wrap>
       <v-flex md12>
         <material-card color="green" title="พนักงานขับรถ" text="รายชื่อพนักงานขับรถทั้งหมด">
-          <v-btn flat slot="menu" to="/driveradd">
+          <v-btn flat slot="menu" :to="{ name: 'DriverCreateEdit', params: { mode: 'create'}}">
             <v-icon>mdi-plus</v-icon>เพิ่ม
           </v-btn>
 
@@ -24,7 +24,7 @@
               <td>{{ item.role.RoleName }}</td>
               <td>{{ item.Description }}</td>
               <td>
-                <v-btn :to="'/driveredit/'+ item.Id" color="secondary" class="font-weight-light">
+                <v-btn :to="{ name: 'DriverCreateEdit', params: { mode: 'edit', Id: item.Id}}" color="secondary" class="font-weight-light">
                     <v-icon>mdi-pencil</v-icon>แก้ไข
                 </v-btn>
               </td>
