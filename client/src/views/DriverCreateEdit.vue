@@ -118,14 +118,14 @@ export default {
 
       formModel: {},
       defaultValue: {
-        Email: "email@gmail.com",
-        Password: "11111111",
-        FirstName: "FNN",
-        LastName: "LNN",
-        StaffCode: "1234",
-        ImageUrl: "Image Url",
-        Description: "Des",
-        RoleId: "1",
+        Email: "",
+        Password: "",
+        FirstName: "",
+        LastName: "",
+        StaffCode: "",
+        ImageUrl: "",
+        Description: "",
+        RoleId: "",
         Active: true,
         UserStatusObj : { Id: 1 },
       },
@@ -211,7 +211,7 @@ export default {
       alert("ไม่สามารถต่อ server ได้");
     }
 
-    if (this.mode == "add") {
+    if (this.mode == "create") {
       this.titleHead = "เพิ่มพนักงานขับรถ";
       this.formModel = Object.assign({}, this.defaultValue);
     } else {
