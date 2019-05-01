@@ -11,17 +11,7 @@ class vehicle extends Model {
   static get idColumn() {
     return 'VehicleId';
   }
-  static get virtualAttributes() {
-    return ['fullName','IsCar'];
-  }
   
-  fullName() {
-    return this.LicensePlate + ' ' + this.Model;
-  }
-
-  IsCar() {
-     return this.VehicleTypeId === 1;
-  }
   $beforeInsert() {
     this.createdAt = this.updatedAt = new Date().toISOString();
   }

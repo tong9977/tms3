@@ -2,10 +2,15 @@
   <v-container fill-height fluid grid-list-xl>
     <v-layout justify-center wrap>
       <v-flex md12>
-        <material-card color="green" :title="titleHead" text="กรอกรายละเอียดพนักงาน">
+        <material-card
+          color="green"
+          :title="'จัดการ'+ objectName"
+          :text="'กรุณากรอกข้อมูลให้ครบถ้วน'"
+        >
           <v-form>
             <v-container py-0>
               <v-layout wrap>
+                <!-- set form กรอกข้อมูลที่นี้ -->
                 <v-flex xs12 md6>
                   <v-text-field
                     label="ชื่อ"
@@ -108,62 +113,94 @@ import { mapMutations, mapState, mapGetters } from "vuex";
 import store from "@/store";
 
 export default {
-  data() {
-    return {
-      mode: null,
-      titleHead: "",
-      userStatusItems: [],
-      inDTO : {},
-      outDTO:{},
+  data: () => ({
+    service: "user",
+    service2: "role",
+    objectName: "พนักงาน",
+    query: { $sort: { Id: -1 } },
+    defaultValue: {
+      Email: "",
+      Password: "",
+      FirstName: "",
+      LastName: "",
+      StaffCode: "",
+      ImageUrl: "",
+      Description: "",
+      RoleId: "",
+      Active: true,
+      UserStatusObj: { Id: 1 }
+    },
+    //--end config
 
-      formModel: {},
-      defaultValue: {
-        Email: "email@gmail.com",
-        Password: "11111111",
-        FirstName: "FNN",
-        LastName: "LNN",
-        StaffCode: "1234",
-        ImageUrl: "Image Url",
-        Description: "Des",
-        RoleId: "1",
-        Active: true,
-        UserStatusObj : { Id: 1 },
-      },
-     
+    formModel: {},
+    userStatusItems: [], // data ที่มาจากการ find ของ server
+    inDTO: {}, // data ที่มาจากการ get ของ server
+    outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
+    mode: "", // มีได้ 2 แบบคือ create กับ edit
 
-      loading: false
-    };
-  },
+    loading: false
+  }),
   computed: {},
+  async mounted() {
+    this.renderUI();
+  },
   methods: {
+    async renderUI() {
+      this.mode = this.$route.params.mode;
+      try {
+        var role = await this.$store.dispatch(this.service2 + "/find", {});
+        this.userStatusItems = role.data;
+      } catch (err) {
+        alert("ไม่สามารถต่อ server ได้");
+      }
+
+      if (this.mode == "edit") {
+        try {
+          this.inDTO = await this.$store.dispatch(
+            this.service + "/get",
+            this.$route.params.Id
+          );
+          this.formModel = Object.assign({}, this.inDTO);
+          this.formModel.UserStatusObj = Object.assign({},{ Id: this.inDTO.RoleId }
+          );
+          //หรืออีกวิธี กรณีผูก Relation ไว้แล้ว this.formModel.UserStatusObj = Object.assign({}, this.inDTO.role);
+        } catch (err) {
+          alert("ไม่สามารถต่อ server ได้");
+        }
+      } else {
+        this.formModel = Object.assign({}, this.defaultValue);
+      }
+    },
     async saveToServer() {
       const valid = await this.$validator.validateAll();
       if (!valid) {
         alert("กรุณากรอกข้อมูลให้สมบรูณ์");
         return;
       }
+      this.loading = true
       if (this.mode == "edit") {
         try {
+          //Edit Data
           const valid = await this.$validator.validateAll();
           if (!valid) {
             alert("กรุณากรอกข้อมูลให้สมบรูณ์");
             return;
           }
+
           this.loading = true;
 
           let temp = this.formModel.UserStatusObj.Id;
           this.formModel.RoleId = temp;
-
           delete this.formModel.UserStatusObj;
           delete this.formModel.role;
+          this.outDTO = Object.assign({}, this.formModel);
 
-          this.outDTO =  Object.assign({}, this.formModel);
-
-          var r = await store.dispatch("user/patch", [
-            this.$route.params.Id,this.outDTO
+          await store.dispatch(this.service + "/patch", [
+            this.$route.params.Id,
+            this.outDTO
           ]);
 
-          store.dispatch("user/find");
+          store.dispatch(this.service + "/find");
 
           this.$router.push({
             name: "Driver"
@@ -175,6 +212,7 @@ export default {
         }
       } else {
         try {
+          //Add Data
           const valid = await this.$validator.validateAll();
           if (!valid) {
             alert("กรุณากรอกข้อมูลให้สมบรูณ์");
@@ -182,11 +220,12 @@ export default {
           }
           this.loading = true;
 
-          this.outDTO =  Object.assign({}, this.formModel);
+          let temp = this.formModel.UserStatusObj.Id;
+          this.formModel.RoleId = temp;
+          delete this.formModel.UserStatusObj;
+          this.outDTO = Object.assign({}, this.formModel);
 
-          // console.table(data);
-          store.dispatch("user/create", this.outDTO);
-
+          store.dispatch(this.service + "/create", this.outDTO);
           this.$router.push({
             name: "Driver"
           });
@@ -201,31 +240,6 @@ export default {
     async createDriverNew() {},
 
     async onUpdate() {}
-  },
-  async mounted() {
-    this.mode = this.$route.params.mode;
-     try {
-      var role = await this.$store.dispatch("role/find", {});
-      this.userStatusItems = role.data;
-    } catch (err) {
-      alert("ไม่สามารถต่อ server ได้");
-    }
-
-    if (this.mode == "add") {
-      this.titleHead = "เพิ่มพนักงานขับรถ";
-      this.formModel = Object.assign({}, this.defaultValue);
-    } else {
-      this.titleHead = "แก้ไขพนักงานขับรถ";
-      try {   
-        //User
-        this.inDTO = await this.$store.dispatch("user/get", this.$route.params.Id);
-        this.formModel = Object.assign({}, this.inDTO);
-        this.formModel.UserStatusObj = Object.assign({}, this.inDTO.role);
-
-      } catch (err) {
-        alert("ไม่สามารถต่อ server ได้");
-      }
-    }
   }
 };
 </script>

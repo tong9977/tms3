@@ -60,6 +60,11 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <!-- set form กรอกข้อมูลที่นี้ -->
+                    <v-layout wrap row>
+                      <v-flex xs12 md12>
+                        <v-text class="font-weight-regular">รายละเอียดลูกค้า</v-text>
+                      </v-flex>
+                   
                     <v-flex xs12 md6>
                       <v-text-field
                         v-model="formModel.Customer"
@@ -78,31 +83,33 @@
                         label="คนติดต่อ"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                    <v-flex xs12 md6>
                       <v-text-field
                         v-model="formModel.Email"
                         data-vv-name="อีเมล์"
                         v-validate="'email'"
                         :error-messages="errors.collect('อีเมล์')"
-                        label="Email"
+                        label="อีเมล์"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                   
+                    <v-flex xs12 md6>
+                      <v-text-field
+                        v-model="formModel.Address"
+                        data-vv-name="ที่อยู่ลูกค้า"
+                        v-validate="'required|min:2'"
+                        :error-messages="errors.collect('ที่อยู่ลูกค้า')"
+                        label="ที่อยู่ลูกค้า"
+                      ></v-text-field>
+                    </v-flex>
+
+                     <v-flex>
                       <v-text-field
                         v-model="formModel.LineId"
                         data-vv-name="ไอดีไลน์"
                         v-validate="'required|min:2'"
                         :error-messages="errors.collect('ไอดีไลน์')"
                         label="LineId"
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex>
-                      <v-text-field
-                        v-model="formModel.Address"
-                        data-vv-name="ที่อยู่ลูกค้า"
-                        v-validate="'required|min:2'"
-                        :error-messages="errors.collect('ที่อยู่ลูกค้า')"
-                        label="Address"
                       ></v-text-field>
                     </v-flex>
                     <v-flex>
@@ -123,25 +130,31 @@
                         label="Long"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                     </v-layout>
+                 <v-layout wrap row>
+                     <v-flex xs12 md12>
+                        <v-text class="font-weight-regular"  >ข้อมูลรายละเอียด</v-text>
+                      </v-flex>
+                    
+                    <v-flex xs12 md3>
                       <v-text-field
-                        v-model="formModel.Weight"
-                        data-vv-name="น้ำหนักที่ขนได้"
+                        v-model="formModel.RouteNo"
+                        data-vv-name="หมายเลขเส้นทาง"
                         v-validate="'numeric'"
-                        :error-messages="errors.collect('น้ำหนักที่ขนได้')"
-                        label="Weight"
+                        :error-messages="errors.collect('หมายเลขเส้นทาง')"
+                        label="หมายเลขเส้นทาง"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                    <v-flex xs12 md7>
                       <v-text-field
-                        v-model="formModel.CC"
-                        data-vv-name="ปริมาตรที่ขนได้"
-                        v-validate="'numeric'"
-                        :error-messages="errors.collect('ปริมาตรที่ขนได้')"
-                        label="CC"
+                        v-model="formModel.RouteName"
+                        data-vv-name="ชื่อเส้นทาง"
+                        v-validate="'required|min:2'"
+                        :error-messages="errors.collect('ชื่อเส้นทาง')"
+                        label="ชื่อเส้นทาง"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                    <v-flex xs12 md2>
                       <v-text-field
                         v-model="formModel.Distance"
                         data-vv-name="ระยะทาง"
@@ -150,52 +163,45 @@
                         label="ระยะทาง"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                    <v-flex xs12 md3>
                       <v-text-field
-                        v-model="formModel.RouteNo"
-                        data-vv-name="หมายเลขเส้นทาง"
+                        v-model="formModel.Weight"
+                        data-vv-name="น้ำหนักที่ขนได้"
                         v-validate="'numeric'"
-                        :error-messages="errors.collect('หมายเลขเส้นทาง')"
-                        label="RouteNo"
+                        :error-messages="errors.collect('น้ำหนักที่ขนได้')"
+                        label="น้ำหนักที่ขนได้ Kg"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                    <v-flex xs12 md3>
                       <v-text-field
-                        v-model="formModel.RouteName"
-                        data-vv-name="ชื่อเส้นทาง"
-                        v-validate="'required|min:2'"
-                        :error-messages="errors.collect('ชื่อเส้นทาง')"
-                        label="RouteName"
+                        v-model="formModel.CC"
+                        data-vv-name="ปริมาตรที่ขนได้"
+                        v-validate="'numeric'"
+                        :error-messages="errors.collect('ปริมาตรที่ขนได้')"
+                        label="ปริมาตรที่ขนได้ CC"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
-                      <v-text-field
-                        v-model="formModel.Remark"
-                        data-vv-name="หมายเหตุ"
-                        v-validate="'required|min:2'"
-                        :error-messages="errors.collect('หมายเหตุ')"
-                        label="Remark"
-                      ></v-text-field>
-                    </v-flex>
-                    <v-flex>
+                    
+                    <v-flex xs12 md3>
+                      <span style="font-size:9pt">วันส่งของ</span>
                       <ejs-datepicker
-                       style="padding-top:20px;"
-                        placeholer="วันเริ่ม"
+                       style="padding-bottom:5px;"
                         v-model="formModel.RequestedDate"
                         :format="dateFormat"
+                        
                       ></ejs-datepicker>
                     </v-flex>
 
-                    <v-flex>
+                    <v-flex xs12 md3>
                       <v-text-field
                         v-model="formModel.NumTrip"
                         data-vv-name="จำนวนรอบในการส่ง"
                         v-validate="'numeric'"
                         :error-messages="errors.collect('จำนวนรอบในการส่ง')"
-                        label="NumTrip"
+                        label="จำนวนรอบในการส่ง"
                       ></v-text-field>
                     </v-flex>
-                    <v-flex>
+                    <v-flex xs12 md6>
                       <v-select
                         :items="JobType"
                         v-model="formModel.JobTypeObj"
@@ -205,7 +211,7 @@
                         return-object
                       ></v-select>
                     </v-flex>
-                    <v-flex>
+                    <v-flex xs12 md6>
                       <v-select
                         :items="JobStatus"
                         v-model="formModel.JobStatusObj"
@@ -215,6 +221,17 @@
                         return-object
                       ></v-select>
                     </v-flex>
+
+                    <v-flex xs12 md12>
+                      <v-text-field
+                        v-model="formModel.Remark"
+                        data-vv-name="หมายเหตุ"
+                        v-validate="'required|min:2'"
+                        :error-messages="errors.collect('หมายเหตุ')"
+                        label="หมายเหตุ"
+                      ></v-text-field>
+                    </v-flex>
+                 </v-layout>
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -266,7 +283,7 @@ export default {
       RouteNo: "2",
       RouteName: "ddd",
       Remark: "ddd",
-      RequestedDate: new Date(),
+      RequestedDate: "",
       CreatedBy: "",
       CompletedDate: "",
       CompletedBy: "",
@@ -383,7 +400,20 @@ export default {
           delete temp.JobStatusObj;
           delete temp.JobTypeObj;
           this.$store.dispatch(this.service + "/create", temp);
-          this.renderUI();
+          ////// go to next page ///////
+          var res = await this.$store.dispatch(
+            this.service + "/find",{
+            query: {
+              $limit: 1,
+              $sort: {
+                Id: -1
+              }
+            }
+            }
+        );
+        this.$router.push("/jobDetail/"+res.data[0].Id);
+        
+          //this.renderUI();
         } catch (err) {
           console.log(err);
           alert("ไม่สามารถเพิ่มข้อมูลได้" + err);

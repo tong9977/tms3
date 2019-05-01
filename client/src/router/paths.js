@@ -56,7 +56,7 @@ export default [
     view: 'JobType'
   },
   {
-    path: '/jobdetail',
+    path: '/jobdetail/:id',
     name: 'JobDetail',
     view: 'JobDetail'
   },
