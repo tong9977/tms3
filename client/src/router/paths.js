@@ -97,6 +97,12 @@ export default [
     view: 'Driver'
   },
   {
+    path: '/drivercreateedit',
+    name: 'DriverCreateEdit',
+    view: 'DriverCreateEdit'
+  },
+  
+  {
     path: '/driveradd',
     name: 'DriverAdd',
     view: 'DriverAdd'
@@ -130,5 +136,15 @@ export default [
     path: '/company',
     name: 'Company',
     view: 'Company'
-  }          
+  },
+  {
+    path: '/jobtype',
+    name: 'Jobtype',
+    view: 'Jobtype'
+  },
+  {
+    path: '/่jobstatus',
+    name: 'JobStatus',
+    view: 'JobStatus'  
+  }  
 ]

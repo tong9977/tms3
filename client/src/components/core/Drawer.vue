@@ -81,6 +81,11 @@ const menuAdmin = [
     to: "/driver",
     icon: "mdi-account",
     text: "พนักงานขับรถ"
+  },
+  {
+    to: "/่jobstatus",
+    icon: "mdi-account",
+    text: "จัดการประเภทงาน"
   }
 ];
 

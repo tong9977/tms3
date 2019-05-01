@@ -18,7 +18,7 @@
             <!-- set column แสดงผลที่นี้ -->
             <template slot="items" slot-scope="{ item }">
               <td>{{ item.Id }}</td>
-              <td>{{ item.TypeName }}</td>
+              <td>{{ item.Name }}</td>
               <td>
                 <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
                   <v-icon>mdi-pencil</v-icon>แก้ไข
@@ -43,11 +43,11 @@
                     <!-- set form กรอกข้อมูลที่นี้ -->
                     <v-flex>
                       <v-text-field
-                        v-model="formModel.TypeName"
-                        data-vv-name="ประเภทรถที่ต้องการ"
+                        v-model="formModel.Name"
+                        data-vv-name="ประเภทงาน"
                         v-validate="'required|min:2'"
-                        :error-messages="errors.collect('ประเภทรถที่ต้องการ')"
-                        label="กรอกประเภทรถ"
+                        :error-messages="errors.collect('ประเภทงาน')"
+                        label="กรอกประเภทงาน"
                       ></v-text-field>
                     </v-flex>
                   </v-layout>
@@ -95,23 +95,21 @@
 export default {
   data: () => ({
     //--start config
-    service: "vehicletype",
-    objectName: "ประเภทรถ",
+    service: "jobstatus",
+    objectName: "ประเภทงาน",
     headers: [
       { value: "Id", text: "Id", sortable: true },
-      { value: "TypeName", text: "รายละเอียดรถ", sortable: true },
+      { value: "์Name", text: "ประเภทงาน", sortable: true },
       { text: "", sortable: false }
     ],
     defaultValue: {
-      TypeName: ""
+      Name: ""
     },
     query: { $sort: { Id: -1 } },
     //--end config
 
-    items: [], // data ที่มาจากการ find ของ server
+    items: [],
     total: 0,
-    inDTO: {}, // data ที่มาจากการ get ของ server
-    outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
     loading: false,
     dialog: false,
     dialogDelete: false,
@@ -173,12 +171,9 @@ export default {
       this.loading = true;
       if (this.mode === "edit") {
         try {
-          this.outDTO = Object.assign({}, this.formModel);
-          // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
-
           await this.$store.dispatch(this.service + "/patch", [
             this.formModel.Id,
-            this.outDTO
+            this.formModel
           ]);
           this.renderUI();
         } catch (err) {
@@ -190,10 +185,7 @@ export default {
       } else {
         //Add Data
         try {
-          this.outDTO = Object.assign({}, this.formModel);
-          // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
-
-          this.$store.dispatch(this.service + "/create", this.outDTO);
+          this.$store.dispatch(this.service + "/create", this.formModel);
           this.renderUI();
         } catch (err) {
           console.log(err);
