@@ -108,8 +108,10 @@ export default {
     query: { $sort: { Id: -1 } },
     //--end config
 
-    items: [],
+    items: [], // data ที่มาจากการ find ของ server
     total: 0,
+    inDTO: {}, // data ที่มาจากการ get ของ server
+    outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
     loading: false,
     dialog: false,
     dialogDelete: false,
@@ -171,9 +173,12 @@ export default {
       this.loading = true;
       if (this.mode === "edit") {
         try {
+          this.outDTO = Object.assign({}, this.formModel);
+          // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
+
           await this.$store.dispatch(this.service + "/patch", [
             this.formModel.Id,
-            this.formModel
+            this.outDTO
           ]);
           this.renderUI();
         } catch (err) {
@@ -185,7 +190,10 @@ export default {
       } else {
         //Add Data
         try {
-          this.$store.dispatch(this.service + "/create", this.formModel);
+          this.outDTO = Object.assign({}, this.formModel);
+          // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
+
+          this.$store.dispatch(this.service + "/create", this.outDTO);
           this.renderUI();
         } catch (err) {
           console.log(err);
