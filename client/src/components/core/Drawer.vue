@@ -86,6 +86,11 @@ const menuAdmin = [
     to: "/่jobstatus",
     icon: "mdi-account",
     text: "จัดการประเภทงาน"
+  },
+  {
+    to: "/่trip",
+    icon: "mdi-account",
+    text: "Trip"
   }
 ];
 
@@ -121,9 +126,7 @@ export default {
     this.onResponsiveInverted();
     window.addEventListener("resize", this.onResponsiveInverted);
 
-   
-      this.links = menuAdmin;
-
+    this.links = menuAdmin;
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.onResponsiveInverted);
