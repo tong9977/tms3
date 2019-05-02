@@ -5,6 +5,7 @@ const vehicletype = require('./vehicletype/vehicletype.service.js');
 const job = require('./job/job.service.js');
 const jobtype = require('./jobtype/jobtype.service.js');
 const jobstatus = require('./jobstatus/jobstatus.service.js');
+const jobitem = require('./jobitem/jobitem.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);
@@ -14,4 +15,5 @@ module.exports = function (app) {
   app.configure(job);
   app.configure(jobtype);
   app.configure(jobstatus);
+  app.configure(jobitem);
 };

@@ -1,55 +1,7 @@
+
 <template>
-  <v-container fill-height fluid grid-list-xl>
-    <v-layout justify-center wrap>
-      <template>
-        <v-flex xs12>
-          <h5 class="headline">ลูกค้า : {{items[0].Customer}}</h5>
-
-          <v-spacer></v-spacer>
-
-          <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
-            <v-icon>mdi-pencil</v-icon>แก้ไข
-          </v-btn>
-        </v-flex>
-        <v-flex xs12>
-          <v-card>
-            <v-card-title>
-              <div>
-                ที่อยู่ : {{items[0].Address}}
-                <br>
-                ผู้ติดต่อ : {{items[0].ContactPerson}}
-                <br>
-                อีเมล์ : {{items[0].Email}}
-                <br>
-                LineId : {{items[0].LineId}}
-              </div>
-            </v-card-title>
-            <v-card-text class="text-xs-right">
-              <v-btn
-                color="primary"
-                flat
-                :href="'https://maps.google.com/maps?q=' + items[0].Lat +','+items[0].Long +'&hl=es;z=14&amp;output=embed'"
-              >
-                <v-icon>mdi-map-marker</v-icon>google map
-              </v-btn>
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      
-        <v-flex md12>
-        
-        <JobItemComp :JobId="Id" />
-        <v-dialog v-model="dialog" max-width="1500px">
-
-        <DriverCreateEdit mode="create"  />
-        </v-dialog>
-      </v-flex>
-      </template>
-    </v-layout>
-
-
-    <!-- dialog สำหรับ เพิ่ม แก้ไข -->
-    <v-dialog max-width="1200px">
+  <div id="v-dialogjob">
+    <v-dialog v-model="dialog" max-width="1200px">
       <v-card>
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
@@ -241,86 +193,78 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-container>
+  </div>
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
-import JobItemComp from "@/viewComponents/JobItemComp.vue";
-import DriverCreateEdit from "@/views/DriverCreateEdit.vue";
+
 
 export default {
-  components:{
-    JobItemComp,
-    DriverCreateEdit
-  },
+    name: "job-create-edit-dialog",
+ 
   data: () => ({
+    //--start config
     service: "job",
+    service2: "jobtype",
+    service3: "jobstatus",
     objectName: "งาน",
-    jobNewHeaders: [
-      { text: "", sortable: false },
-      { value: "CustomerName", text: "ลูกค้า", sortable: true },
-      { value: "DeliveryDate", text: "วันส่งของ", sortable: true },
+    showDialog : false,
+    headers: [
+      { value: "JobId", text: "Id", sortable: true },
+      { value: "Customer", text: "ลูกค้า", sortable: true },
+      // { value: "DeliveryDate", text: "วันส่งของ", sortable: true },
       { value: "ContactPerson", text: "คนติดต่อ", sortable: false },
-      { text: "สินค้า", sortable: false },
+      // { text: "สินค้า", sortable: false },
       { value: "Remark", text: "หมายเหตุ", sortable: false },
       { value: "Address", text: "ที่อยู่", sortable: false },
-      { value: "Weigth", text: "น้ำหนัก", sortable: true },
-      { value: "CC", text: "ปริมาตร", sortable: true },
-      { value: "RouteNo", text: "RouteNo", sortable: true },
-      { value: "Zone", text: "Zone", sortable: true },
-      { value: "Distance", text: "ระยะทาง", sortable: true }
-    ],
-    driverHeaders: [
-      { text: "", sortable: false },
-      { value: "ImageUrl", text: "", sortable: false },
-      { value: "Name", text: "ชื่อพนักงาน", sortable: true },
-      { value: "StaffId", text: "รหัสพนักงาน", sortable: false },
-      { value: "UserName", text: "UserName", sortable: false }
+      { value: "Weight", text: "น้ำหนัก/ปริมาตร", sortable: false },
+      { value: "RouteNo", text: "RouteNo", sortable: false },
+      // { value: "Zone", text: "Zone", sortable: false },
+      { value: "Distance", text: "ระยะทาง", sortable: false }
     ],
     defaultValue: {
-      Customer: "",
-      ContactPerson: "",
-      Email: "",
-      LineId: "",
-      Address: "",
-      Lat: "",
-      Long: "",
-      Weight: "",
-      CC: "",
-      Distance: "",
-      RouteNo: "",
-      RouteName: "",
-      Remark: "",
+      Customer: "ss",
+      ContactPerson: "dd",
+      Email: "ss@sd.com",
+      LineId: "sd",
+      Address: "sd",
+      Lat: "23",
+      Long: "23",
+      Weight: "11",
+      CC: "55",
+      Distance: "2",
+      RouteNo: "2",
+      RouteName: "ddd",
+      Remark: "ddd",
       RequestedDate: "",
       CreatedBy: "",
       CompletedDate: "",
       CompletedBy: "",
-      NumTrip: "",
-      JobTypeId: "",
-      JobStatusId: ""
+      NumTrip: "2",
+      JobTypeObj: { Id: 1 },
+      JobStatusObj: { Id: 1 }
     },
-    
+    query: { $sort: { Id: -1 } },
     //--end config
-    Id:0,
-    response:[],
+    dateFormat: "dd-MM-yyyy",
+    JobStatus: [],
+    JobType: [],
+    JobStatusSelete: { Id: 1 },
+    JobTypesSelete: { Id: 1 },
     items: [],
     total: 0,
     loading: false,
     dialog: false,
     dialogDelete: false,
     formModel: {},
+    inDTO: {}, // data ที่มาจากการ get ของ server
+    outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
     mode: "" // มีได้ 2 แบบคือ create กับ edit
   }),
-  computed: {
-    formTitle() {
-      return this.mode === "create"
-        ? "เพิ่ม" + this.objectName
-        : "แก้ไข" + this.objectName;
-    }
-  },
+  computed: {},
   async mounted() {
     //init here
-    this.Id =  this.$route.params.id;
+
     this.renderUI();
 
     try {
@@ -338,35 +282,27 @@ export default {
       console.log(error);
       alert("ไม่สามารถติดต่อ server ได้");
     }
-    
   },
   methods: {
     async renderUI() {
-      try {
-        var res = await this.$store.dispatch(this.service + "/find", {
-          query: { Id: this.$route.params.id }
-        });
-        this.total = res.total;
-        this.items = res.data;
-      } catch (error) {
-        console.log(error);
-        alert("ไม่สามารถขอข้อมูลจาก server ได้");
-      }
-    },
-    async addItem() {
-      this.mode = "create";
-      this.formModel = Object.assign({}, this.defaultValue);
-      this.dialog = true;
-    },
+      this.mode = this.$route.params.mode;
 
-    async editItem(item) {
-      this.mode = "edit";
-      this.formModel = Object.assign({}, item);
-      this.dialog = true;
-    },
-    async deleteItem(item) {
-      this.formModel = Object.assign({}, item);
-      this.dialogDelete = true;
+      if (this.mode == "edit") {
+        try {
+          this.inDTO = await this.$store.dispatch(
+            this.service + "/get",
+            this.$route.params.Id
+          );
+          this.formModel = Object.assign({}, this.inDTO);
+          this.formModel.JobStatusObj = Object.assign({},{ Id: this.inDTO.JobStatusId });
+          this.formModel.JobTypeObj = Object.assign({},{ Id: this.inDTO.JobTypeId });
+          //หรืออีกวิธี กรณีผูก Relation ไว้แล้ว this.formModel.UserStatusObj = Object.assign({}, this.inDTO.role);
+        } catch (err) {
+          alert("ไม่สามารถต่อ server ได้");
+        }
+      } else {
+        this.formModel = Object.assign({}, this.defaultValue);
+      }
     },
 
     closeDialog() {
@@ -382,22 +318,14 @@ export default {
       this.loading = true;
       if (this.mode === "edit") {
         try {
-
-           let temp = Object.assign({}, this.formModel);
-          //alert(JSON.stringify(temp))
-          temp.JobStatusId = this.formModel.JobStatusObj.Id;
-          temp.JobTypeId = this.formModel.JobTypeObj.Id;
-
-          delete temp.JobStatusObj;
-          delete temp.JobTypeObj;
           await this.$store.dispatch(this.service + "/patch", [
-            temp.Id,
-            temp
+            this.formModel.Id,
+            this.formModel
           ]);
           this.renderUI();
         } catch (err) {
           console.log(err);
-          alert("ไม่สามารถแก้ไขข้อมูลได้" + err);
+          alert("ไม่สามารถแก้ไขข้อมูลได้");
         } finally {
           this.loading = false;
         }
@@ -405,8 +333,26 @@ export default {
         //Add Data
         try {
           //alert(JSON.stringify(this.formModel))
-          this.$store.dispatch(this.service + "/create", this.formModel);
-          this.renderUI();
+          let temp = Object.assign({}, this.formModel);
+          //alert(JSON.stringify(temp))
+          temp.JobStatusId = this.formModel.JobStatusObj.Id;
+          temp.JobTypeId = this.formModel.JobTypeObj.Id;
+
+          delete temp.JobStatusObj;
+          delete temp.JobTypeObj;
+          this.$store.dispatch(this.service + "/create", temp);
+          ////// go to next page ///////
+          var res = await this.$store.dispatch(this.service + "/find", {
+            query: {
+              $limit: 1,
+              $sort: {
+                Id: -1
+              }
+            }
+          });
+          this.$router.push("/jobDetail/" + res.data[0].Id);
+
+          //this.renderUI();
         } catch (err) {
           console.log(err);
           alert("ไม่สามารถเพิ่มข้อมูลได้" + err);
@@ -428,8 +374,22 @@ export default {
         this.loading = false;
         this.dialogDelete = false;
       }
+    },
+    async addItem() {
+      this.mode = "create";
+      this.formModel = Object.assign({}, this.defaultValue);
+      this.dialog = true;
+    },
+
+    async editItem(item) {
+      this.mode = "edit";
+      this.formModel = Object.assign({}, item);
+      this.dialog = true;
+    },
+    async deleteItem(item) {
+      this.formModel = Object.assign({}, item);
+      this.dialogDelete = true;
     }
   }
 };
 </script> 
-

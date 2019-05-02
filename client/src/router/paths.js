@@ -66,7 +66,7 @@ export default [
     view: 'Driver'
   },
   {
-    path: '/drivercreateedit',
+    path: '/drivercreateedit/:mode/:Id',
     name: 'DriverCreateEdit',
     view: 'DriverCreateEdit'
   },
@@ -116,6 +116,7 @@ export default [
     name: 'JobStatus',
     view: 'JobStatus'  
   },
+  
   {
     path: '/่trip',
     name: 'Trip',

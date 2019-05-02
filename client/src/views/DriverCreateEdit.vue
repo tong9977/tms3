@@ -1,5 +1,9 @@
 <template>
+  
   <v-container fill-height fluid grid-list-xl>
+
+    <h1>mode : {{mode}}</h1>
+    <h1>Id : {{Id}}</h1>
     <v-layout justify-center wrap>
       <v-flex md12>
         <material-card
@@ -107,7 +111,9 @@
       </v-flex>
     </v-layout>
   </v-container>
+
 </template>
+
 <script>
 import { mapMutations, mapState, mapGetters } from "vuex";
 import store from "@/store";
@@ -131,22 +137,23 @@ export default {
       UserStatusObj: { Id: 1 }
     },
     //--end config
-
+    
     formModel: {},
     userStatusItems: [], // data ที่มาจากการ find ของ server
     inDTO: {}, // data ที่มาจากการ get ของ server
     outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
-    mode: "", // มีได้ 2 แบบคือ create กับ edit
+   
 
-    loading: false
+   loading: false
   }),
+  props: ["mode","Id"],
   computed: {},
   async mounted() {
     this.renderUI();
   },
   methods: {
     async renderUI() {
-      this.mode = this.$route.params.mode;
+      
       try {
         var role = await this.$store.dispatch(this.service2 + "/find", {});
         this.userStatusItems = role.data;
@@ -158,7 +165,7 @@ export default {
         try {
           this.inDTO = await this.$store.dispatch(
             this.service + "/get",
-            this.$route.params.Id
+            this.Id
           );
           this.formModel = Object.assign({}, this.inDTO);
           this.formModel.UserStatusObj = Object.assign({},{ Id: this.inDTO.RoleId }
@@ -196,7 +203,7 @@ export default {
           this.outDTO = Object.assign({}, this.formModel);
 
           await store.dispatch(this.service + "/patch", [
-            this.$route.params.Id,
+            this.Id,
             this.outDTO
           ]);
 
