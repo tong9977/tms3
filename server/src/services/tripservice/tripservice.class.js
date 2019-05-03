@@ -1,14 +1,48 @@
 /* eslint-disable no-unused-vars */
 const dateFns = require('date-fns');
+const collect = require('collect.js');
 
 class Service {
-  constructor (options) {
+  constructor(options) {
     this.options = options || {};
   }
 
-  async find (params) {
-    let date = params.query.date;
-    let vehicleIds = params.query.vehicleId; //[]
+  async find(params) {
+    // const collection = collect([1, 2, 3, 4, 5]);
+
+    // const diff = collection.diff([1, 2, 3, 9]);
+    // let result = diff.all();
+
+    let x = [
+      {
+        product: 'Chair',
+        manufacturer: 'IKEA',
+      },
+      {
+        product: 'Desk',
+        manufacturer: 'IKEA',
+      },
+      {
+        product: 'Chair',
+        manufacturer: 'Herman Miller',
+      }
+    ]
+
+    const collection = collect(x).sortBy('product').all();
+
+
+    return collection;
+  }
+
+  async get(id, params) {
+    return {
+      id, text: `A new message with ID: ${id}!`
+    };
+  }
+
+  async create(data, params) {
+    let date = data.date;
+    let vehicleIds = data.vehicleId; //[]
 
     let start = dateFns.format(date, "YYYY-MM-DDT00:00:00");
     let end = dateFns.format(date, "YYYY-MM-DDT23:59:59");
@@ -28,50 +62,36 @@ class Service {
     const trip = require('../../models/trips.model')();
     const vehicle = require('../../models/vehicle.model')();
     //[1,2,3,4,5]
-    let rawVehicleToday = await trip.query().where('TripDate','>=', start).where('TripDate','<=', end).select('VehicleId');
-    
+    let rawVehicleToday = await trip.query().where('TripDate', '>=', start).where('TripDate', '<=', end).select('VehicleId');
+
     let result = [];
 
-    if(vehicleIds.length == 0){
+    if (vehicleIds.length == 0) {
       //[1,2,3,4,5,6,7,8]
-    let rawVehicleActive = await vehicle.query().where('Active', true).select('Id');
+      let rawVehicleActive = await vehicle.query().where('Active', true).select('Id');
       //result = [1,2,3,4,5] in  [1,2,3,4,5,6,7,8]
-    }else{
+    } else {
       //result = vehicleIds [1,9,10] in [1,2,3,4,5] = [9,10]
 
     }
 
     result.forEach(async v => {
-        let tripCodeNew = today + '-' + v.VehicleId;
-        await trip.query().insert({ TripCode: tripCodeNew, TripDate: new Date(), Complete: false, Approve: false, ApprovedBy: "", VehicleId: v.VehicleId }); 
+      let tripCodeNew = today + '-' + v.VehicleId;
+      await trip.query().insert({ TripCode: tripCodeNew, TripDate: new Date(), Complete: false, Approve: false, ApprovedBy: "", VehicleId: v.VehicleId });
     });
 
-    return rawTrip;
+    return vehicleIds;
   }
 
-  async get (id, params) {
-    return {
-      id, text: `A new message with ID: ${id}!`
-    };
-  }
-
-  async create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }
-
+  async update(id, data, params) {
     return data;
   }
 
-  async update (id, data, params) {
+  async patch(id, data, params) {
     return data;
   }
 
-  async patch (id, data, params) {
-    return data;
-  }
-
-  async remove (id, params) {
+  async remove(id, params) {
     return { id };
   }
 }
