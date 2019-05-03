@@ -8,6 +8,6 @@
   },
   "mssql": {
     "client": "mssql",
-    "connection": "mssql://tms:Sinetong9977@27.254.174.191/tms"
+    "connection": "mssql://tms2:Sinetong9977@27.254.174.191/tms2"
   }
 }
