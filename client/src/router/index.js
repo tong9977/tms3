@@ -22,7 +22,7 @@ function route(path, view, name) {
     component: (resovle) => {
       import(`@/views/${view}.vue`).then(resovle)
     },
-    props: { default: true }
+    props:  true
   }
 }
 

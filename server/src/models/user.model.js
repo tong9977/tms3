@@ -27,11 +27,11 @@ class user extends Model {
 
   
   $beforeInsert() {
-    this.createdAt = this.updatedAt = new Date().toISOString();
+    
   }
 
   $beforeUpdate() {
-    this.updatedAt = new Date().toISOString();
+    
   }
 
   static get relationMappings() {

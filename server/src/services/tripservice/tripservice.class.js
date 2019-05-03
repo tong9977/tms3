@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+const dateFns = require('date-fns');
+
 class Service {
   constructor (options) {
     this.options = options || {};
@@ -6,7 +8,10 @@ class Service {
 
   async find (params) {
     let date = params.query.date;
-    let vehicleId = params.query.vehicleId;
+    let vehicleIds = params.query.vehicleId; //[]
+
+    let start = dateFns.format(date, "YYYY-MM-DDT00:00:00");
+    let end = dateFns.format(date, "YYYY-MM-DDT23:59:59");
 
     var today = new Date();
     var dd = today.getDate();
@@ -22,24 +27,24 @@ class Service {
 
     const trip = require('../../models/trips.model')();
     const vehicle = require('../../models/vehicle.model')();
+    //[1,2,3,4,5]
+    let rawVehicleToday = await trip.query().where('TripDate','>=', start).where('TripDate','<=', end).select('VehicleId');
+    
+    let result = [];
 
-    let rawTrip = await trip.query();
-    let rawvehicle = await vehicle.query();
+    if(vehicleIds.length == 0){
+      //[1,2,3,4,5,6,7,8]
+    let rawVehicleActive = await vehicle.query().where('Active', true).select('Id');
+      //result = [1,2,3,4,5] in  [1,2,3,4,5,6,7,8]
+    }else{
+      //result = vehicleIds [1,9,10] in [1,2,3,4,5] = [9,10]
 
-    if (vehicleId != null) {
-      rawvehicle.forEach(async v => {
-        if (rawTrip.length > 0) {
-          rawTrip.forEach(async t => {
-            let tripCode = today + '-' + v.VehicleId;
-            if (t.TripCode, '!=', tripCode) {
-              await trip.query().insert({ TripCode: tripCode, TripDate: new Date(), Complete: false, Approve: false, ApprovedBy: "", VehicleId: v.VehicleId });
-            }
-          });
-        }else{
-          await trip.query().insert({ TripCode: tripCode, TripDate: new Date(), Complete: false, Approve: false, ApprovedBy: "", VehicleId: v.VehicleId });
-        }
-      });
     }
+
+    result.forEach(async v => {
+        let tripCodeNew = today + '-' + v.VehicleId;
+        await trip.query().insert({ TripCode: tripCodeNew, TripDate: new Date(), Complete: false, Approve: false, ApprovedBy: "", VehicleId: v.VehicleId }); 
+    });
 
     return rawTrip;
   }

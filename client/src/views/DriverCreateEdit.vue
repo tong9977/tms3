@@ -1,9 +1,5 @@
 <template>
-  
   <v-container fill-height fluid grid-list-xl>
-
-    <h1>mode : {{mode}}</h1>
-    <h1>Id : {{Id}}</h1>
     <v-layout justify-center wrap>
       <v-flex md12>
         <material-card
@@ -111,17 +107,12 @@
       </v-flex>
     </v-layout>
   </v-container>
-
 </template>
 
 <script>
-import { mapMutations, mapState, mapGetters } from "vuex";
-import store from "@/store";
-
 export default {
   data: () => ({
     service: "user",
-    service2: "role",
     objectName: "พนักงาน",
     query: { $sort: { Id: -1 } },
     defaultValue: {
@@ -139,12 +130,8 @@ export default {
     //--end config
     
     formModel: {},
-    userStatusItems: [], // data ที่มาจากการ find ของ server
-    inDTO: {}, // data ที่มาจากการ get ของ server
-    outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
-   
-
-   loading: false
+    userStatusItems: [], // data ที่มาจากการ find ของ server   
+    loading: false
   }),
   props: ["mode","Id"],
   computed: {},
@@ -155,26 +142,30 @@ export default {
     async renderUI() {
       
       try {
-        var role = await this.$store.dispatch(this.service2 + "/find", {});
+        var role = await this.$store.dispatch("role/find", {});
         this.userStatusItems = role.data;
       } catch (err) {
-        alert("ไม่สามารถต่อ server ได้");
+        console.log(err);
+        alert("ไม่สามารถขอข้อมูลได้");
       }
-
+ 
       if (this.mode == "edit") {
+         //edit
         try {
-          this.inDTO = await this.$store.dispatch(
+          let inDTO = await this.$store.dispatch(
             this.service + "/get",
             this.Id
           );
-          this.formModel = Object.assign({}, this.inDTO);
-          this.formModel.UserStatusObj = Object.assign({},{ Id: this.inDTO.RoleId }
+          this.formModel = Object.assign({},  inDTO);
+          this.formModel.UserStatusObj = Object.assign({},{ Id: inDTO.RoleId }
           );
-          //หรืออีกวิธี กรณีผูก Relation ไว้แล้ว this.formModel.UserStatusObj = Object.assign({}, this.inDTO.role);
         } catch (err) {
+          console.log(err);
           alert("ไม่สามารถต่อ server ได้");
         }
-      } else {
+      } 
+      if(this.mode == "create") {
+        //create
         this.formModel = Object.assign({}, this.defaultValue);
       }
     },
@@ -184,61 +175,44 @@ export default {
         alert("กรุณากรอกข้อมูลให้สมบรูณ์");
         return;
       }
-      this.loading = true
+      this.loading = true;
       if (this.mode == "edit") {
         try {
           //Edit Data
-          const valid = await this.$validator.validateAll();
-          if (!valid) {
-            alert("กรุณากรอกข้อมูลให้สมบรูณ์");
-            return;
-          }
+          this.formModel.RoleId = this.formModel.UserStatusObj.Id;
+          let outDTO = Object.assign({}, this.formModel);
+          delete outDTO.UserStatusObj;
+          delete outDTO.role;
 
-          this.loading = true;
-
-          let temp = this.formModel.UserStatusObj.Id;
-          this.formModel.RoleId = temp;
-          delete this.formModel.UserStatusObj;
-          delete this.formModel.role;
-          this.outDTO = Object.assign({}, this.formModel);
-
-          await store.dispatch(this.service + "/patch", [
+          await this.$store.dispatch(this.service + "/patch", [
             this.Id,
-            this.outDTO
+            outDTO
           ]);
-
-          store.dispatch(this.service + "/find");
 
           this.$router.push({
             name: "Driver"
           });
         } catch (err) {
-          alert("ไม่สามารถต่อ server ได้");
+          console.log(err);
+          alert("ไม่สามารถแก้ไขข้อมูลได้");
         } finally {
           this.loading = false;
         }
-      } else {
+      } 
+      if(this.mode == "create") {
         try {
           //Add Data
-          const valid = await this.$validator.validateAll();
-          if (!valid) {
-            alert("กรุณากรอกข้อมูลให้สมบรูณ์");
-            return;
-          }
-          this.loading = true;
+          let outDTO = Object.assign({}, this.formModel);
+          outDTO.RoleId = this.formModel.UserStatusObj.Id;
+          delete outDTO.UserStatusObj;
 
-          let temp = this.formModel.UserStatusObj.Id;
-          this.formModel.RoleId = temp;
-          delete this.formModel.UserStatusObj;
-          this.outDTO = Object.assign({}, this.formModel);
-
-          store.dispatch(this.service + "/create", this.outDTO);
+          this.$store.dispatch(this.service + "/create", outDTO);
           this.$router.push({
             name: "Driver"
           });
         } catch (err) {
           console.error(err);
-          alert("ไม่สามารถต่อ server ได้");
+          alert("ไม่สามารถเพิ่มข้อมูลได้");
         } finally {
           this.loading = false;
         }
