@@ -2,7 +2,14 @@
   <v-container fluid grid-list-xl>
     <v-toolbar dense>
       <v-toolbar-title>
-        <ejs-datepicker style="padding-bottom:5px;" format="dd-MM-yyyy"></ejs-datepicker>
+        เลือกวันที่ :
+         <ejs-datepicker
+              style="padding-top:20px;"
+              placeholer="วันเริ่ม"
+              v-model="tripDate"
+              format="dd-MM-yyyy"
+            ></ejs-datepicker>
+       
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="primary">
@@ -59,3 +66,26 @@
     </v-layout>
   </v-container>
 </template>
+
+<script>
+import {
+  DatePickerComponent,
+  DatePickerPlugin
+} from "@syncfusion/ej2-vue-calendars";
+
+export default {
+  components: {},
+
+  data() {
+    return {
+      tripDate: new Date()
+    };
+  },
+
+  provide: {},
+
+  computed: {},
+  methods: {},
+  mounted: function() {}
+};
+</script>
