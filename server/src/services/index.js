@@ -8,6 +8,8 @@ const jobstatus = require('./jobstatus/jobstatus.service.js');
 const jobitem = require('./jobitem/jobitem.service.js');
 const trips = require('./trips/trips.service.js');
 const tripservice = require('./tripservice/tripservice.service.js');
+const usertrip = require('./usertrip/usertrip.service.js');
+const usertripservice = require('./usertripservice/usertripservice.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);
@@ -20,4 +22,6 @@ module.exports = function (app) {
   app.configure(jobitem);
   app.configure(trips);
   app.configure(tripservice);
+  app.configure(usertrip);
+  app.configure(usertripservice);
 };
