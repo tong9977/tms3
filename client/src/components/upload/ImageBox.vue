@@ -52,7 +52,9 @@ export default {
         this.uploading = true;
         try {
           let res = await upload(this.image);
-          this.$emit('success',res.data[0]);
+          let uploadInfo = res.data[0];
+          uploadInfo.url = 'http://localhost:3030/uploads/' + res.data[0].filename;
+          this.$emit('success',uploadInfo);
         } catch (error) {
           console.log(error);
           this.$emit('error',error);
@@ -80,7 +82,8 @@ event 2 ตัว
         "destination": "public/uploads",
         "filename": "1557043375043-6505.png",
         "path": "public\\uploads\\1557043375043-6505.png",
-        "size": 2096883
+        "size": 2096883,
+        "url":"http://localhost:3030/uploads/1557043375043-6505.png"
     }
 
 - error(err)
