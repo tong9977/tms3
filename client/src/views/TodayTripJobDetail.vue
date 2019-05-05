@@ -45,9 +45,26 @@
                 >
               </v-flex>
               <v-flex xs6>
-                <v-avatar size="100%" color="grey lighten-4" tile>
-                  <v-icon size="80">mdi-camera</v-icon>
-                </v-avatar>
+                <picture-input
+                  ref="pictureInput"
+                  @change="onChange"
+                  @remove="onRemoved"
+                  :removable="true"
+                  width="600"
+                  height="600"
+                  margin="16"
+                  accept="image/jpeg, image/png"
+                  size="10"
+                  buttonClass="caption px-2 grey--text"
+                  removeButtonClass="caption px-2 grey--text"
+                  :custom-strings="{upload: '<h1>Bummer!</h1>',drag: 'Drag a photo here'}"
+                ></picture-input>
+                <div class="text-xs-center">
+                  <v-btn color="primary" v-if="!!image" :loading="uploading" @click="attemptUpload">
+                    Upload
+                    <v-icon right dark>mdi-upload</v-icon>
+                  </v-btn>
+                </div>
               </v-flex>
             </v-layout>
           </v-container>
@@ -66,7 +83,7 @@
             ></v-textarea>
           </v-flex>
           <v-flex xs12>
-            <v-btn block to="/todaytrip" color="primary" dark>ปิดงาน</v-btn>
+            <v-btn color="primary" block to="/todaytrip" dark>ปิดงาน</v-btn>
           </v-flex>
         </v-card>
       </v-flex>
@@ -75,37 +92,50 @@
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
+import PictureInput from "vue-picture-input";
+import upload from "../utils/upload";
 
 export default {
   data: () => ({
-    jobNewHeaders: [
-      { text: "", sortable: false },
-      { value: "CustomerName", text: "ลูกค้า", sortable: true },
-      { value: "DeliveryDate", text: "วันส่งของ", sortable: true },
-      { value: "ContactPerson", text: "คนติดต่อ", sortable: false },
-      { text: "สินค้า", sortable: false },
-      { value: "Remark", text: "หมายเหตุ", sortable: false },
-      { value: "Address", text: "ที่อยู่", sortable: false },
-      { value: "Weigth", text: "น้ำหนัก", sortable: true },
-      { value: "CC", text: "ปริมาตร", sortable: true },
-      { value: "RouteNo", text: "RouteNo", sortable: true },
-      { value: "Zone", text: "Zone", sortable: true },
-      { value: "Distance", text: "ระยะทาง", sortable: true }
-    ],
-    driverHeaders: [
-      { text: "", sortable: false },
-      { value: "ImageUrl", text: "", sortable: false },
-      { value: "Name", text: "ชื่อพนักงาน", sortable: true },
-      { value: "StaffId", text: "รหัสพนักงาน", sortable: false },
-      { value: "UserName", text: "UserName", sortable: false }
-    ],
+    image: "",
+    uploading: false,
     jobNewDialog: false,
     driverDialog: false
   }),
+  components: {
+    PictureInput
+  },
   computed: {
     ...mapState("tms", ["vehicles", "jobnews", "drivers"]),
     job() {
       return this.jobnews[0];
+    }
+  },
+  methods: {
+    onChange() {
+      console.log("New picture loaded");
+      if (this.$refs.pictureInput.file) {
+        this.image = this.$refs.pictureInput.file;
+      } else {
+        console.log("Old browser. No support for Filereader API");
+      }
+    },
+    onRemoved() {
+      this.image = "";
+    },
+    async attemptUpload() {
+      if (this.image) {
+        this.uploading = true;
+        try {
+          let res = await upload(this.image);
+          console.log(res);
+        } catch (error) {
+          console.log(error);
+          alert("ไม่สามารถ upload ได้");
+        } finally {
+          this.uploading = false;
+        }
+      }
     }
   }
 };
