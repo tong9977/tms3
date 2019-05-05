@@ -130,7 +130,7 @@ export default {
     //--end config
     
     formModel: {},
-    userStatusItems: [], // data ที่มาจากการ find ของ server   
+    userStatusItems: [], 
     loading: false
   }),
   props: ["mode","Id"],
@@ -206,7 +206,7 @@ export default {
           outDTO.RoleId = this.formModel.UserStatusObj.Id;
           delete outDTO.UserStatusObj;
 
-          this.$store.dispatch(this.service + "/create", outDTO);
+          await this.$store.dispatch(this.service + "/create", outDTO);
           this.$router.push({
             name: "Driver"
           });
@@ -218,9 +218,7 @@ export default {
         }
       }
     },
-    async createDriverNew() {},
 
-    async onUpdate() {}
   }
 };
 </script>

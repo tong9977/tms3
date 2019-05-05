@@ -92,6 +92,18 @@ const menuAdmin = [
     icon: "mdi-account",
     text: "Trip"
   }
+  ,
+  {
+    to: "/่product",
+    icon: "mdi-cart",
+    text: "่Product"
+  }
+  ,
+  {
+    to: "/่unit",
+    icon: "mdi-apps",
+    text: "่Unit"
+  }
   
 ];
 

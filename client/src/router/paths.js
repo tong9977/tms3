@@ -116,10 +116,19 @@ export default [
     name: 'JobStatus',
     view: 'JobStatus'  
   },
-  
   {
     path: '/่trip',
     name: 'Trip',
     view: 'Trip'
-  }    
+  },
+  {
+    path: '/่product',
+    name: 'Product',
+    view: 'Product'
+  },
+  {
+    path: '/่unit',
+    name: 'Unit',
+    view: 'Unit'
+  }  
 ]
