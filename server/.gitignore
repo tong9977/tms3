@@ -111,4 +111,4 @@ $RECYCLE.BIN/
 lib/
 data/
 
-public/uploads
+public/uploads/*
