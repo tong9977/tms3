@@ -61,26 +61,37 @@ class Service {
 
     const trip = require('../../models/trips.model')();
     const vehicle = require('../../models/vehicle.model')();
-    //[1,2,3,4,5]
-    let rawVehicleToday = await trip.query().where('TripDate', '>=', start).where('TripDate', '<=', end).select('VehicleId');
 
+    let rawVehicleToday = await trip.query().where('TripDate', '>=', start).where('TripDate', '<=', end).select('VehicleId');
+    let rawVehicleTodayArray = [];
+    rawVehicleToday.forEach(v => {
+      rawVehicleTodayArray.push(v.VehicleId);
+    });
     let result = [];
 
     if (vehicleIds.length == 0) {
-      //[1,2,3,4,5,6,7,8]
-      let rawVehicleActive = await vehicle.query().where('Active', true).select('Id');
-      //result = [1,2,3,4,5] in  [1,2,3,4,5,6,7,8]
+      let rawVehicleActive = await vehicle.query().where('Active', true).select('VehicleId');
+      let rawVehicleActiveArray = [];
+      rawVehicleActive.forEach(v => {
+        rawVehicleActiveArray.push(v.VehicleId);
+      });
+      
+      const collection = collect(rawVehicleActiveArray);
+      const diff = collection.diff(rawVehicleTodayArray);
+      result = diff.all();
     } else {
-      //result = vehicleIds [1,9,10] in [1,2,3,4,5] = [9,10]
+      const collection = collect(vehicleIds);
 
+      const diff = collection.diff(rawVehicleTodayArray);
+      result = diff.all();
     }
 
-    result.forEach(async v => {
-      let tripCodeNew = today + '-' + v.VehicleId;
-      await trip.query().insert({ TripCode: tripCodeNew, TripDate: new Date(), Complete: false, Approve: false, ApprovedBy: "", VehicleId: v.VehicleId });
+    result.forEach(async vehicleId => {
+      let tripCodeNew = today + '-' + vehicleId;
+      await trip.query().insert({ TripCode: tripCodeNew, TripDate: start, Complete: false, Approve: false, ApprovedBy: "", VehicleId: vehicleId });
     });
 
-    return vehicleIds;
+    return result;
   }
 
   async update(id, data, params) {

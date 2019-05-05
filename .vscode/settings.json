@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "askForPassword": false,
+            "connectionTimeout": 30,
+            "database": "tms2",
+            "dialect": "MSSQL",
+            "domain": null,
+            "name": "27.254.174.191_tms2",
+            "password": "Sinetong9977",
+            "port": 1433,
+            "server": "27.254.174.191",
+            "username": "tms2"
+        }
+    ]
+}

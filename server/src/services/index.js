@@ -10,6 +10,8 @@ const trips = require('./trips/trips.service.js');
 const tripservice = require('./tripservice/tripservice.service.js');
 const unit = require('./unit/unit.service.js');
 const product = require('./product/product.service.js');
+const usertrip = require('./usertrip/usertrip.service.js');
+const usertripservice = require('./usertripservice/usertripservice.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);

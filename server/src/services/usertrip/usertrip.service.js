@@ -1,7 +1,7 @@
-// Initializes the `trips` service on path `/trips`
+// Initializes the `usertrip` service on path `/usertrip`
 const createService = require('feathers-objection');
-const createModel = require('../../models/trips.model');
-const hooks = require('./trips.hooks');
+const createModel = require('../../models/usertrip.model');
+const hooks = require('./usertrip.hooks');
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -10,16 +10,14 @@ module.exports = function (app) {
   const options = {
     model: Model,
     paginate,
-    id:'Id',
-    whitelist: ['$eager', '$joinRelation'],
-    allowedEager: '[vehicle]'
+    id:"UserId",
   };
 
   // Initialize our service with any options it requires
-  app.use('/trips', createService(options));
+  app.use('/usertrip', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('trips');
+  const service = app.service('usertrip');
 
   service.hooks(hooks);
 };

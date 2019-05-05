@@ -45,9 +45,7 @@
                 >
               </v-flex>
               <v-flex xs6>
-                <v-avatar size="100%" color="grey lighten-4" tile>
-                  <v-icon size="80">mdi-camera</v-icon>
-                </v-avatar>
+                <upload-image-box @success="uploadDone"></upload-image-box>
               </v-flex>
             </v-layout>
           </v-container>
@@ -66,7 +64,7 @@
             ></v-textarea>
           </v-flex>
           <v-flex xs12>
-            <v-btn block to="/todaytrip" color="primary" dark>ปิดงาน</v-btn>
+            <v-btn color="primary" block to="/todaytrip" dark>ปิดงาน</v-btn>
           </v-flex>
         </v-card>
       </v-flex>
@@ -75,38 +73,25 @@
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
+import PictureInput from "vue-picture-input";
+import upload from "../utils/upload";
 
 export default {
   data: () => ({
-    jobNewHeaders: [
-      { text: "", sortable: false },
-      { value: "CustomerName", text: "ลูกค้า", sortable: true },
-      { value: "DeliveryDate", text: "วันส่งของ", sortable: true },
-      { value: "ContactPerson", text: "คนติดต่อ", sortable: false },
-      { text: "สินค้า", sortable: false },
-      { value: "Remark", text: "หมายเหตุ", sortable: false },
-      { value: "Address", text: "ที่อยู่", sortable: false },
-      { value: "Weigth", text: "น้ำหนัก", sortable: true },
-      { value: "CC", text: "ปริมาตร", sortable: true },
-      { value: "RouteNo", text: "RouteNo", sortable: true },
-      { value: "Zone", text: "Zone", sortable: true },
-      { value: "Distance", text: "ระยะทาง", sortable: true }
-    ],
-    driverHeaders: [
-      { text: "", sortable: false },
-      { value: "ImageUrl", text: "", sortable: false },
-      { value: "Name", text: "ชื่อพนักงาน", sortable: true },
-      { value: "StaffId", text: "รหัสพนักงาน", sortable: false },
-      { value: "UserName", text: "UserName", sortable: false }
-    ],
-    jobNewDialog: false,
-    driverDialog: false
+    image: "",
+  
   }),
+ 
   computed: {
     ...mapState("tms", ["vehicles", "jobnews", "drivers"]),
     job() {
       return this.jobnews[0];
     }
+  },
+  methods: {
+   uploadDone(uploadInfo){
+     console.log(uploadInfo);
+   }
   }
 };
 </script>

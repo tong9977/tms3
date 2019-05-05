@@ -19,6 +19,21 @@ class trips extends Model {
   $beforeUpdate() {
     
   }
+
+  static get relationMappings() {
+    const vehicle = require('./vehicle.model')();
+
+    return {
+      vehicle: {
+        relation: Model.HasManyRelation,
+        modelClass: vehicle,
+        join: {
+          from: 'Trips.VehicleId',
+          to: 'Vehicles.VehicleId'
+        }
+      },
+    }
+  }
 }
 
 module.exports = function (app) {
