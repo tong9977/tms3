@@ -112,3 +112,5 @@ lib/
 data/
 
 public/uploads/*
+# เอา test.png ไว้ 
+!public/uploads/test.png
