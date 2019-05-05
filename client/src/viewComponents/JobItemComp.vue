@@ -22,6 +22,11 @@
               <td>{{ item.Quantity }}</td>
               <td>{{ item.Unit }}</td>
               <td>
+                <v-icon v-if="item.Complete">mdi-check</v-icon>
+                <v-icon v-else>mdi-close</v-icon>
+                {{item.CompletedDate}}
+              </td>
+              <td>
                 <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
                   <v-icon>mdi-pencil</v-icon>แก้ไข
                 </v-btn>
@@ -72,6 +77,10 @@
                         label="หน่วย"
                       ></v-combobox>
                     </v-flex>
+
+                    <v-flex xs12 md6>
+                  <v-checkbox v-model="formModel.Complete"  label="เสร็จหรือไม่"></v-checkbox>
+                </v-flex>
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -123,6 +132,7 @@ export default {
       { value: "ProductName", text: "ชื่อสินค้า", sortable: true },
       { value: "Quantity", text: "จำนวน", sortable: true },
       { value: "Unit", text: "หน่วย", sortable: true },
+      { value: "Complete", text: "เสร็จแล้ว", sortable: true },
       { text: "", sortable: false }
     ],
     defaultValue: {

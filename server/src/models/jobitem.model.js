@@ -13,11 +13,22 @@ class jobitem extends Model {
   }
 
   $beforeInsert() {
-   // this.createdAt = this.updatedAt = new Date().toISOString();
+    
+    if(this.Complete === true){
+      this.CompletedDate = new Date().toISOString();
+     }else{
+      this.CompletedDate = null;
+     }
   }
 
   $beforeUpdate() {
-   // this.updatedAt = new Date().toISOString();
+    
+   if(this.Complete === true){
+    this.CompletedDate = new Date().toISOString();
+   }else{
+    this.CompletedDate = null;
+   }
+
   }
 }
 

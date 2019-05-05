@@ -5,20 +5,25 @@
         <v-flex xs12>
           <h5 class="headline">ลูกค้า : {{formModel.Customer}}</h5>
 
-          <v-spacer></v-spacer>
-
+         
+            <div>
+           <v-btn color="blue" class="font-weight-light" >
+            ย้อนกลับ
+          </v-btn>
+            
            <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
             <v-icon>mdi-pencil</v-icon>แก้ไข
           </v-btn>
+            </div>
+
         </v-flex>
         <!-- mat 1 -->
         <v-flex xs12>
-          <v-card>
-            <v-card-title>
+         
               <v-layout wrap row>
-                <v-flex md12>
-                  <v-text class="font-weight-regular" style="font-size: 14pt ">ข้อมูลงาน</v-text>
-                </v-flex>
+                
+                 
+               {{jobtype}}
                 <v-flex md6>
                   <material-card color="green" title="รายละเอียดลูกค้า">
                     <!--  <v-text class="font-weight-regular" style="font-size: 14pt ">รายละเอียดลูกค้า</v-text> -->
@@ -47,6 +52,19 @@
                       <v-icon>mdi-wechat</v-icon>
                       LineId : {{formModel.LineId}}
                       <br>
+                    </v-flex>
+                  </material-card>
+
+                   <material-card color="green" title="รายละเอียดงาน">
+                    <!--  <v-text class="font-weight-regular" style="font-size: 14pt ">รายละเอียดลูกค้า</v-text> -->
+
+                     <v-flex>
+                      <v-icon>mdi-file</v-icon>
+                      ประเภทงาน : {{JobsObj[0].jobtype.Name}}
+                    </v-flex>
+                    <v-flex>
+                      <v-icon>mdi-briefcase-check</v-icon>
+                      สถานะงาน : {{JobsObj[0].jobstatus.Name}}
                     </v-flex>
                   </material-card>
                 </v-flex>
@@ -93,22 +111,14 @@
                       จำนวนในการส่ง : {{formModel.NumTrip}} รอบ
                     </v-flex>
                     <v-flex>
-                      <v-icon>mdi-file</v-icon>
-                      ประเภทงาน : {{formModel.JobTypeId}}
-                    </v-flex>
-                    <v-flex>
-                      <v-icon>mdi-briefcase-check</v-icon>
-                      สถานะงาน : {{formModel.JobStatusId}}
-                    </v-flex>
-                    <v-flex>
                       <v-icon>mdi-marker</v-icon>
                       หมายเหตุ : {{formModel.Remark}}
                     </v-flex>
                   </material-card>
                 </v-flex>
               </v-layout>
-            </v-card-title>
-            <v-card-text class="text-xs-right">
+            
+              <div class="text-xs-right">
               <v-btn
                 color="primary"
                 flat
@@ -117,14 +127,12 @@
               >
                 <v-icon>mdi-map-marker</v-icon>google map
               </v-btn>
-            </v-card-text>
-          </v-card>
+              </div>
+         
         </v-flex>
+      
+        <JobItemComp :JobId="Id"/>
         
-       
-        <v-flex md12>
-          <JobItemComp :JobId="Id"/>
-        </v-flex>
       </template>
     </v-layout>
 
@@ -149,7 +157,8 @@ export default {
     service: "job",
     loading: false,
     dialog: false,
-    formModel: {}
+    formModel: {},
+    JobsObj: [],
     
   }),
   props:['Id'],
@@ -167,6 +176,20 @@ export default {
       } catch (error) {
         console.log(error);
         alert("ไม่สามารถขอข้อมูลจาก server ได้");
+      }
+
+
+
+      try {
+        const { Job } = this.$FeathersVuex;
+
+        Job.find({ query: {Id : this.Id , $eager: "[jobstatus,jobtype]" } }).then(res => {
+          this.JobsObj = res.data;
+        });
+       
+      
+      } catch (err) {
+        alert("ไม่สามารถต่อ server ได้");
       }
     },
 

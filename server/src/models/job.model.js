@@ -29,7 +29,7 @@ class job extends Model {
         modelClass: jobtype,
         join: {
           from: 'Jobs.JobTypeId',
-          to: 'jobtype.Id'
+          to: 'JobType.Id'
         }
       },
       jobstatus: {
@@ -37,7 +37,7 @@ class job extends Model {
         modelClass: jobstatus,
         join: {
           from: 'Jobs.JobStatusId',
-          to: 'jobstatus.Id'
+          to: 'JobStatus.Id'
         }
       }
     }

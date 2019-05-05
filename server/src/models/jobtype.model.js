@@ -5,7 +5,7 @@ const { Model } = require('objection');
 class jobtype extends Model {
 
   static get tableName() {
-    return 'jobtype';
+    return 'JobType';
   }
 
   static get idColumn() {
