@@ -69,7 +69,7 @@ class Service {
     });
     let result = [];
 
-    if (vehicleIds == null) {
+    if (vehicleIds.length == 0) {
       let rawVehicleActive = await vehicle.query().where('Active', true).select('VehicleId');
       let rawVehicleActiveArray = [];
       rawVehicleActive.forEach(v => {
@@ -88,7 +88,7 @@ class Service {
 
     result.forEach(async vehicleId => {
       let tripCodeNew = today + '-' + vehicleId;
-      await trip.query().insert({ TripCode: tripCodeNew, TripDate: new Date(), Complete: false, Approve: false, ApprovedBy: "", VehicleId: vehicleId });
+      await trip.query().insert({ TripCode: tripCodeNew, TripDate: start, Complete: false, Approve: false, ApprovedBy: "", VehicleId: vehicleId });
     });
 
     return result;
