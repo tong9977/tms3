@@ -45,26 +45,7 @@
                 >
               </v-flex>
               <v-flex xs6>
-                <picture-input
-                  ref="pictureInput"
-                  @change="onChange"
-                  @remove="onRemoved"
-                  :removable="true"
-                  width="600"
-                  height="600"
-                  margin="16"
-                  accept="image/jpeg, image/png"
-                  size="10"
-                  buttonClass="caption px-2 grey--text"
-                  removeButtonClass="caption px-2 grey--text"
-                  :custom-strings="{upload: '<h1>Bummer!</h1>',drag: 'Drag a photo here'}"
-                ></picture-input>
-                <div class="text-xs-center">
-                  <v-btn color="primary" v-if="!!image" :loading="uploading" @click="attemptUpload">
-                    Upload
-                    <v-icon right dark>mdi-upload</v-icon>
-                  </v-btn>
-                </div>
+                <upload-image-box @success="uploadDone"></upload-image-box>
               </v-flex>
             </v-layout>
           </v-container>
@@ -98,13 +79,9 @@ import upload from "../utils/upload";
 export default {
   data: () => ({
     image: "",
-    uploading: false,
-    jobNewDialog: false,
-    driverDialog: false
+  
   }),
-  components: {
-    PictureInput
-  },
+ 
   computed: {
     ...mapState("tms", ["vehicles", "jobnews", "drivers"]),
     job() {
@@ -112,31 +89,9 @@ export default {
     }
   },
   methods: {
-    onChange() {
-      console.log("New picture loaded");
-      if (this.$refs.pictureInput.file) {
-        this.image = this.$refs.pictureInput.file;
-      } else {
-        console.log("Old browser. No support for Filereader API");
-      }
-    },
-    onRemoved() {
-      this.image = "";
-    },
-    async attemptUpload() {
-      if (this.image) {
-        this.uploading = true;
-        try {
-          let res = await upload(this.image);
-          console.log(res);
-        } catch (error) {
-          console.log(error);
-          alert("ไม่สามารถ upload ได้");
-        } finally {
-          this.uploading = false;
-        }
-      }
-    }
+   uploadDone(uploadInfo){
+     console.log(uploadInfo);
+   }
   }
 };
 </script>
