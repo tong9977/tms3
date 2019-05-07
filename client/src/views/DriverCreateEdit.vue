@@ -89,12 +89,13 @@
                   />
                 </v-flex>
                 <v-flex xs12 text-xs-center>
-                  <v-avatar size="120" color="grey lighten-4">
-                    <v-icon size="80">mdi-account</v-icon>
-                  </v-avatar>
-                </v-flex>
-                <v-flex xs12 text-xs-center>
-                  <v-btn round color="secondary">Upload</v-btn>
+                  <upload-image-input @success="uploadDone">
+                    <div slot="activator">
+                      <v-avatar size="150px" v-ripple class="mb-3">
+                        <img :src="formModel.ImageUrl" alt="avatar">
+                      </v-avatar>
+                    </div>
+                  </upload-image-input>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -110,6 +111,8 @@
 </template>
 
 <script>
+import upload from "../utils/upload";
+
 export default {
   data: () => ({
     service: "user",
@@ -121,26 +124,25 @@ export default {
       FirstName: "",
       LastName: "",
       StaffCode: "",
-      ImageUrl: "",
+      ImageUrl: "/img/user.png",
       Description: "",
       RoleId: "",
       Active: true,
       UserStatusObj: { Id: 1 }
     },
     //--end config
-    
+
     formModel: {},
-    userStatusItems: [], // data ที่มาจากการ find ของ server   
+    userStatusItems: [],
     loading: false
   }),
-  props: ["mode","Id"],
+  props: ["mode", "Id"],
   computed: {},
   async mounted() {
     this.renderUI();
   },
   methods: {
     async renderUI() {
-      
       try {
         var role = await this.$store.dispatch("role/find", {});
         this.userStatusItems = role.data;
@@ -148,23 +150,25 @@ export default {
         console.log(err);
         alert("ไม่สามารถขอข้อมูลได้");
       }
- 
+
       if (this.mode == "edit") {
-         //edit
+        //edit
         try {
           let inDTO = await this.$store.dispatch(
             this.service + "/get",
             this.Id
           );
-          this.formModel = Object.assign({},  inDTO);
-          this.formModel.UserStatusObj = Object.assign({},{ Id: inDTO.RoleId }
+          this.formModel = Object.assign({}, inDTO);
+          this.formModel.UserStatusObj = Object.assign(
+            {},
+            { Id: inDTO.RoleId }
           );
         } catch (err) {
           console.log(err);
           alert("ไม่สามารถต่อ server ได้");
         }
-      } 
-      if(this.mode == "create") {
+      }
+      if (this.mode == "create") {
         //create
         this.formModel = Object.assign({}, this.defaultValue);
       }
@@ -198,15 +202,15 @@ export default {
         } finally {
           this.loading = false;
         }
-      } 
-      if(this.mode == "create") {
+      }
+      if (this.mode == "create") {
         try {
           //Add Data
           let outDTO = Object.assign({}, this.formModel);
           outDTO.RoleId = this.formModel.UserStatusObj.Id;
           delete outDTO.UserStatusObj;
 
-          this.$store.dispatch(this.service + "/create", outDTO);
+          await this.$store.dispatch(this.service + "/create", outDTO);
           this.$router.push({
             name: "Driver"
           });
@@ -218,9 +222,9 @@ export default {
         }
       }
     },
-    async createDriverNew() {},
-
-    async onUpdate() {}
+    uploadDone(uploadInfo) {
+      this.formModel.ImageUrl = uploadInfo.url;
+    }
   }
 };
 </script>

@@ -1,7 +1,7 @@
-// Initializes the `job` service on path `/job`
+// Initializes the `unit` service on path `/unit`
 const createService = require('feathers-objection');
-const createModel = require('../../models/job.model');
-const hooks = require('./job.hooks');
+const createModel = require('../../models/unit.model');
+const hooks = require('./unit.hooks');
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -11,15 +11,13 @@ module.exports = function (app) {
     model: Model,
     paginate,
     id:'Id',
-    whitelist: ['$eager', '$joinRelation'],
-    allowedEager: '[jobstatus,jobtype,jobitem]'
   };
 
   // Initialize our service with any options it requires
-  app.use('/job', createService(options));
+  app.use('/unit', createService(options));
 
   // Get our initialized service so that we can register hooks and filters
-  const service = app.service('job');
+  const service = app.service('unit');
 
   service.hooks(hooks);
 };

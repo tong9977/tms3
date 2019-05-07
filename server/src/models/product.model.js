@@ -2,26 +2,27 @@
 // for more of what you can do here.
 const { Model } = require('objection');
 
-class jobtype extends Model {
+class product extends Model {
 
   static get tableName() {
-    return 'JobType';
+    return 'ProductHint';
   }
-
   static get idColumn() {
     return 'Id';
   }
 
+ 
+
   $beforeInsert() {
-    //this.createdAt = this.updatedAt = new Date().toISOString();
+  //  this.createdAt = this.updatedAt = new Date().toISOString();
   }
 
   $beforeUpdate() {
-    //this.updatedAt = new Date().toISOString();
+   // this.updatedAt = new Date().toISOString();
   }
 }
 
 module.exports = function (app) {
   
-  return jobtype;
+  return product;
 };

@@ -1,12 +1,10 @@
 
 <template>
-  <div id="v-dialogjob">
-    <v-dialog v-model="dialog" max-width="1200px">
-      <v-card>
+   <v-card>
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
         </v-card-title>
-
+     
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
@@ -34,18 +32,35 @@
                     label="คนติดต่อ"
                   ></v-text-field>
                 </v-flex>
-                <v-flex xs12 md6>
+                 <v-flex xs12 md4>
+                  <v-text-field
+                    v-model="formModel.Telephone"
+                    data-vv-name="โทรศัพท์"
+                    v-validate="'numeric'"
+                    :error-messages="errors.collect('โทรศัพท์')"
+                    label="โทรศัพท์"
+                  ></v-text-field>
+                </v-flex>
+                <v-flex xs12 md4>
                   <v-text-field
                     v-model="formModel.Email"
-                    data-vv-name="อีเมล์"
-                    v-validate="'email'"
-                    :error-messages="errors.collect('อีเมล์')"
+                   
                     label="อีเมล์"
                   ></v-text-field>
                 </v-flex>
 
-                <v-flex xs12 md6>
-                  <v-text-field
+                <v-flex xs12 md4>
+                 <v-text-field
+                    v-model="formModel.LineId"
+                   
+                    label="LineId"
+                  ></v-text-field>
+                </v-flex>
+
+                <v-flex xs12 md8>
+                  
+
+                   <v-text-field
                     v-model="formModel.Address"
                     data-vv-name="ที่อยู่ลูกค้า"
                     v-validate="'required|min:2'"
@@ -53,31 +68,17 @@
                     label="ที่อยู่ลูกค้า"
                   ></v-text-field>
                 </v-flex>
-
-                <v-flex>
-                  <v-text-field
-                    v-model="formModel.LineId"
-                    data-vv-name="ไอดีไลน์"
-                    v-validate="'required|min:2'"
-                    :error-messages="errors.collect('ไอดีไลน์')"
-                    label="LineId"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex>
+                <v-flex xs12 md2>
                   <v-text-field
                     v-model="formModel.Lat"
-                    data-vv-name="Lat"
-                    v-validate="'decimal:10'"
-                    :error-messages="errors.collect('Lat')"
+                   
                     label="Lat"
                   ></v-text-field>
                 </v-flex>
-                <v-flex>
+                <v-flex xs12 md2>
                   <v-text-field
                     v-model="formModel.Long"
-                    data-vv-name="Long"
-                    v-validate="'decimal:10'"
-                    :error-messages="errors.collect('Long')"
+                    
                     label="Long"
                   ></v-text-field>
                 </v-flex>
@@ -90,27 +91,21 @@
                 <v-flex xs12 md3>
                   <v-text-field
                     v-model="formModel.RouteNo"
-                    data-vv-name="หมายเลขเส้นทาง"
-                    v-validate="'numeric'"
-                    :error-messages="errors.collect('หมายเลขเส้นทาง')"
+                    
                     label="หมายเลขเส้นทาง"
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 md7>
                   <v-text-field
                     v-model="formModel.RouteName"
-                    data-vv-name="ชื่อเส้นทาง"
-                    v-validate="'required|min:2'"
-                    :error-messages="errors.collect('ชื่อเส้นทาง')"
+                    
                     label="ชื่อเส้นทาง"
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12 md2>
                   <v-text-field
                     v-model="formModel.Distance"
-                    data-vv-name="ระยะทาง"
-                    v-validate="'numeric'"
-                    :error-messages="errors.collect('ระยะทาง')"
+                    
                     label="ระยะทาง"
                   ></v-text-field>
                 </v-flex>
@@ -145,9 +140,7 @@
                 <v-flex xs12 md3>
                   <v-text-field
                     v-model="formModel.NumTrip"
-                    data-vv-name="จำนวนรอบในการส่ง"
-                    v-validate="'numeric'"
-                    :error-messages="errors.collect('จำนวนรอบในการส่ง')"
+                    
                     label="จำนวนรอบในการส่ง"
                   ></v-text-field>
                 </v-flex>
@@ -175,9 +168,7 @@
                 <v-flex xs12 md12>
                   <v-text-field
                     v-model="formModel.Remark"
-                    data-vv-name="หมายเหตุ"
-                    v-validate="'required|min:2'"
-                    :error-messages="errors.collect('หมายเหตุ')"
+                   
                     label="หมายเหตุ"
                   ></v-text-field>
                 </v-flex>
@@ -188,19 +179,17 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="closeDialog">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat @click="CancelClick">Cancel</v-btn>
           <v-btn color="blue darken-1" :loading="loading" flat @click="saveToServer">Save</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
-  </div>
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
 
 
 export default {
-    name: "job-create-edit-dialog",
+    
  
   data: () => ({
     //--start config
@@ -223,29 +212,32 @@ export default {
       { value: "Distance", text: "ระยะทาง", sortable: false }
     ],
     defaultValue: {
-      Customer: "ss",
-      ContactPerson: "dd",
-      Email: "ss@sd.com",
-      LineId: "sd",
-      Address: "sd",
-      Lat: "23",
-      Long: "23",
-      Weight: "11",
-      CC: "55",
-      Distance: "2",
-      RouteNo: "2",
-      RouteName: "ddd",
-      Remark: "ddd",
+      Customer: "",
+      ContactPerson: "",
+      Email: "",
+      LineId: "",
+      Address: "",
+      Lat: "",
+      Long: "",
+      Weight: "",
+      CC: "",
+      Distance: "",
+      RouteNo: "",
+      RouteName: "",
+      Remark: "",
       RequestedDate: "",
       CreatedBy: "",
+      CreatedDate: "",
       CompletedDate: "",
       CompletedBy: "",
-      NumTrip: "2",
+      NumTrip: "",
       JobTypeObj: { Id: 1 },
       JobStatusObj: { Id: 1 }
     },
     query: { $sort: { Id: -1 } },
     //--end config
+
+    
     dateFormat: "dd-MM-yyyy",
     JobStatus: [],
     JobType: [],
@@ -259,11 +251,17 @@ export default {
     formModel: {},
     inDTO: {}, // data ที่มาจากการ get ของ server
     outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
-    mode: "" // มีได้ 2 แบบคือ create กับ edit
+   
   }),
-  computed: {},
+  props: ["mode","Id"],
+  computed: {
+    formTitle() {
+      return this.mode === "create"
+        ? "เพิ่ม" + this.objectName
+        : "แก้ไข" + this.objectName;
+    }
+  },
   async mounted() {
-    //init here
 
     this.renderUI();
 
@@ -285,29 +283,34 @@ export default {
   },
   methods: {
     async renderUI() {
-      this.mode = this.$route.params.mode;
+    
 
-      if (this.mode == "edit") {
+      if (this.mode === "edit") {
         try {
           this.inDTO = await this.$store.dispatch(
             this.service + "/get",
-            this.$route.params.Id
+            this.Id
           );
           this.formModel = Object.assign({}, this.inDTO);
           this.formModel.JobStatusObj = Object.assign({},{ Id: this.inDTO.JobStatusId });
           this.formModel.JobTypeObj = Object.assign({},{ Id: this.inDTO.JobTypeId });
-          //หรืออีกวิธี กรณีผูก Relation ไว้แล้ว this.formModel.UserStatusObj = Object.assign({}, this.inDTO.role);
+          
         } catch (err) {
           alert("ไม่สามารถต่อ server ได้");
         }
       } else {
         this.formModel = Object.assign({}, this.defaultValue);
       }
+      if(this.mode == "create") {
+        
+        this.formModel = Object.assign({}, this.defaultValue);
+      }
     },
 
-    closeDialog() {
-      this.dialog = false;
-      this.dialogDelete = false;
+    CancelClick() {
+    
+     this.$emit('Cancel', {});
+     this.$emit('Done', {});
     },
     async saveToServer() {
       const valid = await this.$validator.validateAll();
@@ -317,19 +320,32 @@ export default {
       }
       this.loading = true;
       if (this.mode === "edit") {
+       
         try {
+            
+          let outDTO = Object.assign({}, this.formModel);
+          
+          outDTO.JobStatusId = this.formModel.JobStatusObj.Id;
+          outDTO.JobTypeId = this.formModel.JobTypeObj.Id;
+
+          delete outDTO.JobStatusObj;
+          delete outDTO.JobTypeObj;
+
           await this.$store.dispatch(this.service + "/patch", [
-            this.formModel.Id,
-            this.formModel
+            this.Id,
+            outDTO
           ]);
-          this.renderUI();
+
+          this.$emit('Success',outDTO.Id);
+          this.$emit('Done', {});
         } catch (err) {
           console.log(err);
-          alert("ไม่สามารถแก้ไขข้อมูลได้");
+          alert("ไม่สามารถแก้ไขข้อมูลได้" + err);
         } finally {
           this.loading = false;
         }
-      } else {
+      }  
+      if(this.mode == "create") {
         //Add Data
         try {
           //alert(JSON.stringify(this.formModel))
@@ -340,18 +356,10 @@ export default {
 
           delete temp.JobStatusObj;
           delete temp.JobTypeObj;
-          this.$store.dispatch(this.service + "/create", temp);
-          ////// go to next page ///////
-          var res = await this.$store.dispatch(this.service + "/find", {
-            query: {
-              $limit: 1,
-              $sort: {
-                Id: -1
-              }
-            }
-          });
-          this.$router.push("/jobDetail/" + res.data[0].Id);
-
+          let newjob = await  this.$store.dispatch(this.service + "/create", temp);
+          
+          this.$emit('Success',newjob.Id);
+          this.$emit('Done', {});
           //this.renderUI();
         } catch (err) {
           console.log(err);
@@ -360,36 +368,9 @@ export default {
           this.loading = false;
         }
       }
-      this.closeDialog();
-    },
-    async deleteToServer() {
-      this.loading = true;
-      try {
-        await this.$store.dispatch(this.service + "/remove", this.formModel.Id);
-        this.renderUI();
-      } catch (err) {
-        console.log(err);
-        alert("ไม่สามารถลบข้อมูลได้");
-      } finally {
-        this.loading = false;
-        this.dialogDelete = false;
-      }
-    },
-    async addItem() {
-      this.mode = "create";
-      this.formModel = Object.assign({}, this.defaultValue);
-      this.dialog = true;
-    },
-
-    async editItem(item) {
-      this.mode = "edit";
-      this.formModel = Object.assign({}, item);
-      this.dialog = true;
-    },
-    async deleteItem(item) {
-      this.formModel = Object.assign({}, item);
-      this.dialogDelete = true;
+      
     }
+   
   }
 };
 </script> 

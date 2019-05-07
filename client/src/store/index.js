@@ -25,8 +25,6 @@ const store = new Vuex.Store({
     modules,
     plugins:[
         auth({ userService: 'users' }),
-        service('company',{modelName:'Company',idField: 'CompanyID'}),
-        //service('jobtype',{modelName:'JobType',idField: 'JobTypeID'}),
         service('role',{modelName:'Role',idField: 'Id'}),
         service('user',{modelName:'User',idField: 'Id'}), 
         service('vehicle',{modelName:'Vehicle',idField: 'Id'}),
@@ -35,8 +33,13 @@ const store = new Vuex.Store({
         service('jobtype',{modelName:'JobType' ,idField:'Id'}),
         service('jobstatus',{modelName:'JobStatus' ,idField:'Id'}),
         service('jobitem',{idField:'Id'}),
+<<<<<<< HEAD
         service('trips',{idField:'TripId'}),
         service('tripservice',{idField:'Id'}),
+=======
+        service('product',{idField:'Id'}),
+        service('unit',{idField:'Id'})
+>>>>>>> 19c6d94ef0af25d5ff1f86658c0372aeb5fbdc57
     ]
 })
 

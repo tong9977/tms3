@@ -10,7 +10,7 @@ class job extends Model {
   static get idColumn() {
     return 'Id';
   }
-  
+
 
   $beforeInsert() {
     //this.CreatedDate= this.updatedAt = new Date().toISOString();
@@ -23,13 +23,14 @@ class job extends Model {
 
     const jobtype = require('./jobtype.model')();
     const jobstatus = require('./jobstatus.model')();
+    const jobitem = require('./jobitem.model')();
     return {
       jobtype: {
         relation: Model.HasOneRelation,
         modelClass: jobtype,
         join: {
           from: 'Jobs.JobTypeId',
-          to: 'jobtype.Id'
+          to: 'JobType.Id'
         }
       },
       jobstatus: {
@@ -37,7 +38,15 @@ class job extends Model {
         modelClass: jobstatus,
         join: {
           from: 'Jobs.JobStatusId',
-          to: 'jobstatus.Id'
+          to: 'JobStatus.Id'
+        }
+      },
+      jobitem: {
+        relation: Model.HasManyRelation,
+        modelClass: jobitem,
+        join: {
+          from: 'Jobs.Id',
+          to: 'JobItems.JobId'
         }
       }
     }
@@ -45,6 +54,6 @@ class job extends Model {
 }
 
 module.exports = function (app) {
- 
+
   return job;
 };

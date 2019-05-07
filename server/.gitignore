@@ -110,3 +110,7 @@ $RECYCLE.BIN/
 # Others
 lib/
 data/
+#ไม่เอาทุกไฟล์ใน uploads 
+public/uploads/*
+#เอาเฉพาะ test.png ขึ้น
+!public/uploads/test.png
