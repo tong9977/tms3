@@ -6,12 +6,12 @@
           <h5 class="headline">ลูกค้า : {{formModel.Customer}}</h5>
 
          
-            <div>
-           <v-btn color="blue" class="font-weight-light" >
+            <div >
+           <v-btn color="blue"  href="javascript:history.go(-1)" >
             ย้อนกลับ
           </v-btn>
             
-           <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
+           <v-btn color="blue" class="right mr-2" @click="editItem(item)">
             <v-icon>mdi-pencil</v-icon>แก้ไข
           </v-btn>
             </div>

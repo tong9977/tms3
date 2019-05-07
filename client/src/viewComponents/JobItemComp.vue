@@ -24,6 +24,7 @@
               <td>
                 <v-icon v-if="item.Complete">mdi-check</v-icon>
                 <v-icon v-else>mdi-close</v-icon>
+                <br>
                 {{item.CompletedDate}}
               </td>
               <td>

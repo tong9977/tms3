@@ -1,4 +1,52 @@
 <template>
+<JobListComp :JobStatusId ="3"  ColorTheme='green' :CanCreate="false"/>
+
+</template>
+
+<script>
+import JobListComp from "@/viewComponents/JobListComp.vue";
+
+export default {
+  components: {
+   
+    JobListComp
+  },
+
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <template>
   <v-container fill-height fluid grid-list-xl>
     <v-layout justify-center wrap>
       <v-flex md12>
@@ -59,4 +107,4 @@ export default {
     ...mapState("tms", ["jobdones"])
   }
 };
-</script>
+</script> -->
