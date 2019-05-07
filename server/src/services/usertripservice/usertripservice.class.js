@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+const errors = require('@feathersjs/errors');
+
 class Service {
   constructor(options) {
     this.options = options || {};
@@ -15,7 +17,7 @@ class Service {
   }
 
   async create(data, params) {
-    let result = 'false'; 
+    let result = false; 
 
     let userId = data.UserId;
     let tripId = data.TripId;
@@ -33,7 +35,9 @@ class Service {
         console.log(ut.length);
         if(ut.length == 0){
           await userTrip.query().insert({ UserId: userId, TripId: tripId, TripDate: t[0].TripDate });
-          result = 'true';
+          result = true;
+        }else{
+          return Promise.reject(new errors.BadRequest('มี user นี้อยู่แล้ว'));
         } 
       }
     } catch (err) {

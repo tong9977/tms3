@@ -26,4 +26,6 @@ module.exports = function (app) {
   app.configure(tripservice);
   app.configure(unit);
   app.configure(product);
+  app.configure(usertrip);
+  app.configure(usertripservice);
 };
