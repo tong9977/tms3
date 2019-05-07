@@ -27,7 +27,8 @@
     "vue-meta": "^1.5.2",
     "vue-picture-input": "^2.1.6",
     "vuetify": "^1.2.5",
-    "vuetify-dialog": "^0.3.4"
+    "vuetify-dialog": "^0.3.4",
+    "vue-date-fns": "^1.0.0"
   },
   "devDependencies": {
     "@mdi/font": "^2.5.94",
