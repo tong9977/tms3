@@ -23,7 +23,7 @@ class trips extends Model {
     const vehicle = require('./vehicle.model')();
     return {
       vehicle: {
-        relation: Model.ManyToManyRelation,
+        relation: Model.HasOneRelation,
         modelClass: vehicle,
         join: {
           from: 'Trips.VehicleId',

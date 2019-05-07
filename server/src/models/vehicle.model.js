@@ -5,7 +5,7 @@ const { Model } = require('objection');
 class vehicle extends Model {
 
   static get tableName() {
-    return 'vehicles';
+    return 'Vehicles';
   }
 
   static get idColumn() {
@@ -28,8 +28,8 @@ class vehicle extends Model {
         relation: Model.HasOneRelation,
         modelClass: vehicletype,
         join: {
-          from: 'vehicles.VehicleTypeId',
-          to: 'vehicletype.Id'
+          from: 'Vehicles.VehicleTypeId',
+          to: 'Vehicletype.Id'
         }
       },
     }

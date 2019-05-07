@@ -5,7 +5,7 @@ const { Model } = require('objection');
 class vehicletype extends Model {
 
   static get tableName() {
-    return 'vehicletype';
+    return 'Vehicletype';
   }
   static get idColumn() {
     return 'Id';
