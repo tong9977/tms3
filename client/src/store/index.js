@@ -29,13 +29,14 @@ const store = new Vuex.Store({
         //service('jobtype',{modelName:'JobType',idField: 'JobTypeID'}),
         service('role',{modelName:'Role',idField: 'Id'}),
         service('user',{modelName:'User',idField: 'Id'}), 
-        service('vehicle',{modelName:'Vehicle',idField: 'VehicleId'}),
+        service('vehicle',{modelName:'Vehicle',idField: 'Id'}),
         service('vehicletype',{modelName:'VehicleType',idField: 'Id'}),
         service('job',{modelName:'Job',idField: 'Id'}),
         service('jobtype',{modelName:'JobType' ,idField:'Id'}),
         service('jobstatus',{modelName:'JobStatus' ,idField:'Id'}),
         service('jobitem',{idField:'Id'}),
-        service('tripservice',{idField:'Id'})
+        service('trips',{idField:'TripId'}),
+        service('tripservice',{idField:'Id'}),
     ]
 })
 

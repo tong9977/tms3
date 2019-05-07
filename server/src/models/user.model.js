@@ -11,8 +11,7 @@ class user extends Model {
   static get idColumn() {
     return 'Id';
   }
-
-    //Add New สำหรับคำนวณ ตัวอย่าง function ชื่อ total ผลลัพธ์ได้ column total
+  //Add New สำหรับคำนวณ ตัวอย่าง function ชื่อ total ผลลัพธ์ได้ column total
   static get virtualAttributes() {
     return ['fullName','isAdmin'];
   }
@@ -36,7 +35,6 @@ class user extends Model {
 
   static get relationMappings() {
     const role = require('./role.model')();
-
     return {
       role: {
         relation: Model.HasOneRelation,

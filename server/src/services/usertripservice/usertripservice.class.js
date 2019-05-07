@@ -15,7 +15,7 @@ class Service {
   }
 
   async create(data, params) {
-    let result = false;
+    let result = 'false'; 
 
     let userId = data.UserId;
     let tripId = data.TripId;
@@ -27,13 +27,17 @@ class Service {
     try {
       let u = await user.query().where('Id', userId);
       let t = await trip.query().where('Id', tripId);
+      let ut = await userTrip.query().where('UserId', userId).where('TripId',tripId);
 
       if (u.length != 0 && t.length != 0) {
-        await userTrip.query().insert({ UserId: userId, TripId: tripId, TripDate: t[0].TripDate });
-        result = true;
+        console.log(ut.length);
+        if(ut.length == 0){
+          await userTrip.query().insert({ UserId: userId, TripId: tripId, TripDate: t[0].TripDate });
+          result = 'true';
+        } 
       }
     } catch (err) {
-      result = false;
+      return 0;
     }
 
     return result;

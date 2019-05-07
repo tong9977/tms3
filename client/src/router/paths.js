@@ -45,6 +45,11 @@ export default [
     view: 'Vehicle'
   },
   {
+    path: '/vehiclecreateedit/:mode/:Id',
+    name: 'VehicleCreateEdit',
+    view: 'VehicleCreateEdit'
+  },
+  {
     path: '/vehicleadd',
     name: 'VehicleAdd',
     view: 'VehicleAdd'

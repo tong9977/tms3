@@ -7,7 +7,7 @@
           :title="'จัดการ'+objectName"
           :text="'รายการ'+objectName+'ทั้งหมด'"
         >
-          <v-btn flat slot="menu" @click.stop="addItem()">
+          <v-btn flat slot="menu" :to="{ name: 'VehicleCreateEdit', params: { mode: 'create', Id: -1}}">
             <v-icon>mdi-plus</v-icon>เพิ่ม
           </v-btn>
           <v-subheader>มีทั้งหมด {{total}} รายการ</v-subheader>
@@ -17,7 +17,7 @@
             </template>
             <!-- set column แสดงผลที่นี้ -->
             <template slot="items" slot-scope="{ item }">
-              <td>{{ item.VehicleId }}</td>
+              <td>{{ item.Id }}</td>
               <td>{{ item.LicensePlate }}</td>
               <td>{{ item.vehicletype.TypeName }}</td>
               <td>
@@ -35,7 +35,11 @@
               </td>
               <td>{{ item.Desciption }}</td>
               <td>
-                <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
+                <v-btn
+                  color="blue"
+                  class="font-weight-light"
+                  :to="{ name: 'VehicleCreateEdit', params: { mode: 'edit', Id: item.Id}}"
+                >
                   <v-icon>mdi-pencil</v-icon>แก้ไข
                 </v-btn>
                 <v-btn color="red" @click="deleteItem(item)" class="font-weight-light">
@@ -159,9 +163,9 @@ export default {
   data: () => ({
     //--start config
     service: "vehicle",
-    objectName: "ประเภทรถ",
+    objectName: "รถ",
     headers: [
-      { value: "VehicleId", text: "Id", sortable: true },
+      { value: "Id", text: "Id", sortable: true },
       { value: "LicensePlate", text: "ทะเบียนรถ", sortable: false },
       { value: "Type", text: "ประเภท", sortable: true },
       { value: "Limit", text: "น้ำหนักที่ขนได้", sortable: true },
@@ -269,10 +273,10 @@ export default {
         try {
           let temp = Object.assign({}, this.formModel);
           //alert(JSON.stringify(temp))
-          temp.VehicleTypeId = this.formModel.VehicleTypeObj.Id;
+          temp.VehicleTypeId = this.formModel.VehiclaeTypeObj.Id;
           delete temp.VehicleTypeObj;
           await this.$store.dispatch(this.service + "/patch", [
-            temp.VehicleId,
+            temp.Id,
             temp
           ]);
           this.renderUI();
