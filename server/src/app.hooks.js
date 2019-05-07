@@ -1,9 +1,10 @@
 // Application hooks that run for every service
 const log = require('./hooks/log');
+const delay = require('./hooks/delay');
 
 module.exports = {
   before: {
-    all: [ log() ],
+    all: [ log()],
     find: [],
     get: [],
     create: [],
@@ -13,7 +14,7 @@ module.exports = {
   },
 
   after: {
-    all: [ log() ],
+    all: [log()],
     find: [],
     get: [],
     create: [],

@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 
 
-const allowedExtentions = ['.png', '.jpeg']
+const allowedExtentions = ['.png', '.jpeg','.jpg']
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'public/uploads'),
   filename: (req, file, cb) => {
