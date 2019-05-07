@@ -11,7 +11,6 @@ class trips extends Model {
   static get idColumn() {
     return 'Id';
   }
-
   $beforeInsert() {
     
   }
@@ -22,14 +21,13 @@ class trips extends Model {
 
   static get relationMappings() {
     const vehicle = require('./vehicle.model')();
-
     return {
       vehicle: {
-        relation: Model.HasManyRelation,
+        relation: Model.ManyToManyRelation,
         modelClass: vehicle,
         join: {
           from: 'Trips.VehicleId',
-          to: 'Vehicles.VehicleId'
+          to: 'Vehicles.Id'
         }
       },
     }

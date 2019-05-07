@@ -94,17 +94,16 @@ export default {
   }),
 
  async mounted() {
-
    try{
-   var res = await this.$store.dispatch("vehicletype/find", {}) 
+    var res = await this.$store.dispatch("vehicletype/find", {}) 
       this.VehicleStatus = res.data;
   
-   }catch (error) {
+    }catch (error) {
         console.log(error);
         alert("ไม่สามารถติดต่อ server ได้");
-      } 
-  
+    } 
   },
+
   methods: {
     async save() {
       const valid = await this.$validator.validateAll();

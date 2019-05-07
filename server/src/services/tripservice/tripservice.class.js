@@ -8,30 +8,9 @@ class Service {
   }
 
   async find(params) {
-    // const collection = collect([1, 2, 3, 4, 5]);
-
-    // const diff = collection.diff([1, 2, 3, 9]);
-    // let result = diff.all();
-
-    let x = [
-      {
-        product: 'Chair',
-        manufacturer: 'IKEA',
-      },
-      {
-        product: 'Desk',
-        manufacturer: 'IKEA',
-      },
-      {
-        product: 'Chair',
-        manufacturer: 'Herman Miller',
-      }
-    ]
-
-    const collection = collect(x).sortBy('product').all();
-
-
-    return collection;
+    const trip = require('../../models/trips.model')();
+    let rawData = await trip.query().eager('vehicletype');
+    return rawData;
   }
 
   async get(id, params) {
@@ -70,10 +49,10 @@ class Service {
     let result = [];
 
     if (vehicleIds.length == 0) {
-      let rawVehicleActive = await vehicle.query().where('Active', true).select('VehicleId');
+      let rawVehicleActive = await vehicle.query().where('Active', true).select('Id');
       let rawVehicleActiveArray = [];
       rawVehicleActive.forEach(v => {
-        rawVehicleActiveArray.push(v.VehicleId);
+        rawVehicleActiveArray.push(v.Id);
       });
       
       const collection = collect(rawVehicleActiveArray);

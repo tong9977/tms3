@@ -21,8 +21,49 @@
       </v-btn>
     </v-toolbar>
 
+    <!-- dialog สำหรับ เพิ่ม แก้ไข -->
+    <v-dialog v-model="dialog" max-width="1200px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">จัดการ Trip</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <!-- set form กรอกข้อมูลที่นี้ -->
+              <v-flex xs12 md12>
+                เลือกรถที่ต้องการสร้าง
+                <v-combobox
+                  v-model="vehicleSelect"
+                  :items="vehicles"
+                  item-text="LicensePlate"
+                  item-value="Id"
+                  label="เลือกรถ"
+                  multiple
+                  v-validate="'required'"
+                  :error-messages="errors.collect('กรุณาเลือกรถ')"
+                ></v-combobox>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="closeDialog">Cancel</v-btn>
+          <v-btn
+            color="blue darken-1"
+            :loading="loading"
+            flat
+            @click="saveToServer('byVehicleId')"
+          >Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- dialog -->
+
     <v-layout wrap>
-      <v-flex xs12 sm6 md4>
+      <v-flex xs12 sm6 md4 v-for="t in trips" :key="t.TripId">
+        <!-- <material-card color="green" :title="t.LicensePlate" :text="t.Desciption" full-width> -->
         <material-card color="green" title="4 กด 187" text="ขนได้ 2000 กก. 600000 cc" full-width>
           <v-btn flat slot="menu">
             <v-icon>mdi-plus</v-icon>
@@ -62,50 +103,10 @@
               </v-flex>
             </v-layout>
           </v-card-text>
-
-          <!-- dialog สำหรับ เพิ่ม แก้ไข -->
-          <v-dialog v-model="dialog" max-width="1200px">
-            <v-card>
-              <v-card-title>
-                <span class="headline">จัดการ Trip</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container grid-list-md>
-                  <v-layout wrap>
-                    <!-- set form กรอกข้อมูลที่นี้ -->
-                    <v-flex xs12 md12>
-                      กรองตามพื้นที่
-                      <v-combobox
-                        v-model="vehicleSelect"
-                        :items="vehicles"
-                        item-text="LicensePlate"
-                        item-value="VehicleId"
-                        label="เลือกรถ"
-                        multiple
-                        v-validate="'required'"
-                        :error-messages="errors.collect('กรุณาเลือกรถ')"
-                      ></v-combobox>
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" flat @click="closeDialog">Cancel</v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  :loading="loading"
-                  flat
-                  @click="saveToServer('byVehicleId')"
-                >Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </material-card>
       </v-flex>
     </v-layout>
+
   </v-container>
 </template>
 
@@ -121,6 +122,7 @@ export default {
   data: () => ({
     service: "tripservice",
     tripDate: new Date(),
+    trips: [],
     dialog: false,
     vehicles: [],
     vehicleSelect: null,
@@ -133,6 +135,15 @@ export default {
   computed: {},
   methods: {
     async render() {
+      try {
+        var res = await this.$store.dispatch("trips/find", {});
+        this.trips = res.data;
+      } catch (error) {
+        console.log(error);
+        alert("ไม่สามารถติดต่อ server ได้");
+      }
+
+      //แสดงใน dialog
       try {
         var res = await this.$store.dispatch("vehicle/find", {});
         this.vehicles = res.data;
@@ -152,7 +163,7 @@ export default {
         var count = this.vehicleSelect.length;
 
         for (var i = 0; i < count; i++) {
-          this.vehicleId.push(this.vehicleSelect[i].VehicleId);
+          this.vehicleId.push(this.vehicleSelect[i].Id);
         }
         this.dialog = false;
       }
@@ -169,6 +180,7 @@ export default {
         this.loading = false;
       }
       this.vehicleId = [];
+      this.render();
     },
 
     async addItemฺByVehicleId() {

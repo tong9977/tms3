@@ -9,16 +9,17 @@ class vehicle extends Model {
   }
 
   static get idColumn() {
-    return 'VehicleId';
+    return 'Id';
   }
   
   $beforeInsert() {
-    this.createdAt = this.updatedAt = new Date().toISOString();
+    //this.createdAt = this.updatedAt = new Date().toISOString();
   }
 
   $beforeUpdate() {
-    this.updatedAt = new Date().toISOString();
+    //this.updatedAt = new Date().toISOString();
   }
+
   static get relationMappings() {
 
     const vehicletype = require('./vehicletype.model')();
