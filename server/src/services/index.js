@@ -7,11 +7,11 @@ const jobtype = require('./jobtype/jobtype.service.js');
 const jobstatus = require('./jobstatus/jobstatus.service.js');
 const jobitem = require('./jobitem/jobitem.service.js');
 const trips = require('./trips/trips.service.js');
-const tripservice = require('./tripservice/tripservice.service.js');
 const unit = require('./unit/unit.service.js');
 const product = require('./product/product.service.js');
 const usertrip = require('./usertrip/usertrip.service.js');
-const usertripservice = require('./usertripservice/usertripservice.service.js');
+const tripcommand = require('./tripcommand/tripcommand.service.js');
+const usertripcommand = require('./usertripcommand/usertripcommand.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);
@@ -23,9 +23,9 @@ module.exports = function (app) {
   app.configure(jobstatus);
   app.configure(jobitem);
   app.configure(trips);
-  app.configure(tripservice);
   app.configure(unit);
   app.configure(product);
   app.configure(usertrip);
-  app.configure(usertripservice);
+  app.configure(tripcommand);
+  app.configure(usertripcommand);
 };

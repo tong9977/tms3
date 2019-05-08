@@ -87,7 +87,7 @@ export default {
   },
 
   data: () => ({
-    service: "tripservice",
+    service: "tripcommand",
     tripDate: new Date(),
     trips: [],
     dialog: false,

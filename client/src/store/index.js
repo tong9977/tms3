@@ -34,7 +34,7 @@ const store = new Vuex.Store({
         service('jobstatus',{modelName:'JobStatus' ,idField:'Id'}),
         service('jobitem',{idField:'Id'}),
         service('trips',{idField:'TripId'}),
-        service('tripservice',{idField:'Id'}),
+        service('tripcommand',{idField:'Id'}),
         service('product',{idField:'Id'}),
         service('unit',{idField:'Id'})
     ]

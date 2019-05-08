@@ -1,6 +1,6 @@
-// Initializes the `tripservice` service on path `/tripservice`
-const createService = require('./tripservice.class.js');
-const hooks = require('./tripservice.hooks');
+// Initializes the `tripcommand` service on path `/tripcommand`
+const createService = require('./tripcommand.class.js');
+const hooks = require('./tripcommand.hooks');
 
 module.exports = function (app) {
   
@@ -11,10 +11,10 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/tripservice', createService(options));
+  app.use('/tripcommand', createService(options));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('tripservice');
+  const service = app.service('tripcommand');
 
   service.hooks(hooks);
 };
