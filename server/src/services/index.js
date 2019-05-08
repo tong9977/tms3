@@ -10,7 +10,6 @@ const trips = require('./trips/trips.service.js');
 const unit = require('./unit/unit.service.js');
 const product = require('./product/product.service.js');
 const usertrip = require('./usertrip/usertrip.service.js');
-const usertripservice = require('./usertripservice/usertripservice.service.js');
 const upload = require('./upload/upload.service.js');
 const tripcommand = require('./tripcommand/tripcommand.service.js');
 const usertripcommand = require('./usertripcommand/usertripcommand.service.js');
@@ -30,7 +29,6 @@ module.exports = function (app) {
   app.configure(unit);
   app.configure(product);
   app.configure(usertrip);
-  app.configure(usertripservice);
   app.configure(upload);
   app.configure(tripcommand);
   app.configure(usertripcommand);
