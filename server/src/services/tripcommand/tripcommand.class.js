@@ -3,7 +3,7 @@ const dateFns = require('date-fns');
 const collect = require('collect.js');
 
 class Service {
-  constructor(options) {
+  constructor (options) {
     this.options = options || {};
   }
 
@@ -13,13 +13,13 @@ class Service {
     return rawData;
   }
 
-  async get(id, params) {
+  async get (id, params) {
     return {
       id, text: `A new message with ID: ${id}!`
     };
   }
 
-  async create(data, params) {
+  async create (data, params) {
     let date = data.date;
     let vehicleIds = data.vehicleId; //[]
 
@@ -73,16 +73,23 @@ class Service {
     return result;
   }
 
-  async update(id, data, params) {
+  async update (id, data, params) {
     return data;
   }
 
-  async patch(id, data, params) {
+  async patch (id, data, params) {
     return data;
   }
 
-  async remove(id, params) {
-    return { id };
+  async remove (id, params) {
+    let tripId = params.query.TripId;
+
+    const trips = require('../../models/trips.model')();
+    const numberOfDeletedRows = await trips.query().delete().where('Id', tripId);
+
+    console.log('removed', numberOfDeletedRows, 'รายการ');
+
+    return { numberOfDeletedRows };
   }
 }
 
