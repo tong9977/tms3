@@ -21,6 +21,17 @@
       </v-btn>
     </v-toolbar>
 
+    <v-layout row>
+      <v-flex xs12 sm4 md4 v-for="t in trips" :key="t.TripId">
+        <TripDetailComp
+          :LicensePlate="t.vehicle.LicensePlate"
+          :TripCode="t.TripCode"
+          :Limit="t.vehicle.Limit"
+          :LimitCC="t.vehicle.LimitCC"
+        ></TripDetailComp>
+      </v-flex>
+    </v-layout>
+
     <!-- dialog สำหรับ เพิ่ม แก้ไข -->
     <v-dialog v-model="dialog" max-width="1200px">
       <v-card>
@@ -60,53 +71,6 @@
       </v-card>
     </v-dialog>
     <!-- dialog -->
-
-    <v-layout wrap>
-      <v-flex xs12 sm6 md4 v-for="t in trips" :key="t.TripId">
-        <!-- <material-card color="green" :title="t.LicensePlate" :text="t.Desciption" full-width> -->
-        <material-card color="green" title="4 กด 187" text="ขนได้ 2000 กก. 600000 cc" full-width>
-          <v-btn flat slot="menu">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-          <v-list two-line>
-            <v-list-tile @click.stop>
-              <v-list-tile-action>
-                <v-icon color="blue">mdi-map-marker</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>ไอซีอี</v-list-tile-title>
-                <v-list-tile-sub-title>งามวงศวาน</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-          <v-card-text>
-            <v-layout>
-              <v-flex xs6 text-xs-left>
-                <v-avatar size="40" color="grey lighten-4">
-                  <img src="https://cdn.vuetifyjs.com/images/lists/2.jpg" alt="avatar">
-                </v-avatar>
-              </v-flex>
-              <v-flex xs6 text-xs-right>
-                <v-btn
-                  color="success"
-                  round
-                  class="font-weight-light"
-                  @click="driverDialog = true"
-                >คนขับรถ</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-          <v-card-text>
-            <v-layout>
-              <v-flex xs12>
-                <v-btn block color="primary">ออกรถ</v-btn>
-              </v-flex>
-            </v-layout>
-          </v-card-text>
-        </material-card>
-      </v-flex>
-    </v-layout>
-
   </v-container>
 </template>
 
@@ -115,9 +79,12 @@ import {
   DatePickerComponent,
   DatePickerPlugin
 } from "@syncfusion/ej2-vue-calendars";
+import TripDetailComp from "@/viewComponents/TripDetailComp.vue";
 
 export default {
-  components: {},
+  components: {
+    TripDetailComp
+  },
 
   data: () => ({
     service: "tripservice",
@@ -136,7 +103,9 @@ export default {
   methods: {
     async render() {
       try {
-        var res = await this.$store.dispatch("trips/find", {});
+        let res = await this.$store.dispatch("trips/find", {
+          query: { $eager: "vehicle" }
+        });
         this.trips = res.data;
       } catch (error) {
         console.log(error);
@@ -145,7 +114,7 @@ export default {
 
       //แสดงใน dialog
       try {
-        var res = await this.$store.dispatch("vehicle/find", {});
+        let res = await this.$store.dispatch("vehicle/find", {});
         this.vehicles = res.data;
       } catch (error) {
         console.log(error);

@@ -31,6 +31,14 @@ class Service {
       let t = await trip.query().where('Id', tripId);
       let ut = await userTrip.query().where('UserId', userId).where('TripId',tripId);
 
+      if(u.length == 0){
+        //ออก เพราะส่งมาเป็น Array return Promise.reject(new errors.BadRequest('ไม่พบ user นี้อยู่ในระบบ'));
+      }
+
+      if(t.length == 0){
+        return Promise.reject(new errors.BadRequest('ไม่พบ trip นี้อยู่ในระบบ'));
+      }
+
       if (u.length != 0 && t.length != 0) {
         console.log(ut.length);
         if(ut.length == 0){
@@ -56,7 +64,17 @@ class Service {
   }
 
   async remove(id, params) {
-    return { id };
+    let userId = params.query.UserId;
+    let tripId = params.TripId;
+
+    console.log(params);
+
+    const userTrip = require('../../models/usertrip.model')();
+    const numberOfDeletedRows = await userTrip.query().delete().where('UserId', 1).where('TripId', 111);
+
+    console.log('removed', numberOfDeletedRows, 'รายการ');
+
+    return { userId };
   }
 }
 

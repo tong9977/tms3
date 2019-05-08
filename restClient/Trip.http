@@ -1,0 +1,4 @@
+http://localhost:3030/trips
+###
+http://localhost:3030/trips?$eager=[vehicle]
+###
