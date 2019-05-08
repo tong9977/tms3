@@ -12,6 +12,8 @@ const product = require('./product/product.service.js');
 const usertrip = require('./usertrip/usertrip.service.js');
 const tripcommand = require('./tripcommand/tripcommand.service.js');
 const usertripcommand = require('./usertripcommand/usertripcommand.service.js');
+const jobtrip = require('./jobtrip/jobtrip.service.js');
+const jobtripcommand = require('./jobtripcommand/jobtripcommand.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);
@@ -28,4 +30,6 @@ module.exports = function (app) {
   app.configure(usertrip);
   app.configure(tripcommand);
   app.configure(usertripcommand);
+  app.configure(jobtrip);
+  app.configure(jobtripcommand);
 };
