@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+const errors = require('@feathersjs/errors');
+
 class Service {
   constructor (options) {
     this.options = options || {};

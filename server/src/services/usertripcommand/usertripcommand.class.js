@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 const errors = require('@feathersjs/errors');
+const dateFns = require('date-fns');
 
 class Service {
   constructor (options) {
@@ -7,7 +8,34 @@ class Service {
   }
 
   async find (params) {
-    return [];
+    let userId = params.query.UserId;
+    let start = params.query.Start;
+    let end = params.query.End;
+
+    let tripStart = dateFns.format(start, "YYYY-MM-DDT00:00:00");
+    let tripEnd = dateFns.format(end, "YYYY-MM-DDT23:59:59");
+
+    var output = [{
+      data:[],
+    }];
+
+    const userTrip = require('../../models/usertrip.model')();
+    const trip = require('../../models/trips.model')();
+
+    let rawData = await userTrip.query().where('UserId', userId).where('TripDate', '>=', tripStart).where('TripDate', '<=', tripEnd);
+
+    rawData.forEach(async t => {
+      let tripIdNow = t.TripId;
+      let tripData = await trip.query().where('Id', tripIdNow);
+
+        var ct = {};
+        ct['Id'] = tripData[0].Id;
+        console.log(ct);
+        output[0].data.push(ct);
+        console.log(output[0].data);
+    });
+
+    return output[0];
   }
 
   async get (id, params) {
@@ -17,9 +45,9 @@ class Service {
   }
 
   async create (data, params) {
-    let result = false; 
+    let numberOfAddedRows = []; 
 
-    let userId = data.UserId;
+    let userIds = data.UserId;
     let tripId = data.TripId;
 
     const userTrip = require('../../models/usertrip.model')();
@@ -27,32 +55,36 @@ class Service {
     const trip = require('../../models/trips.model')();
 
     try {
-      let u = await user.query().where('Id', userId);
       let t = await trip.query().where('Id', tripId);
-      let ut = await userTrip.query().where('UserId', userId).where('TripId',tripId);
-
-      if(u.length == 0){
-        //ออก เพราะส่งมาเป็น Array return Promise.reject(new errors.BadRequest('ไม่พบ user นี้อยู่ในระบบ'));
-      }
+      //ออก เพราะส่งมาเป็น Array
+      //if(u.length == 0){
+        //return Promise.reject(new errors.BadRequest('ไม่พบ user นี้อยู่ในระบบ'));
+      //}
 
       if(t.length == 0){
         return Promise.reject(new errors.BadRequest('ไม่พบ trip นี้อยู่ในระบบ'));
       }
 
-      if (u.length != 0 && t.length != 0) {
-
-        if(ut.length == 0){
-          await userTrip.query().insert({ UserId: userId, TripId: tripId, TripDate: t[0].TripDate });
-          result = true;
-        }else{
-          return Promise.reject(new errors.BadRequest('มี user นี้อยู่แล้ว'));
-        } 
+      if(userIds.length > 0){
+        userIds.forEach(async userIdNow => {
+          let u = await user.query().where('Id', userIdNow);
+          if (u.length != 0 && t.length != 0) {
+            let ut = await userTrip.query().where('UserId', userIdNow).where('TripId',tripId);
+            if(ut.length == 0){
+              await userTrip.query().insert({ UserId: userIdNow, TripId: tripId, TripDate: t[0].TripDate });
+              numberOfAddedRows.push(userId);
+            }
+            // else{
+            //   return Promise.reject(new errors.BadRequest('มี user นี้อยู่แล้ว'));
+            // } 
+          }
+        });
       }
     } catch (err) {
       return 0;
     }
 
-    return result;
+    return numberOfAddedRows;
   }
 
   async update (id, data, params) {
