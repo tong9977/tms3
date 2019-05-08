@@ -82,7 +82,14 @@ class Service {
   }
 
   async remove (id, params) {
-    return { id };
+    let tripId = params.query.TripId;
+
+    const trips = require('../../models/trips.model')();
+    const numberOfDeletedRows = await trips.query().delete().where('Id', tripId);
+
+    console.log('removed', numberOfDeletedRows, 'รายการ');
+
+    return { numberOfDeletedRows };
   }
 }
 
