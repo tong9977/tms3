@@ -12,6 +12,7 @@ const unit = require('./unit/unit.service.js');
 const product = require('./product/product.service.js');
 const usertrip = require('./usertrip/usertrip.service.js');
 const usertripservice = require('./usertripservice/usertripservice.service.js');
+const upload = require('./upload/upload.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);
@@ -28,4 +29,5 @@ module.exports = function (app) {
   app.configure(product);
   app.configure(usertrip);
   app.configure(usertripservice);
+  app.configure(upload);
 };

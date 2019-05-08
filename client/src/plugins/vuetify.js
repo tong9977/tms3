@@ -4,6 +4,12 @@ import theme from './theme'
 import 'vuetify/dist/vuetify.min.css'
 import '@mdi/font/css/materialdesignicons.css'
 
+import VuetifyToast from 'vuetify-toast-snackbar'
+Vue.use(VuetifyToast)
+
+import Lightbox from 'vue-my-photos'
+Vue.component('lightbox', Lightbox);
+
 import VuetifyDialog from 'vuetify-dialog'
 Vue.use(VuetifyDialog)
 

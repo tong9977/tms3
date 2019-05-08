@@ -36,7 +36,8 @@ const store = new Vuex.Store({
         service('trips',{idField:'TripId'}),
         service('tripservice',{idField:'Id'}),
         service('product',{idField:'Id'}),
-        service('unit',{idField:'Id'})
+        service('unit',{idField:'Id'}),
+        service('upload',{idField:'Id'})
     ]
 })
 

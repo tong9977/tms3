@@ -1,24 +1,44 @@
 
 <template>
-<JobListComp :JobStatusId ="2" ColorTheme='blue' :CanCreate="false"/>
-
+  <v-container fill-height fluid grid-list-xl>
+    <v-layout justify-center wrap>
+      <v-flex md12>
+        <material-card color="blue" title="จัดการใบงานมอบหมายแล้ว" text="รายการใบงานมอบหมายแล้วสิ้นทั้งหมด">
+          
+          <JobListComp :JobStatusId="2" @itemClick="GotoDetail"/>
+          
+          <!-- dialog สำหรับ เพิ่ม แก้ไข -->
+          <v-dialog v-model="dialog" max-width="1200px">
+          
+             <JobCreateEditDialog @Done="dialog = false" @Success="GotoDetail"/>
+          </v-dialog>
+        </material-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 import JobListComp from "@/viewComponents/JobListComp.vue";
+import JobCreateEditDialog from "@/viewComponents/JobCreateEditDialog.vue";
 
 export default {
+  data: () => ({
+    dialog: false,
+    formModel: {}
+  }),
   components: {
-   
-    JobListComp
+    JobListComp,
+    JobCreateEditDialog
   },
-
-}
+  methods: {
+   
+    GotoDetail(Id) {
+      this.$router.push({ name: "JobDetail", params: { Id: Id } });
+    }
+  }
+};
 </script>
-
-
-
-
 
 
 

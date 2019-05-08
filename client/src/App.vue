@@ -20,12 +20,14 @@ export default {
 </script>
 
 <style lang="scss">
+
 @import "@/styles/index.scss";
 
 
 /* Remove in 1.2 */
 .v-datatable thead th.column.sortable i {
   vertical-align: unset;
+
 }
 
 @import "../node_modules/@syncfusion/ej2-base/styles/material.css";
@@ -39,3 +41,5 @@ export default {
 @import "../node_modules/@syncfusion/ej2-vue-grids/styles/material.css";
 @import "../node_modules/@syncfusion/ej2-vue-calendars/styles/material.css";
 </style>
+
+

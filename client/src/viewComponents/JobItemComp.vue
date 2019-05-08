@@ -186,7 +186,7 @@ export default {
         this.jobitems = res.data;
       } catch (error) {
         console.log(error);
-        alert("ไม่สามารถขอข้อมูลจาก server ได้");
+        this.$toast.error('ไม่สามารถขอข้อมูลจาก server ได้');
       }
 
       //Product
@@ -200,7 +200,7 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        alert("ไม่สามารถติดต่อ server ได้");
+        this.$toast.error('ไม่สามารถติดต่อ server ได้');
       }
 
       //Unit
@@ -214,7 +214,7 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        alert("ไม่สามารถติดต่อ server ได้");
+        this.$toast.error('ไม่สามารถติดต่อ server ได้');
       }
     },
     async addItem() {
@@ -240,7 +240,7 @@ export default {
     async saveToServer() {
       const valid = await this.$validator.validateAll();
       if (!valid) {
-        alert("กรุณากรอกข้อมูลให้สมบรูณ์");
+        this.$toast.error('กรุณากรอกข้อมูลให้สมบรูณ์');
         return;
       }
       this.loading = true;
@@ -251,12 +251,13 @@ export default {
           this.outDTO.JobId = this.JobId;
           await this.$store.dispatch(this.service + "/patch", [
             this.formModel.Id,
-            this.outDTO
+            this.outDTO,
+            this.$toast.success('แก้ไขข้อมูลสำเร็จ')
           ]);
           this.renderUI();
         } catch (err) {
           console.log(err);
-          alert("ไม่สามารถแก้ไขข้อมูลได้");
+          this.$toast.error('ไม่สามารถแก้ไขข้อมูลได้');
         } finally {
           this.loading = false;
         }
@@ -267,10 +268,11 @@ export default {
           // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
           this.outDTO.JobId = this.JobId;
           this.$store.dispatch(this.service + "/create", this.outDTO);
+          this.$toast.success('เพิ่มข้อมูลสำเร็จ');
           this.renderUI();
         } catch (err) {
           console.log(err);
-          alert("ไม่สามารถเพิ่มข้อมูลได้");
+          this.$toast.error('ไม่สามารถเพิ่มข้อมูลได้');
         } finally {
           this.loading = false;
         }
@@ -281,10 +283,11 @@ export default {
       this.loading = true;
       try {
         await this.$store.dispatch(this.service + "/remove", this.formModel.Id);
+        this.$toast.success('ลบข้อมูลสำเร็จ');
         this.renderUI();
       } catch (err) {
         console.log(err);
-        alert("ไม่สามารถลบข้อมูลได้");
+        this.$toast.error('ไม่สามารถลบข้อมูลได้');
       } finally {
         this.loading = false;
         this.dialogDelete = false;
@@ -294,3 +297,14 @@ export default {
 };
 </script> 
 
+
+<!-- Component Docs
+props 1 ตัว
+- JobId มีการผูกค่ากับ JobId เพื่อดึง item ที่มี JobId ตรงกับ Id ของ Job เท่านั้น
+
+
+event 0 ตัว
+
+
+- error(err)
+-->

@@ -270,7 +270,7 @@ export default {
       this.JobStatus = res.data;
     } catch (error) {
       console.log(error);
-      alert("ไม่สามารถติดต่อ server ได้");
+      this.$toast.error('ไม่สามารถติดต่อ server ได้');
     }
 
     try {
@@ -278,7 +278,7 @@ export default {
       this.JobType = res2.data;
     } catch (error) {
       console.log(error);
-      alert("ไม่สามารถติดต่อ server ได้");
+      this.$toast.error('ไม่สามารถติดต่อ server ได้');
     }
   },
   methods: {
@@ -296,7 +296,7 @@ export default {
           this.formModel.JobTypeObj = Object.assign({},{ Id: this.inDTO.JobTypeId });
           
         } catch (err) {
-          alert("ไม่สามารถต่อ server ได้");
+          this.$toast.error('ไม่สามารถต่อ server ได้');
         }
       } else {
         this.formModel = Object.assign({}, this.defaultValue);
@@ -315,7 +315,7 @@ export default {
     async saveToServer() {
       const valid = await this.$validator.validateAll();
       if (!valid) {
-        alert("กรุณากรอกข้อมูลให้สมบรูณ์");
+        this.$toast.error('กรุณากรอกข้อมูลให้สมบรูณ์');
         return;
       }
       this.loading = true;
@@ -338,9 +338,10 @@ export default {
 
           this.$emit('Success',outDTO.Id);
           this.$emit('Done', {});
+          this.$toast.success('แก้ไขข้อมูลสำเร็จ');
         } catch (err) {
           console.log(err);
-          alert("ไม่สามารถแก้ไขข้อมูลได้" + err);
+          this.$toast.error('ไม่สามารถแก้ไขข้อมูลได้' + err);
         } finally {
           this.loading = false;
         }
@@ -360,10 +361,11 @@ export default {
           
           this.$emit('Success',newjob.Id);
           this.$emit('Done', {});
+          this.$toast.success('เพิ่มข้อมูลสำเร็จ');
           //this.renderUI();
         } catch (err) {
           console.log(err);
-          alert("ไม่สามารถเพิ่มข้อมูลได้" + err);
+          this.$toast.error('ไม่สามารถเพิ่มข้อมูลได้' + err);
         } finally {
           this.loading = false;
         }
@@ -374,3 +376,17 @@ export default {
   }
 };
 </script> 
+
+<!-- Component Docs
+props 2 ตัว
+- mode(create,edit) เป็นตัวแปรที่กำหมดการทำงานสร้างและแก้ไข ต้องเป็นตัวพิมพ์เล็กเท่านั้น
+- Id ใช้ตอนแก้ไขเ
+
+
+event 3 ตัว
+- Success โยนตัวแปร Id เพื่อไปยังหน้า JobDetail
+- Cancel ยกเลิก Dialog
+- Done คือ event เพื่อจบการทำงาน
+
+- error(err)
+-->
