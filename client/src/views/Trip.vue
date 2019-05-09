@@ -16,7 +16,7 @@
       <v-btn color="primary" @click.stop="saveToServer('all')" :loading="loading">
         <v-icon>mdi-plus</v-icon>สร้างตารางรถวันนี้
       </v-btn>
-      <v-btn color="primary" @click.stop="addItemฺByVehicleId()">
+      <v-btn color="primary" @click.stop="addItemฺByVehicleId()" :loading="loading2">
         <v-icon>mdi-plus</v-icon>สร้างแบบรายคัน
       </v-btn>
     </v-toolbar>
@@ -91,7 +91,8 @@ export default {
     vehicles: [],
     vehicleSelect: null,
     vehicleId: [],
-    loading: false
+    loading: false,
+    loading2: false,
   }),
 
   provide: {},
@@ -120,6 +121,7 @@ export default {
     },
     async saveToServer(by) {
       if (by != "all") {
+        this.loading2 = true;
         const valid = await this.$validator.validateAll();
         if (!valid) {
           alert("กรุณากรอกข้อมูลให้สมบรูณ์");
@@ -132,9 +134,12 @@ export default {
           this.vehicleId.push(this.vehicleSelect[i].Id);
         }
         this.dialog = false;
+      }else{
+        //all
+        this.loading = true;
       }
 
-      this.loading = true;
+    
 
       try {
         let newTodo = { date: this.tripDate, vehicleId: this.vehicleId };
@@ -144,6 +149,7 @@ export default {
         alert("ไม่สามารถสร้าง Trip ได้");
       } finally {
         this.loading = false;
+        this.loading2 = false;
       }
       this.vehicleId = [];
       this.render();
