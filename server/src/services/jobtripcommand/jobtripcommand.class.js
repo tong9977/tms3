@@ -33,20 +33,19 @@ class Service {
       }
 
       if (jobIds.length > 0) {
-        jobIds.forEach(async jobIdNow => {
-          let j = await job.query().where('Id', jobIdNow).where('JobStatusId',1);
+        for(let i=0;i < jobIds.length; i++){
+          let j = await job.query().where('Id', jobIds[i]).where('JobStatusId',1);
           if (j.length != 0 && t.length != 0) {
             //เช็คว่า job นี้ เลข trip นี้ได้ลงแล้วรึยัง
-            let jt = await jobTrip.query().where('JobId', jobIdNow).where('TripId', tripId);
+            let jt = await jobTrip.query().where('JobId', jobIds[i]).where('TripId', tripId);
             if (jt.length == 0) {
-              await jobTrip.query().insert({ JobId: jobIdNow, TripId: tripId, TripDate: t[0].TripDate });
-              await job.query().findById(jobIdNow).patch({JobStatusId: 2})
-              numberOfAddedRows.push(jobIdNow);
+              await jobTrip.query().insert({ JobId: jobIds[i], TripId: tripId, TripDate: t[0].TripDate });
+              await job.query().findById(jobIds[i]).patch({JobStatusId: 2})
+              numberOfAddedRows.push(jobIds[i]);
             }
           }
-        });
+        }
       }
-
     } catch (err) {
       return err;
     } 
