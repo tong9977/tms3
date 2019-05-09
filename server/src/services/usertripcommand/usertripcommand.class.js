@@ -59,7 +59,7 @@ class Service {
         userIds.forEach(async userIdNow => {
           let u = await user.query().where('Id', userIdNow);
           if (u.length != 0 && t.length != 0) {
-            //เช็คสวันที่ของ trip ที่ส่งมาว่าในวันเดียวกัน user นี้ได้มีการออก trip อื่นไปแล้วรึยัง
+            //เช็ควันที่ของ trip ที่ส่งมาว่าในวันเดียวกัน user นี้ได้มีการออก trip อื่นไปแล้วรึยัง
             let ut1 = await userTrip.query().where('UserId', userIdNow).where('TripDate',t[0].TripDate );
             if (ut1.length == 0) {
               //เช็คว่า user นี้ เลข trip นี้ได้ลงแล้วรึยัง
