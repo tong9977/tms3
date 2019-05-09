@@ -16,27 +16,21 @@ class Service {
     let tripEnd = dateFns.format(end, "YYYY-MM-DDT23:59:59");
 
     var output = [{
-      data: [],
+      Trips:[],
     }];
-
     const userTrip = require('../../models/usertrip.model')();
     const trip = require('../../models/trips.model')();
 
     let rawData = await userTrip.query().where('UserId', userId).where('TripDate', '>=', tripStart).where('TripDate', '<=', tripEnd);
 
-    rawData.forEach(async t => {
-      let tripIdNow = t.TripId;
+    for(let i =0; i < rawData.length ;i++){ 
+      let tripIdNow = rawData[i].TripId;
       let tripData = await trip.query().where('Id', tripIdNow);
 
-      var ct = {};
-      ct['Id'] = tripData[0].Id;
-      console.log(ct);
-      await output[0].data.push(ct);
-      console.log(output[0].data);
-    });
-    console.log('Final : ' + output[0].data);
-
-    return output[0];
+      output[0].Trips.push(tripData[0]);
+    };
+     
+    return output;
   }
 
   async get(id, params) {
@@ -70,10 +64,8 @@ class Service {
         userIds.forEach(async userIdNow => {
           let u = await user.query().where('Id', userIdNow);
           if (u.length != 0 && t.length != 0) {
-            //เช็คสวันที่ของ trip ในวันเดียวได้มีการออก trip ไปแล้วรึยัง
-            console.log();
+            //เช็คสวันที่ของ trip ที่ส่งมาว่าในวันเดียวกัน user นี้ได้มีการออก trip อื่นไปแล้วรึยัง
             let ut1 = await userTrip.query().where('UserId', userIdNow).where('TripDate',t[0].TripDate );
-     
             if (ut1.length == 0) {
               //เช็คว่า user นี้ เลข trip นี้ได้ลงแล้วรึยัง
               let ut2 = await userTrip.query().where('UserId', userIdNow).where('TripId', tripId);
