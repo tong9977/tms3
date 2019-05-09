@@ -40,7 +40,8 @@ class Service {
             let jt = await jobTrip.query().where('JobId', jobIdNow).where('TripId', tripId);
             if (jt.length == 0) {
               await jobTrip.query().insert({ JobId: jobIdNow, TripId: tripId, TripDate: t[0].TripDate });
-              numberOfAddedRows.push(userIdNow);
+              await job.query().findById(jobIdNow).patch({JobStatusId: 2})
+              numberOfAddedRows.push(jobIdNow);
             }
           }
         });
@@ -49,7 +50,7 @@ class Service {
     } catch (err) {
       return err;
     } 
-    
+
     return numberOfAddedRows;
   }
 
