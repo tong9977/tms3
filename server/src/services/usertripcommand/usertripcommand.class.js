@@ -42,7 +42,7 @@ class Service {
   async create(data, params) {
     let numberOfAddedRows = [];
 
-    let userIds = data.UserId;
+    let userIds = data.UserId; //Array [1,2,3]
     let tripId = data.TripId;
 
     const userTrip = require('../../models/usertrip.model')();
@@ -50,12 +50,7 @@ class Service {
     const trip = require('../../models/trips.model')();
 
     try {
-      let t = await trip.query().where('Id', tripId);
-      //ออก เพราะส่งมาเป็น Array
-      //if(u.length == 0){
-      //return Promise.reject(new errors.BadRequest('ไม่พบ user นี้อยู่ในระบบ'));
-      //}
-
+      let t = await trip.query().where('Id', tripId);  
       if (t.length == 0) {
         return Promise.reject(new errors.BadRequest('ไม่พบ trip นี้อยู่ในระบบ'));
       }
@@ -78,8 +73,8 @@ class Service {
         });
       }
     } catch (err) {
-      return 0;
-    }
+      return err;
+    } 
 
     return numberOfAddedRows;
   }
