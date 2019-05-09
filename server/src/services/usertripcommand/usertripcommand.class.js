@@ -1,25 +1,48 @@
 /* eslint-disable no-unused-vars */
 const errors = require('@feathersjs/errors');
+const dateFns = require('date-fns');
 
 class Service {
-  constructor (options) {
+  constructor(options) {
     this.options = options || {};
   }
 
-  async find (params) {
-    return [];
+  async find(params) {
+    let userId = params.query.UserId;
+    let start = params.query.Start;
+    let end = params.query.End;
+
+    let tripStart = dateFns.format(start, "YYYY-MM-DDT00:00:00");
+    let tripEnd = dateFns.format(end, "YYYY-MM-DDT23:59:59");
+
+    var output = [{
+      Trips:[],
+    }];
+    const userTrip = require('../../models/usertrip.model')();
+    const trip = require('../../models/trips.model')();
+
+    let rawData = await userTrip.query().where('UserId', userId).where('TripDate', '>=', tripStart).where('TripDate', '<=', tripEnd);
+
+    for(let i =0; i < rawData.length ;i++){ 
+      let tripIdNow = rawData[i].TripId;
+      let tripData = await trip.query().where('Id', tripIdNow);
+
+      output[0].Trips.push(tripData[0]);
+    };
+     
+    return output;
   }
 
-  async get (id, params) {
+  async get(id, params) {
     return {
       id, text: `A new message with ID: ${id}!`
     };
   }
 
-  async create (data, params) {
-    let result = false; 
+  async create(data, params) {
+    let numberOfAddedRows = [];
 
-    let userId = data.UserId;
+    let userIds = data.UserId; //Array [1,2,3]
     let tripId = data.TripId;
 
     const userTrip = require('../../models/usertrip.model')();
@@ -27,43 +50,44 @@ class Service {
     const trip = require('../../models/trips.model')();
 
     try {
-      let u = await user.query().where('Id', userId);
-      let t = await trip.query().where('Id', tripId);
-      let ut = await userTrip.query().where('UserId', userId).where('TripId',tripId);
-
-      if(u.length == 0){
-        //ออก เพราะส่งมาเป็น Array return Promise.reject(new errors.BadRequest('ไม่พบ user นี้อยู่ในระบบ'));
-      }
-
-      if(t.length == 0){
+      let t = await trip.query().where('Id', tripId);  
+      if (t.length == 0) {
         return Promise.reject(new errors.BadRequest('ไม่พบ trip นี้อยู่ในระบบ'));
       }
 
-      if (u.length != 0 && t.length != 0) {
-
-        if(ut.length == 0){
-          await userTrip.query().insert({ UserId: userId, TripId: tripId, TripDate: t[0].TripDate });
-          result = true;
-        }else{
-          return Promise.reject(new errors.BadRequest('มี user นี้อยู่แล้ว'));
-        } 
+      if (userIds.length > 0) {
+        userIds.forEach(async userIdNow => {
+          let u = await user.query().where('Id', userIdNow);
+          if (u.length != 0 && t.length != 0) {
+            //เช็ควันที่ของ trip ที่ส่งมาว่าในวันเดียวกัน user นี้ได้มีการออก trip อื่นไปแล้วรึยัง
+            let ut1 = await userTrip.query().where('UserId', userIdNow).where('TripDate',t[0].TripDate );
+            if (ut1.length == 0) {
+              //เช็คว่า user นี้ เลข trip นี้ได้ลงแล้วรึยัง
+              let ut2 = await userTrip.query().where('UserId', userIdNow).where('TripId', tripId);
+              if (ut2.length == 0) {
+                await userTrip.query().insert({ UserId: userIdNow, TripId: tripId, TripDate: t[0].TripDate });
+                numberOfAddedRows.push(userIdNow);
+              }
+            }
+          }
+        });
       }
     } catch (err) {
-      return 0;
-    }
+      return err;
+    } 
 
-    return result;
+    return numberOfAddedRows;
   }
 
-  async update (id, data, params) {
+  async update(id, data, params) {
     return data;
   }
 
-  async patch (id, data, params) {
+  async patch(id, data, params) {
     return data;
   }
 
-  async remove (id, params) {
+  async remove(id, params) {
     let userId = params.query.UserId;
     let tripId = params.query.TripId;
 
