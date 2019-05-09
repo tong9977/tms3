@@ -22,12 +22,9 @@
     </v-toolbar>
 
     <v-layout row>
-      <v-flex xs12 sm4 md4 v-for="t in trips" :key="t.TripId">
+      <v-flex xs12 sm4 md4 v-for="trip in trips" :key="trip.TripId">
         <TripDetailComp
-          :LicensePlate="t.vehicle.LicensePlate"
-          :TripCode="t.TripCode"
-          :Limit="t.vehicle.Limit"
-          :LimitCC="t.vehicle.LimitCC"
+          :Trip="trip"
         ></TripDetailComp>
       </v-flex>
     </v-layout>

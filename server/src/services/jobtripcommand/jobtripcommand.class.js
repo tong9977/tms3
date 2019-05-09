@@ -7,7 +7,24 @@ class Service {
   }
 
   async find (params) {
-    return [];
+    let jobId = params.query.JobId;
+
+    var output = [{
+      Trips: [],
+    }];
+    const jobTrip = require('../../models/jobtrip.model')();
+    const trip = require('../../models/trips.model')();
+
+    let rawData = await jobTrip.query().where('JobId', jobId);
+
+    for (let i = 0; i < rawData.length; i++) {
+      let tripIdNow = rawData[i].TripId;
+      let tripData = await trip.query().where('Id', tripIdNow);
+
+      output[0].Trips.push(tripData[0]);
+    };
+
+    return output;
   }
 
   async get (id, params) {
