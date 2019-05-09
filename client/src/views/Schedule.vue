@@ -74,65 +74,9 @@
         hide-overlay
         transition="dialog-bottom-transition"
       >
-        <v-card>
-          <div class="blue py-1 elevation-2">
-            <v-layout row wrap>
-              <v-flex xs6>
-                <h3 class="px-4 white--text">เลือกใบงานที่จะใส่ในรถคันนี้</h3>
-              </v-flex>
-              <v-flex xs6 text-xs-right>
-                <v-btn class="green mx-4" @click="jobNewDialog = false">OK</v-btn>
-              </v-flex>
-            </v-layout>
-          </div>
-
-          <v-layout justify-center wrap>
-            <v-flex md12>
-              <v-card class="pa-4">
-                <v-data-table :headers="jobNewHeaders" :items="jobnews" hide-actions>
-                  <template slot="headerCell" slot-scope="{ header }">
-                    <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
-                  </template>
-                  <template slot="items" slot-scope="{ item }">
-                    <td>
-                      <v-checkbox primary hide-details></v-checkbox>
-                    </td>
-                    <td>{{ item.CustomerName }}</td>
-                    <td>{{ item.DeliveryDate }}</td>
-                    <td>
-                      {{ item.ContactPerson }}
-                      <br>
-                      {{ item.Tel }}
-                    </td>
-                    <td>
-                      <ul>
-                        <li
-                          v-for="p in item.Products"
-                          :key="p.ProductName"
-                        >{{p.ProductName}} {{p.Quantity}} {{p.Unit}}</li>
-                      </ul>
-                    </td>
-                    <td>{{ item.Remark }}</td>
-                    <td>
-                      {{ item.Address }}
-                      <br>
-                      <a
-                        :href="'https://maps.google.com/maps?q=' + item.Lat +','+item.Long +'&hl=es;z=14&amp;output=embed'"
-                        style="color:#0000FF;text-align:left"
-                        target="_blank"
-                      >map</a>
-                    </td>
-                    <td>{{ item.Weigth }} kg</td>
-                    <td>{{ item.CC }} cc</td>
-                    <td>{{ item.RouteNo }}</td>
-                    <td>{{ item.Zone }}</td>
-                    <td>{{ item.Distance }} km.</td>
-                  </template>
-                </v-data-table>
-              </v-card>
-            </v-flex>
-          </v-layout>
-        </v-card>
+        
+        
+        <JobSelectionComp  @success="GetDetail" />
       </v-dialog>
     </v-layout>
 
@@ -186,6 +130,7 @@
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
+import JobSelectionComp from "@/viewComponents/JobSelectionComp.vue";
 
 export default {
   data: () => ({
@@ -213,8 +158,18 @@ export default {
     jobNewDialog: false,
     driverDialog: false
   }),
+  components: {
+   JobSelectionComp
+  },
   computed: {
     ...mapState("tms", ["vehicles", "jobnews", "drivers"])
+  },
+   methods: {
+
+    GetDetail(Id) {
+      alert(JSON.stringify(Id))
+      this.jobNewDialog = false;
+    }
   }
 };
 </script>
