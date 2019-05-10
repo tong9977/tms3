@@ -50,15 +50,21 @@ class Service {
       }
 
       if (jobIds.length > 0) {
-        for(let i=0;i < jobIds.length; i++){
+        for(let i= 0;i < jobIds.length; i++){
           let j = await job.query().where('Id', jobIds[i]).where('JobStatusId',1);
           if (j.length != 0 && t.length != 0) {
             //เช็คว่า job นี้ เลข trip นี้ได้ลงแล้วรึยัง
             let jt = await jobTrip.query().where('JobId', jobIds[i]).where('TripId', tripId);
             if (jt.length == 0) {
               await jobTrip.query().insert({ JobId: jobIds[i], TripId: tripId, TripDate: t[0].TripDate });
-              await job.query().findById(jobIds[i]).patch({JobStatusId: 2})
-              numberOfAddedRows.push(jobIds[i]);
+              if(j[0].TripCredit > 0){
+                let tripTotal = j[0].TripCredit - 1;
+                await job.query().findById(jobIds[i]).patch({TripCredit: tripTotal})
+                if(tripTotal == 0){
+                  await job.query().findById(jobIds[i]).patch({JobStatusId: 2})
+                }
+                numberOfAddedRows.push(jobIds[i]);
+              }
             }
           }
         }

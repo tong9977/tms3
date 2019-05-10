@@ -49,6 +49,7 @@
 
 <script>
 import JobSelectionComp from "@/viewComponents/JobSelectionComp.vue";
+import collect from "collect.js";
 
 export default {
   components: {
@@ -81,14 +82,21 @@ export default {
       this.jobNewDialog = false;
     },
     async saveToServer(jobId) {
-      let result;
       try {
         if (jobId.length > 0) {
           let newTodo = { JobId: jobId, TripId: this.Trip.Id };
-          result = await this.$store.dispatch(this.service + "/create", newTodo);
-          if(result.length == 0){
-            alert("ไม่สามารถเพิ่ม Job ได้");
-          }
+          let jobIdCreated = await this.$store.dispatch(this.service + "/create", newTodo);
+          alert(JSON.stringify(jobIdCreated));
+          // alert("sent : " + JSON.stringify(jobId) + "return : " + JSON.stringify(jobIdCreated));
+          // let errorList = 0; //[jobId] collectdiff result;
+          // const collection = collect(jobId);
+          // const diff = collection.diff(jobIdReturn);
+          // errorList = diff.all();
+          // alert(JSON.stringify(errorList));
+
+          // if (errorList.length > 0) {
+          //   alert("ไม่สามารถเพิ่ม ได้ id " + errorList + "ได้");
+          // }
         }
       } catch (err) {
         console.log(err);

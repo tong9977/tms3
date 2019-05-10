@@ -1,4 +1,10 @@
+//มี find และ get
 http://localhost:3030/usertripcommand
 
 ###
 http://localhost:3030/usertripcommand/?UserId=1&TripId=111
+###
+POST url HTTP/1.1
+header name: header value
+
+content
