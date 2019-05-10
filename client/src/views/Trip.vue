@@ -102,7 +102,7 @@ export default {
     async render() {
       try {
         let res = await this.$store.dispatch("trips/find", {
-          query: { $eager: "vehicle" }
+          query: { $eager: "vehicles" }
         });
         this.trips = res.data;
       } catch (error) {

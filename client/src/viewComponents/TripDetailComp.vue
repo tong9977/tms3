@@ -64,12 +64,12 @@ export default {
   props: ["Trip"],
   mounted: function() {
     this.title =
-      this.Trip.vehicle.LicensePlate + " (" + this.Trip.TripCode + ")";
+      this.Trip.vehicles.LicensePlate + " (" + this.Trip.TripCode + ")";
     this.subTitle =
       "ขนได้ " +
-      this.Trip.vehicle.Limit +
+      this.Trip.vehicles.Limit +
       " กก. " +
-      this.Trip.vehicle.LimitCC +
+      this.Trip.vehicles.LimitCC +
       " cc";
   },
   methods: {
