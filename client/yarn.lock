@@ -5270,6 +5270,11 @@ merge-descriptors@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
 
+merge-images@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/merge-images/-/merge-images-1.1.0.tgz#e41b5f29972a493d60517e49c5f9ce139c3db16a"
+  integrity sha512-RNRb9+NR/LqyKKD6AyMNT66R5BVh9y3WrFB6OqrnN38M+EwST4gxjC0luZO6H8xgpSBQ3LNq/ELtRFsDfHNsng==
+
 merge-source-map@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/merge-source-map/-/merge-source-map-1.1.0.tgz#2fdde7e6020939f70906a68f2d7ae685e4c8c646"
@@ -7546,6 +7551,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
+signature_pad@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/signature_pad/-/signature_pad-2.3.2.tgz#ca7230021c89cedeead27b33d8d16ff254e5f04a"
+  integrity sha512-peYXLxOsIY6MES2TrRLDiNg2T++8gGbpP2yaC+6Ohtxr+a2dzoaqWosWDY9sWqTAAk6E/TyQO+LJw9zQwyu5kA==
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
@@ -8519,6 +8529,15 @@ vue-router@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
 
+vue-signature-pad@^1.1.9-beta.1:
+  version "1.1.9-beta.1"
+  resolved "https://registry.yarnpkg.com/vue-signature-pad/-/vue-signature-pad-1.1.9-beta.1.tgz#9e721c30898f4d08961525bce82ef7c3d1e0781e"
+  integrity sha512-TXrdXsxQkE7ckMmOQMNATU3xo07Re53J4YnoNPC1kEtF2AWAy+lmFyAewevu9EXYobkYk4swF8Txmxryb6NcSg==
+  dependencies:
+    merge-images "^1.1.0"
+    signature_pad "^2.3.2"
+    vue "^2.6.9"
+
 vue-style-loader@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.1.tgz#7c1d051b24f60b1707602b549ed50b4c8111d316"
@@ -8552,7 +8571,7 @@ vue@^2.5.17:
   version "2.5.17"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
 
-vue@^2.5.22:
+vue@^2.5.22, vue@^2.6.9:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==

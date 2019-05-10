@@ -139,7 +139,7 @@
 
                 <v-flex xs12 md3>
                   <v-text-field
-                    v-model="formModel.NumTrip"
+                    v-model="formModel.TripCredit"
                     
                     label="จำนวนรอบในการส่ง"
                   ></v-text-field>
@@ -230,7 +230,7 @@ export default {
       CreatedDate: "",
       CompletedDate: "",
       CompletedBy: "",
-      NumTrip: "",
+      TripCredit: "",
       JobTypeObj: { Id: 1 },
       JobStatusObj: { Id: 1 }
     },

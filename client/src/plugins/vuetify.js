@@ -7,6 +7,9 @@ import '@mdi/font/css/materialdesignicons.css'
 import VuetifyToast from 'vuetify-toast-snackbar'
 Vue.use(VuetifyToast)
 
+import VueSignaturePad from 'vue-signature-pad';
+Vue.use(VueSignaturePad);
+
 import Lightbox from 'vue-my-photos'
 Vue.component('lightbox', Lightbox);
 

@@ -101,7 +101,7 @@
                 </v-flex>
                 <v-flex>
                   <v-icon>mdi-truck</v-icon>
-                  จำนวนในการส่ง : {{formModel.NumTrip}} รอบ
+                  จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
                 </v-flex>
                 <v-flex>
                   <v-icon>mdi-marker</v-icon>
@@ -143,15 +143,25 @@
               <upload-image-box @success="uploadDone"></upload-image-box>
             </v-flex>
           </v-layout>
+
+
+
+           
         </v-container>
+        <v-flex xs12>
+          <div class="text-xs-left" style="font-size: 24pt " >Signature</div>
+          </v-flex>
+          <v-btn class="blue white--text" to="Signature" >
+              Signature
+          </v-btn>
       </template>
     </v-layout>
 
     <!-- dialog สำหรับ เพิ่ม แก้ไข -->
       
     <v-dialog v-model="dialogimg" max-width="100%" max-height="100%" >
-      <div style="text-align: center;" class="black white--text" >
-       <img :src="photo" class="image" width="auto" height="auto">  <br>
+      <div style="text-align: center;" class="black white--text">
+       <img :src="photo" class="image" width="auto" height="auto"><br>
        <v-text > <v-icon>mdi-clock</v-icon> {{dateCreate | dateC}}</v-text>
       </div>
     </v-dialog>

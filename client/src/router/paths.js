@@ -136,4 +136,10 @@ export default [
     name: 'Unit',
     view: 'Unit'
   }  
+  ,
+  {
+    path: '/signature',
+    name: 'Signature',
+    view: 'Signature'
+  }  
 ]

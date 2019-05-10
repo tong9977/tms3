@@ -74,9 +74,10 @@
         hide-overlay
         transition="dialog-bottom-transition"
       >
-        
+        <v-card>
         
         <JobSelectionComp  @success="GetDetail" />
+        </v-card>
       </v-dialog>
     </v-layout>
 
@@ -87,43 +88,9 @@
         hide-overlay
         transition="dialog-bottom-transition"
       >
-        <v-card>
-          <div class="blue py-1 elevation-2">
-            <v-layout row wrap>
-              <v-flex xs6>
-                <h3 class="px-4 white--text">เลือกพนักงานขับรถที่จะขับคันนี้</h3>
-              </v-flex>
-              <v-flex xs6 text-xs-right>
-                <v-btn class="green mx-4" @click="driverDialog = false">OK</v-btn>
-              </v-flex>
-            </v-layout>
-          </div>
-
-          <v-layout justify-center wrap>
-            <v-flex md12>
-              <v-card class="pa-4">
-                <v-data-table :headers="driverHeaders" :items="drivers" hide-actions>
-                  <template slot="headerCell" slot-scope="{ header }">
-                    <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
-                  </template>
-                  <template slot="items" slot-scope="{ item }">
-                    <td>
-                      <v-checkbox primary hide-details></v-checkbox>
-                    </td>
-                    <td>
-                      <v-avatar size="64" color="grey lighten-4">
-                        <img :src="item.ImageUrl" alt="avatar">
-                      </v-avatar>
-                    </td>
-                    <td>{{ item.FirstName}} {{ item.LastName}}</td>
-                    <td>{{ item.StaffId }}</td>
-                    <td>{{ item.UserName }}</td>
-                  </template>
-                </v-data-table>
-              </v-card>
-            </v-flex>
-          </v-layout>
-        </v-card>
+      <v-card>
+        <UserSelectionComp  @success="GetDetailUser" />
+      </v-card>
       </v-dialog>
     </v-layout>
   </v-container>
@@ -131,7 +98,7 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import JobSelectionComp from "@/viewComponents/JobSelectionComp.vue";
-
+import UserSelectionComp from "@/viewComponents/UserSelectionComp.vue";
 export default {
   data: () => ({
     jobNewHeaders: [
@@ -159,7 +126,8 @@ export default {
     driverDialog: false
   }),
   components: {
-   JobSelectionComp
+   JobSelectionComp,
+   UserSelectionComp
   },
   computed: {
     ...mapState("tms", ["vehicles", "jobnews", "drivers"])
@@ -169,6 +137,11 @@ export default {
     GetDetail(Id) {
       alert(JSON.stringify(Id))
       this.jobNewDialog = false;
+
+    },
+    GetDetailUser(Id){
+      alert(JSON.stringify(Id))
+      this.driverDialog = false;
     }
   }
 };

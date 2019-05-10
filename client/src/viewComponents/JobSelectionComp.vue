@@ -57,8 +57,6 @@
                 </td>
                 <td>{{ item.RouteNo }}</td>
                 <td>{{ item.Distance }} km.</td>
-
-           
               </template>
             </v-data-table>
           </v-card>
@@ -85,15 +83,15 @@ export default {
       { value: "", text: "", sortable: false },
       { value: "Customer", text: "ลูกค้า", sortable: true },
 
-      { value: "ContactPerson", text: "คนติดต่อ", sortable: false },
+      { value: "ContactPerson", text: "คนติดต่อ", sortable: true },
       { value: "DeliveryDate", text: "วันส่งของ", sortable: true },
       { text: "สินค้า", sortable: false },
       //{ value: "Remark", text: "หมายเหตุ", sortable: false },
-      { value: "Address", text: "ที่อยู่", sortable: false },
-      { value: "Weight", text: "น้ำหนัก/ปริมาตร", sortable: false },
-      { value: "RouteNo", text: "RouteNo", sortable: false },
+      { value: "Address", text: "ที่อยู่", sortable: true },
+      { value: "Weight", text: "น้ำหนัก/ปริมาตร", sortable: true },
+      { value: "RouteNo", text: "RouteNo", sortable: true },
       // { value: "Zone", text: "Zone", sortable: false },
-      { value: "Distance", text: "ระยะทาง", sortable: false },
+      { value: "Distance", text: "ระยะทาง", sortable: true },
       { value: "", text: "", sortable: false }
     ],
     defaultValue: {},
@@ -110,7 +108,7 @@ export default {
   filters: {
     date: createDateFilter("DD/MM/YYYY", { locale })
   },
-  
+
   computed: {},
   async mounted() {
     //init here
@@ -146,11 +144,11 @@ export default {
       } catch (err) {
         this.$toast.error("ไม่สามารถต่อ server ได้");
       }
-
-     
     },
     OkClick(item) {
-       this.$emit("success", this.JobsId);
+      this.$emit("success", this.JobsId);
+      this.JobsId = [];
+      this.renderUI();
     }
   }
 };
