@@ -22,6 +22,8 @@ class trips extends Model {
   static get relationMappings() {
     const vehicle = require('./vehicle.model')();
     const user = require('./user.model')();
+    const job = require('./job.model')();
+
     return {
       vehicles: {
         relation: Model.HasOneRelation,
@@ -43,6 +45,20 @@ class trips extends Model {
             to: 'UserTrip.TripId'
           },
           to: 'Users.Id'
+        }
+      },
+
+      jobs: {
+        relation: Model.ManyToManyRelation,
+        modelClass: job,
+        join: {
+          from: 'Trips.Id',
+          through: {
+            // persons_movies is the join table.
+            from: 'JobTrip.JobId',
+            to: 'JobTrip.TripId'
+          },
+          to: 'Jobs.Id'
         }
       },
     }
