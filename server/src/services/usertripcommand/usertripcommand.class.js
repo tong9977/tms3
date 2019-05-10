@@ -16,20 +16,20 @@ class Service {
     let tripEnd = dateFns.format(end, "YYYY-MM-DDT23:59:59");
 
     var output = [{
-      Trips:[],
+      Trips: [],
     }];
     const userTrip = require('../../models/usertrip.model')();
     const trip = require('../../models/trips.model')();
 
     let rawData = await userTrip.query().where('UserId', userId).where('TripDate', '>=', tripStart).where('TripDate', '<=', tripEnd);
 
-    for(let i =0; i < rawData.length ;i++){ 
+    for (let i = 0; i < rawData.length; i++) {
       let tripIdNow = rawData[i].TripId;
       let tripData = await trip.query().where('Id', tripIdNow);
 
       output[0].Trips.push(tripData[0]);
     };
-     
+
     return output;
   }
 
@@ -50,31 +50,31 @@ class Service {
     const trip = require('../../models/trips.model')();
 
     try {
-      let t = await trip.query().where('Id', tripId);  
+      let t = await trip.query().where('Id', tripId);
       if (t.length == 0) {
         return Promise.reject(new errors.BadRequest('ไม่พบ trip นี้อยู่ในระบบ'));
       }
 
       if (userIds.length > 0) {
-        userIds.forEach(async userIdNow => {
-          let u = await user.query().where('Id', userIdNow);
+        for (let i = 0; i < userIds.length; i++) {
+          let u = await user.query().where('Id', userIds[i]);
           if (u.length != 0 && t.length != 0) {
             //เช็ควันที่ของ trip ที่ส่งมาว่าในวันเดียวกัน user นี้ได้มีการออก trip อื่นไปแล้วรึยัง
-            let ut1 = await userTrip.query().where('UserId', userIdNow).where('TripDate',t[0].TripDate );
+            let ut1 = await userTrip.query().where('UserId',  userIds[i]).where('TripDate', t[0].TripDate);
             if (ut1.length == 0) {
               //เช็คว่า user นี้ เลข trip นี้ได้ลงแล้วรึยัง
-              let ut2 = await userTrip.query().where('UserId', userIdNow).where('TripId', tripId);
+              let ut2 = await userTrip.query().where('UserId',  userIds[i]).where('TripId', tripId);
               if (ut2.length == 0) {
-                await userTrip.query().insert({ UserId: userIdNow, TripId: tripId, TripDate: t[0].TripDate });
-                numberOfAddedRows.push(userIdNow);
+                await userTrip.query().insert({ UserId:  userIds[i], TripId: tripId, TripDate: t[0].TripDate });
+                numberOfAddedRows.push(userIds[i]);
               }
             }
           }
-        });
+        }
       }
     } catch (err) {
       return err;
-    } 
+    }
 
     return numberOfAddedRows;
   }

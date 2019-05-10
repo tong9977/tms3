@@ -146,9 +146,9 @@ export default {
       }
     },
     OkClick(item) {
-      this.$emit("success", this.JobsId);
-      this.JobsId = [];
-      this.renderUI();
+       this.$emit("success", this.JobsId);
+       this.JobsId = [];
+       this.renderUI();
     }
   }
 };
