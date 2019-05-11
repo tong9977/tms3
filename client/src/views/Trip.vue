@@ -21,7 +21,7 @@
       </v-btn>
     </v-toolbar>
 
-    <v-layout row>
+    <v-layout row wrap>
       <v-flex xs12 sm4 md4 v-for="trip in trips" :key="trip.TripId">
         <TripDetailComp
           :Trip="trip"
@@ -102,7 +102,7 @@ export default {
     async render() {
       try {
         let res = await this.$store.dispatch("trips/find", {
-          query: { $eager: "vehicles" }
+          query: { $eager: "[vehicles,users,jobs]" }
         });
         this.trips = res.data;
       } catch (error) {

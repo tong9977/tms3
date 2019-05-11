@@ -106,8 +106,7 @@ export default {
     this.ready();
   },
   methods: {
-    async ready() {
-      this.JobsId=[];
+    async ready() { 
       try {
         this.query = {
           query: {
@@ -124,6 +123,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.JobsId=[];
     },
     OkClick(item) {
       this.$emit("success", this.JobsId);

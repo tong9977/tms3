@@ -41,8 +41,8 @@ class trips extends Model {
           from: 'Trips.Id',
           through: {
             // persons_movies is the join table.
-            from: 'UserTrip.UserId',
-            to: 'UserTrip.TripId'
+            from: 'UserTrip.TripId',
+            to: 'UserTrip.UserId'
           },
           to: 'Users.Id'
         }
@@ -55,8 +55,8 @@ class trips extends Model {
           from: 'Trips.Id',
           through: {
             // persons_movies is the join table.
-            from: 'JobTrip.JobId',
-            to: 'JobTrip.TripId'
+            from: 'JobTrip.TripId',
+            to: 'JobTrip.JobId'
           },
           to: 'Jobs.Id'
         }

@@ -80,11 +80,11 @@ export default {
   async mounted() {
     //init here
 
-    this.renderUI();
+    this.ready();
   },
 
   methods: {
-    async renderUI() {
+    async ready() {
       try {
         this.query = {
           query: {

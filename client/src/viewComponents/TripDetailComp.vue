@@ -1,6 +1,6 @@
 <template>
   <material-card color="green" :title="title" :text="subTitle" full-width>
-    <v-btn flat slot="menu" @click="jobNewDialog = true">
+    <v-btn flat slot="menu" @click="CallJobDialog">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-list two-line>
@@ -41,7 +41,7 @@
         hide-overlay
         transition="dialog-bottom-transition"
       >
-        <JobSelectionComp @success="getJobIdSelected"/>
+        <JobSelectionComp ref="JobSelectionComp" @success="getJobIdSelected"/>
       </v-dialog>
     </v-layout>
   </material-card>
@@ -63,6 +63,7 @@ export default {
   }),
   props: ["Trip"],
   mounted: function() {
+    //alert(this.Trip.users[0].Email);
     this.title =
       this.Trip.vehicles.LicensePlate + " (" + this.Trip.TripCode + ")";
     this.subTitle =
@@ -73,6 +74,10 @@ export default {
       " cc";
   },
   methods: {
+    async CallJobDialog(){
+      await this.$refs.JobSelectionComp.ready();
+      this.jobNewDialog = true;
+    },
     deleteTrip() {
       alert("Delete");
     },
@@ -94,14 +99,17 @@ export default {
           // errorList = diff.all();
           // alert(JSON.stringify(errorList));
 
-          // if (errorList.length > 0) {
-          //   alert("ไม่สามารถเพิ่ม ได้ id " + errorList + "ได้");
-          // }
+          if (jobId.length != jobIdCreated.length) {
+            let error = jobId.length - jobIdCreated.length;
+            alert("ไม่สามารถเพิ่มได้จำนวน " + error + " รายการ");
+          }
+          
+          //find ใหม่ เอาแค่ตัวเดียวที่เพิ่มแล้วสั่ง this.Trip = ที่ get มาใหม่
         }
       } catch (err) {
         console.log(err);
         alert("ไม่สามารถเพิ่ม Job ได้");
-      }
+      }   
     }
   }
 };
