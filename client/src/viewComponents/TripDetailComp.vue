@@ -42,7 +42,7 @@
           </v-avatar>
         </v-flex>
         <v-flex xs6 text-xs-right>
-          <v-btn color="success" round class="font-weight-light">คนขับรถ</v-btn>
+          <v-btn color="success" round class="font-weight-light" @click="CallUserDialog">คนขับรถ</v-btn>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -82,6 +82,7 @@
       </v-card>
     </v-dialog>
 
+    <!-- Add Job -->
     <v-layout row justify-center>
       <v-dialog
         v-model="jobNewDialog"
@@ -92,22 +93,36 @@
         <JobSelectionComp ref="JobSelectionComp" @success="getJobIdSelected"/>
       </v-dialog>
     </v-layout>
+
+    <!-- Add User -->
+    <v-layout row justify-center>
+      <v-dialog
+        v-model="userNewDialog"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
+        <UserSelectionComp ref="UserSelectionComp" @success="getUserIdSelected"/>
+      </v-dialog>
+    </v-layout>
   </material-card>
 </template>
 
 <script>
 import JobSelectionComp from "@/viewComponents/JobSelectionComp.vue";
+import UserSelectionComp from "@/viewComponents/UserSelectionComp.vue";
 import collect from "collect.js";
 
 export default {
   components: {
-    JobSelectionComp
+    JobSelectionComp,
+    UserSelectionComp
   },
   data: () => ({
-    service: "jobtripcommand",
     title: "",
     subTitle: "",
     jobNewDialog: false,
+    userNewDialog: false,
 
     weight: 0,
     weightMax: 0,
@@ -140,23 +155,28 @@ export default {
     this.limitMax = this.Trip.vehicles.LimitCC;
   },
   methods: {
+    async render() {
+      //find ใหม่ เอาแค่ตัวเดียวที่เพิ่มแล้วสั่ง this.Trip = ที่ get มาใหม่
+      let res = await this.$store.dispatch("trips/find", {
+        query: { Id: this.Trip.Id, $eager: "[vehicles,users,jobs]" }
+      });
+      this.Trip = res.data[0];
+    },
+    //Add Job
     async CallJobDialog() {
       await this.$refs.JobSelectionComp.ready();
       this.jobNewDialog = true;
     },
-    deleteTrip() {
-      alert("Delete");
-    },
     getJobIdSelected(jobId) {
-      this.saveToServer(jobId);
+      this.saveJobToServer(jobId);
       this.jobNewDialog = false;
     },
-    async saveToServer(jobId) {
+    async saveJobToServer(jobId) {
       try {
         if (jobId.length > 0) {
           let newTodo = { JobId: jobId, TripId: this.Trip.Id };
           let jobIdCreated = await this.$store.dispatch(
-            this.service + "/create",
+            "jobtripcommand/create",
             newTodo
           );
           alert(JSON.stringify(jobIdCreated));
@@ -171,13 +191,7 @@ export default {
             let error = jobId.length - jobIdCreated.length;
             alert("ไม่สามารถเพิ่มได้จำนวน " + error + " รายการ");
           }
-
-          //find ใหม่ เอาแค่ตัวเดียวที่เพิ่มแล้วสั่ง this.Trip = ที่ get มาใหม่
-          let res = await this.$store.dispatch("trips/find", {
-            query: { Id: this.Trip.Id, $eager: "[vehicles,users,jobs]" }
-          });
-          this.Trip = res.data[0];
-          alert(JSON.stringify(this.Trip));
+          this.render();
         }
       } catch (err) {
         console.log(err);
@@ -185,12 +199,55 @@ export default {
       }
     },
 
+    //Add User
+    async CallUserDialog() {
+      await this.$refs.UserSelectionComp.ready();
+      this.userNewDialog = true;
+    },
+    getUserIdSelected(userId) {
+      let userIds = [];
+      userIds.push(userId);
+      this.saveUserToServer(userIds);
+      this.userNewDialog = false;
+    },
+    async saveUserToServer(userId) {
+      try {
+        alert(userId);
+        if (userId.length > 0) {
+          alert(userId);
+          let newTodo = { UserId: userId, TripId: this.Trip.Id };
+          alert(newTodo);
+          let userIdCreated = await this.$store.dispatch(
+            "usertripcommand/create",
+            newTodo
+          );
+          alert(JSON.stringify(userIdCreated));
+
+          if (userId.length != userIdCreated.length) {
+            let error = userId.length - userIdCreated.length;
+            alert("ไม่สามารถเพิ่มได้จำนวน " + error + " รายการ");
+          }
+          this.render();
+        }
+      } catch (err) {
+        console.log(err);
+        alert("ไม่สามารถเพิ่ม Job ได้");
+      }
+    },
+
+    deleteTrip() {
+      alert("Delete");
+    },
+
     async onDelete() {
       this.dialogDelete = true;
     },
     async confirmStartTrip() {
       try {
-        await this.$store.dispatch("trips/patch", [this.Trip.Id, { Approve: true, ApprovedBy: "admin" }]);
+        await this.$store.dispatch("trips/patch", [
+          this.Trip.Id,
+          { Approve: true, ApprovedBy: "admin" }
+        ]);
       } catch (err) {
         alert("ไม่สามารถยืนยันการออกรถได้");
       } finally {
