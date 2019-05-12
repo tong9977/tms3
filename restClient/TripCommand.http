@@ -1,7 +1,8 @@
+### Find
 http://localhost:3030/trips
 
-###
-http://localhost:3030/trips?$eager=[vehicle]
+### Find eager
+http://localhost:3030/trips?$eager=[vehicles,users,jobs]
 
-###
-http://localhost:3030/tripcommand/?TripId=119
+### Delete
+DELETE http://localhost:3030/tripcommand/?TripId=138
