@@ -1,52 +1,46 @@
 <template>
-  <v-container fill-height fluid grid-list-xl>
-    <v-layout justify-center wrap>
-      <v-flex xs12>
-        <v-card>
-          <v-subheader>มีทั้งหมด {{total}} รายการ</v-subheader>
+  <v-flex xs12>
+    <v-subheader>มีทั้งหมด {{total}} รายการ</v-subheader>
 
-          <v-data-table :headers="headers" :items="jobitems" hide-actions>
-            <template slot="headerCell" slot-scope="{ header }">
-              <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
-            </template>
-            <!-- set column แสดงผลที่นี้ -->
-            <template slot="items" slot-scope="{ item }">
-              <td>
-                <v-checkbox v-model="item.Complete" @change="editItem(item)" label=""></v-checkbox>
-              </td>
-              <td>
-                {{ item.ProductName }}
-                ({{ item.Quantity }}) {{ item.Unit }}
-              </td>
-              <td>{{item.CompletedDate |date}}</td>
-            </template>
-          </v-data-table>
-        </v-card>
+    <v-data-table :headers="headers" :items="jobitems" hide-actions>
+      <template slot="headerCell" slot-scope="{ header }">
+        <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
+      </template>
+      <!-- set column แสดงผลที่นี้ -->
+      <template slot="items" slot-scope="{ item }">
+        <td>
+          <v-checkbox v-model="item.Complete" @change="editItem(item)" label></v-checkbox>
+        </td>
+        <td>
+          {{ item.ProductName }}
+          ({{ item.Quantity }}) {{ item.Unit }}
+        </td>
+        <td>{{item.CompletedDate |date}}</td>
+      </template>
+    </v-data-table>
 
-        <v-dialog v-model="dialog" max-width="500px">
-          <v-card>
-            <v-card-title>
-              <span class="headline">งานนี้เสร็จแล้วใช่หรือไม่</span>
-            </v-card-title>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">งานนี้เสร็จแล้วใช่หรือไม่</span>
+        </v-card-title>
 
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex>แก้ไข "{{formModel[Object.keys(formModel)[1]]}}"หรือไม่ ?</v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex>แก้ไข "{{formModel[Object.keys(formModel)[1]]}}"หรือไม่ ?</v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click="dialog=false">Cancel</v-btn>
-              <v-btn color="blue darken-1" flat :loading="loading" @click="saveToServer">ใช่</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-flex>
-    </v-layout>
-  </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="dialog=false">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat :loading="loading" @click="saveToServer">ใช่</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-flex>
 </template>
 
 
@@ -172,7 +166,6 @@ export default {
         } finally {
           this.loading = false;
         }
-      
       }
       this.dialog = false;
     }

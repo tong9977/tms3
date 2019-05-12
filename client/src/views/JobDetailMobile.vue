@@ -1,156 +1,124 @@
 <template>
-  <v-container fill-height fluid grid-list-xl>
-    <v-layout justify-center wrap>
-      <template>
-        <v-flex xs12>
-          <div style="font-size: 24pt">ลูกค้า : {{formModel.Customer}}</div>
+  <v-container>
+    <v-btn color="blue" @click="$router.go(-1)">ย้อนกลับ</v-btn>
 
-          <div>
-            <v-btn color="blue" @click="$router.go(-1)">ย้อนกลับ</v-btn>
+    <material-card color="green" :title="formModel.Customer + ' [JobId:' + formModel.Id +']'">
+      <v-flex>
+        <v-icon>mdi-home-map-marker</v-icon>
+        ที่อยู่ : {{formModel.Address}}
+        <br>
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-account</v-icon>
+        ผู้ติดต่อ : {{formModel.ContactPerson}}
+        <br>
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-phone</v-icon>
+        โทรศัพท์ : {{formModel.Telephone}}
+        <br>
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-email</v-icon>
+        อีเมล์ : {{formModel.Email}}
+        <br>
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-wechat</v-icon>
+        LineId : {{formModel.LineId}}
+        <br>
+      </v-flex>
+    </material-card>
 
-           
-          </div>
-        </v-flex>
-        <!-- mat 1 -->
-        <v-flex xs12>
-          <v-layout wrap row>
-            {{jobtype}}
-            <v-flex md6>
-              <material-card color="green" title="รายละเอียดลูกค้า">
-                <!--  <v-text class="font-weight-regular" style="font-size: 14pt ">รายละเอียดลูกค้า</v-text> -->
+    <material-card color="green" title="รายละเอียดงาน">
+      <v-flex>
+        <v-icon>mdi-file</v-icon>
+        ประเภทงาน : {{JobsObj[0].jobtype.Name}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-briefcase-check</v-icon>
+        สถานะงาน : {{JobsObj[0].jobstatus.Name}}
+      </v-flex>
+    </material-card>
 
-                <v-flex>
-                  <v-icon>mdi-home-map-marker</v-icon>
-                  ที่อยู่ : {{formModel.Address}}
-                  <br>
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-account</v-icon>
-                  ผู้ติดต่อ : {{formModel.ContactPerson}}
-                  <br>
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-phone</v-icon>
-                  โทรศัพท์ : {{formModel.Telephone}}
-                  <br>
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-email</v-icon>
-                  อีเมล์ : {{formModel.Email}}
-                  <br>
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-wechat</v-icon>
-                  LineId : {{formModel.LineId}}
-                  <br>
-                </v-flex>
-              </material-card>
+    <material-card color="green" title="ข้อมูลรายละเอียด">
+      <v-flex>
+        <v-icon>mdi-weight-kilogram</v-icon>
+        น้ำหนักที่ขนได้ : {{formModel.Weight}} Kg.
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-weight</v-icon>
+        ปริมาตรที่ขนได้ : {{formModel.CC}} CC.
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-map-marker-distance</v-icon>
+        ระยะทาง : {{formModel.Distance}} Km.
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-routes</v-icon>
+        หมายเลขเส้นทาง : {{formModel.RouteNo}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-rename-box</v-icon>
+        ชื่อเส้นทาง : {{formModel.RouteName}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-clock</v-icon>
+        วันส่งของ : {{formModel.RequestedDate | date}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-plus</v-icon>
+        สร้างวันที่ : {{formModel.CreatedDate | date}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-account-alert</v-icon>
+        สร้างโดย : {{formModel.CreatedBy}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-truck</v-icon>
+        จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-marker</v-icon>
+        หมายเหตุ : {{formModel.Remark}}
+      </v-flex>
+    </material-card>
 
-              <material-card color="green" title="รายละเอียดงาน">
-                <!--  <v-text class="font-weight-regular" style="font-size: 14pt ">รายละเอียดลูกค้า</v-text> -->
-
-                <v-flex>
-                  <v-icon>mdi-file</v-icon>
-                  ประเภทงาน : {{JobsObj[0].jobtype.Name}}
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-briefcase-check</v-icon>
-                  สถานะงาน : {{JobsObj[0].jobstatus.Name}}
-                </v-flex>
-              </material-card>
-            </v-flex>
-
-            <v-flex md6>
-              <material-card color="green" title="ข้อมูลรายละเอียด">
-                <!-- <v-flex>
-                    <v-text class="font-weight-regular" style="font-size: 14pt ">ข้อมูลรายละเอียด</v-text>
-                </v-flex>-->
-                <v-flex>
-                  <v-icon>mdi-weight-kilogram</v-icon>
-                  น้ำหนักที่ขนได้ : {{formModel.Weight}} Kg.
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-weight</v-icon>
-                  ปริมาตรที่ขนได้ : {{formModel.CC}} CC.
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-map-marker-distance</v-icon>
-                  ระยะทาง : {{formModel.Distance}} Km.
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-routes</v-icon>
-                  หมายเลขเส้นทาง : {{formModel.RouteNo}}
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-rename-box</v-icon>
-                  ชื่อเส้นทาง : {{formModel.RouteName}}
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-calendar-clock</v-icon>
-                  วันส่งของ : {{formModel.RequestedDate | date}}
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-calendar-plus</v-icon>
-                  สร้างวันที่ : {{formModel.CreatedDate | date}}
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-account-alert</v-icon>
-                  สร้างโดย : {{formModel.CreatedBy}}
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-truck</v-icon>
-                  จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
-                </v-flex>
-                <v-flex>
-                  <v-icon>mdi-marker</v-icon>
-                  หมายเหตุ : {{formModel.Remark}}
-                </v-flex>
-              </material-card>
-            </v-flex>
-          </v-layout>
-
-          <div class="text-xs-right">
-            <v-btn
-              color="primary"
-              flat
-              :href="'https://maps.google.com/maps?q=' + formModel.Lat +','+formModel.Long +'&hl=es;z=14&amp;output=embed'"
-              target="_blank"
-            >
-              <v-icon>mdi-map-marker</v-icon>google map
-            </v-btn>
-          </div>
-        </v-flex>
-
-        
-
-        <JobItemMobileComp :JobId="Id"/>
-
-        <v-flex xs12>
-          <div class="text-xs-left" style="font-size: 24pt ">รูปการส่งงาน</div>
-        </v-flex>
-
-        <v-container fluid grid-list-sm>
-          <v-layout row wrap>
-            <v-flex v-for="i in ImgModel" :key="i" md3 xs6>
-              <!-- :src="`https://randomuser.me/api/portraits/men/${i + 20}.jpg`" -->
-              <div @click="ImgDialog(i)">
-                <img :src="i.Url" class="image" alt="lorem" width="100%" height="auto">
+    <material-card color="green" title="รายการที่ต้องทำ">
+      <JobItemMobileComp :JobId="Id"/>
+    </material-card>
+    
+    <material-card color="green" title="รูปการส่งงาน">
+      <v-container fluid grid-list-sm>
+        <v-layout row wrap>
+          <v-flex v-for="i in ImgModel" :key="i" md3 xs6>
+            <div @click="ImgDialog(i)">
+              <img :src="i.Url" class="image" width="100%" height="auto">
+            </div>
+          </v-flex>
+        </v-layout>
+        <v-layout row wrap>
+          <v-flex xs12 text-xs-center>
+            <upload-image-input @success="uploadDone">
+              <div slot="activator">
+                <v-btn block class="blue white--text">
+                  <v-icon>mdi-upload</v-icon>เลือกรูป
+                </v-btn>
               </div>
-            </v-flex>
+            </upload-image-input>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </material-card>
 
-            <v-flex md3 xs6>
-              <upload-image-box @success="uploadDone"></upload-image-box>
-            </v-flex>
-          </v-layout>
-        </v-container>
-        <v-flex xs12>
-          <div class="text-xs-left" style="font-size: 24pt ">Signature</div>
-        </v-flex>
-        <v-btn class="blue white--text" @click="GotoSignature(Id)">Signature</v-btn>
-      </template>
-    </v-layout>
-
-    <!-- dialog สำหรับ เพิ่ม แก้ไข -->
+    <material-card color="green" title="ลายเซ็นลูกค้า">
+      <div v-if="!!!signaturePhoto">
+        <v-btn block class="blue white--text" @click="GotoSignature(Id)">
+          <v-icon>mdi-pen</v-icon>ให้ลูกค้าเซ็นชื่อ
+        </v-btn>
+      </div>
+      <v-img v-else :src="signaturePhoto"></v-img>
+    </material-card>
 
     <v-dialog v-model="dialogimg" max-width="100%" max-height="100%">
       <div style="text-align: center;" class="black white--text">
@@ -179,8 +147,7 @@ import Lightbox from "vue-my-photos";
 
 export default {
   components: {
-    JobItemMobileComp,
-    
+    JobItemMobileComp
   },
   data: () => ({
     service: "job",
@@ -188,7 +155,8 @@ export default {
     dialog: false,
     formModel: {},
     ImgModel: {},
-    JobsObj: []
+    JobsObj: [],
+    signaturePhoto: ""
   }),
   filters: {
     date: createDateFilter("DD/MM/YYYY", { locale }),
@@ -205,6 +173,14 @@ export default {
       try {
         var res = await this.$store.dispatch(this.service + "/get", this.Id);
         this.formModel = res;
+
+        if (this.formModel.SignatureId) {
+          let res = await this.$store.dispatch(
+            "blob/get",
+            this.formModel.SignatureId
+          );
+          this.signaturePhoto = res.uri;
+        }
       } catch (error) {
         console.log(error);
         this.$toast.error("ไม่สามารถขอข้อมูลจาก server ได้");
@@ -212,7 +188,6 @@ export default {
 
       try {
         const { Job } = this.$FeathersVuex;
-
         Job.find({
           query: { Id: this.Id, $eager: "[jobstatus,jobtype]" }
         }).then(res => {
@@ -235,6 +210,7 @@ export default {
         this.$toast.error("ไม่สามารถขอข้อมูลจาก server ได้");
       }
     },
+
     uploadDone(uploadInfo) {
       console.log(uploadInfo);
 

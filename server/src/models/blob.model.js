@@ -29,21 +29,6 @@ class blob extends Model {
 }
 
 module.exports = function (app) {
-  const db = app.get('knex');
-
-  db.schema.hasTable('blob').then(exists => {
-    if (!exists) {
-      db.schema.createTable('blob', table => {
-        table.increments('id');
-        table.string('text');
-        table.timestamp('createdAt');
-        table.timestamp('updatedAt');
-      })
-        .then(() => console.log('Created blob table')) // eslint-disable-line no-console
-        .catch(e => console.error('Error creating blob table', e)); // eslint-disable-line no-console
-    }
-  })
-    .catch(e => console.error('Error creating blob table', e)); // eslint-disable-line no-console
-
+ 
   return blob;
 };

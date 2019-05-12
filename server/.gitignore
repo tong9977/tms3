@@ -114,3 +114,8 @@ data/
 public/uploads/*
 #เอาเฉพาะ test.png ขึ้น
 !public/uploads/test.png
+
+#ไม่เอาทุกไฟล์ใน blobs 
+public/blobs/*
+#เอาเฉพาะ test.png ขึ้น
+!public/blobs/test.png
