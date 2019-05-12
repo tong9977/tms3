@@ -13,7 +13,7 @@
         </td>
         <td>
           {{ item.ProductName }}
-          ({{ item.Quantity }}) {{ item.Unit }}
+          {{ item.Quantity }} {{ item.Unit }}
         </td>
         <td>{{item.CompletedDate |date}}</td>
       </template>
@@ -139,35 +139,22 @@ export default {
     async editItem(item) {
       this.mode = "edit";
       this.formModel = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    async saveToServer() {
-      const valid = await this.$validator.validateAll();
-      if (!valid) {
-        this.$toast.error("กรุณากรอกข้อมูลให้สมบรูณ์");
-        return;
+      try {
+        this.outDTO = Object.assign({}, this.formModel);
+        // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
+        this.outDTO.JobId = this.JobId;
+        await this.$store.dispatch(this.service + "/patch", [
+          this.formModel.Id,
+          this.outDTO,
+          this.$toast.success("แก้ไขข้อมูลสำเร็จ")
+        ]);
+        this.renderUI();
+      } catch (err) {
+        console.log(err);
+        this.$toast.error("ไม่สามารถแก้ไขข้อมูลได้");
+      } finally {
+        this.loading = false;
       }
-      this.loading = true;
-      if (this.mode === "edit") {
-        try {
-          this.outDTO = Object.assign({}, this.formModel);
-          // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
-          this.outDTO.JobId = this.JobId;
-          await this.$store.dispatch(this.service + "/patch", [
-            this.formModel.Id,
-            this.outDTO,
-            this.$toast.success("แก้ไขข้อมูลสำเร็จ")
-          ]);
-          this.renderUI();
-        } catch (err) {
-          console.log(err);
-          this.$toast.error("ไม่สามารถแก้ไขข้อมูลได้");
-        } finally {
-          this.loading = false;
-        }
-      }
-      this.dialog = false;
     }
   }
 };
