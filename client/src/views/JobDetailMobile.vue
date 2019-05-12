@@ -3,14 +3,12 @@
     <v-layout justify-center wrap>
       <template>
         <v-flex xs12>
-          <div style="font-size: 24pt" >ลูกค้า : {{formModel.Customer}}</div>
+          <div style="font-size: 24pt">ลูกค้า : {{formModel.Customer}}</div>
 
           <div>
             <v-btn color="blue" @click="$router.go(-1)">ย้อนกลับ</v-btn>
 
-            <v-btn color="blue" class="right mr-2" @click="editItem(item)">
-              <v-icon>mdi-pencil</v-icon>แก้ไข
-            </v-btn>
+           
           </div>
         </v-flex>
         <!-- mat 1 -->
@@ -123,13 +121,14 @@
           </div>
         </v-flex>
 
-        <JobItemComp :JobId="Id"/>
-
-          <v-flex xs12>
-          <div class="text-xs-left" style="font-size: 24pt " >รูปการส่งงาน</div>
-          </v-flex>
-       
         
+
+        <JobItemMobileComp :JobId="Id"/>
+
+        <v-flex xs12>
+          <div class="text-xs-left" style="font-size: 24pt ">รูปการส่งงาน</div>
+        </v-flex>
+
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
             <v-flex v-for="i in ImgModel" :key="i" md3 xs6>
@@ -143,26 +142,24 @@
               <upload-image-box @success="uploadDone"></upload-image-box>
             </v-flex>
           </v-layout>
-
-
-
-           
         </v-container>
         <v-flex xs12>
-          <div class="text-xs-left" style="font-size: 24pt " >Signature</div>
-          </v-flex>
-         
-
-          
+          <div class="text-xs-left" style="font-size: 24pt ">Signature</div>
+        </v-flex>
+        <v-btn class="blue white--text" @click="GotoSignature(Id)">Signature</v-btn>
       </template>
     </v-layout>
 
     <!-- dialog สำหรับ เพิ่ม แก้ไข -->
-      
-    <v-dialog v-model="dialogimg" max-width="100%" max-height="100%" >
+
+    <v-dialog v-model="dialogimg" max-width="100%" max-height="100%">
       <div style="text-align: center;" class="black white--text">
-       <img :src="photo" class="image" width="auto" height="auto"><br>
-       <v-text > <v-icon>mdi-clock</v-icon> {{dateCreate | dateC}}</v-text>
+        <img :src="photo" class="image" width="auto" height="auto">
+        <br>
+        <v-text>
+          <v-icon>mdi-clock</v-icon>
+          {{dateCreate | dateC}}
+        </v-text>
       </div>
     </v-dialog>
 
@@ -173,10 +170,7 @@
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
-import JobItemComp from "@/viewComponents/JobItemComp.vue";
 import JobItemMobileComp from "@/viewComponents/JobItemMobileComp.vue";
-import DriverCreateEdit from "@/views/DriverCreateEdit.vue";
-import JobCreateEditDialog from "@/viewComponents/JobCreateEditDialog.vue";
 import { createDateFilter } from "vue-date-fns";
 import locale from "date-fns/locale/th";
 import PictureInput from "vue-picture-input";
@@ -185,15 +179,13 @@ import Lightbox from "vue-my-photos";
 
 export default {
   components: {
-    JobItemComp,
-    JobCreateEditDialog,
-    JobItemMobileComp
+    JobItemMobileComp,
+    
   },
   data: () => ({
     service: "job",
     loading: false,
     dialog: false,
-    dialogimg:false,
     formModel: {},
     ImgModel: {},
     JobsObj: []
@@ -271,9 +263,9 @@ export default {
     },
     ImgDialog(item) {
       //alert(JSON.stringify(item.Url))
-        this.photo = item.Url;
-        this.dateCreate = item.CreatedDate;
-        this.dialogimg = true;
+      this.photo = item.Url;
+      this.dateCreate = item.CreatedDate;
+      this.dialogimg = true;
     },
     GotoSignature(Id) {
       this.$router.push({ name: "Signature", params: { Id: Id } });
