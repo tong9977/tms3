@@ -35,7 +35,7 @@ export default {
       this.dialog = true;
     },
     GotoDetail(Id) {
-      this.$router.push({ name: "JobDetail", params: { Id: Id } });
+      this.$router.push({ path: `/jobdetail/${Id}` })
     }
   }
 };

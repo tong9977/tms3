@@ -30,6 +30,11 @@ export default [
     view: 'JobDetail'
   },
   {
+    path: '/jobdetailmobile/:id',
+    name: 'JobDetailMobile',
+    view: 'JobDetailMobile'
+  },
+  {
     path: '/jobassigned',
     name: 'JobAssigned',
     view: 'JobAssigned'
@@ -138,7 +143,7 @@ export default [
   }  
   ,
   {
-    path: '/signature',
+    path: '/signature/:Id',
     name: 'Signature',
     view: 'Signature'
   }  
