@@ -179,7 +179,6 @@ export default {
             "jobtripcommand/create",
             newTodo
           );
-          alert(JSON.stringify(jobIdCreated));
           // alert("sent : " + JSON.stringify(jobId) + "return : " + JSON.stringify(jobIdCreated));
           // let errorList = 0; //[jobId] collectdiff result;
           // const collection = collect(jobId);
@@ -212,26 +211,22 @@ export default {
     },
     async saveUserToServer(userId) {
       try {
-        alert(userId);
         if (userId.length > 0) {
-          alert(userId);
           let newTodo = { UserId: userId, TripId: this.Trip.Id };
-          alert(newTodo);
           let userIdCreated = await this.$store.dispatch(
             "usertripcommand/create",
             newTodo
           );
-          alert(JSON.stringify(userIdCreated));
 
           if (userId.length != userIdCreated.length) {
             let error = userId.length - userIdCreated.length;
-            alert("ไม่สามารถเพิ่มได้จำนวน " + error + " รายการ");
+            alert("ไม่สามารถเพิ่มพนักงานคนนี้ได้");
           }
           this.render();
         }
       } catch (err) {
         console.log(err);
-        alert("ไม่สามารถเพิ่ม Job ได้");
+        alert("ไม่สามารถเพิ่มพนักงานคนนี้ได้");
       }
     },
 
