@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-height">
     <v-card>
       <div class="blue py-1 elevation-2">
         <v-layout row wrap>
@@ -15,7 +15,7 @@
       <v-layout justify-center wrap>
         <v-flex md12>
           <v-card class="pa-4">
-            <v-subheader>มีทั้งหมด {{total}} รายการ {{JobsId}}</v-subheader>
+            <v-subheader>เลือก {{JobsId.length}} รายการ {{JobsId}}</v-subheader>
             <v-data-table :headers="headers" :items="items" hide-actions>
               <template slot="headerCell" slot-scope="{ header }">
                 <span class="subheading font-weight-light text--darken-3" v-text="header.text"/>
@@ -57,6 +57,7 @@
                 </td>
                 <td>{{ item.RouteNo }}</td>
                 <td>{{ item.Distance }} km.</td>
+                <td>{{ item.TripCredit }}</td>
               </template>
             </v-data-table>
           </v-card>
@@ -67,14 +68,11 @@
 </template>
 <script>
 import { mapMutations, mapState } from "vuex";
-import JobCreateEditDialog from "@/viewComponents/JobCreateEditDialog.vue";
 import { createDateFilter } from "vue-date-fns";
 import locale from "date-fns/locale/th";
 
 export default {
-  components: {
-    JobCreateEditDialog
-  },
+
   data: () => ({
     //--start config
     service: "job",
@@ -86,22 +84,16 @@ export default {
       { value: "ContactPerson", text: "คนติดต่อ", sortable: true },
       { value: "DeliveryDate", text: "วันส่งของ", sortable: true },
       { text: "สินค้า", sortable: false },
-      //{ value: "Remark", text: "หมายเหตุ", sortable: false },
       { value: "Address", text: "ที่อยู่", sortable: true },
       { value: "Weight", text: "น้ำหนัก/ปริมาตร", sortable: true },
       { value: "RouteNo", text: "RouteNo", sortable: true },
-      // { value: "Zone", text: "Zone", sortable: false },
       { value: "Distance", text: "ระยะทาง", sortable: true },
-      { value: "", text: "", sortable: false }
+      { value: "TripCredit", text: "TripCredit", sortable: true }
     ],
     defaultValue: {},
 
-    //--end config
-    //colorTheme:'',
     items: [],
-    total: 0,
     loading: false,
-    dialog: false,
     formModel: {},
     JobsId: []
   }),
@@ -110,18 +102,16 @@ export default {
   },
 
   computed: {},
-  async mounted() {
-    //init here
-
-    this.renderUI();
+  mounted(){
+    this.ready();
   },
-
   methods: {
-    async renderUI() {
+    async ready() { 
       try {
         this.query = {
           query: {
-            JobStatusId: 1
+            JobStatusId: 1,
+            $eager: "[jobitem]"
           }
         };
         var res = await this.$store.dispatch(
@@ -132,29 +122,25 @@ export default {
         this.items = res.data;
       } catch (error) {
         console.log(error);
-        this.$toast.error("ไม่สามารถขอข้อมูลจาก server ได้");
       }
-
-      try {
-        const { Job } = this.$FeathersVuex;
-
-        Job.find({ query: { Id: this.Id, $eager: "[jobitem]" } }).then(res => {
-          this.JobitemObj = res.data;
-        });
-      } catch (err) {
-        this.$toast.error("ไม่สามารถต่อ server ได้");
-      }
+      this.JobsId=[];
     },
     OkClick(item) {
-       this.$emit("success", this.JobsId);
-       this.JobsId = [];
-       this.renderUI();
+      this.$emit("success", this.JobsId);
     }
   }
 };
 </script> 
+<style>
+.full-height {
+  height: 100%;
+  background-color: #ffffff;
+}
+</style>
 
 <!-- Component Docs
+
+
 props 0 ตัว
 - 
 

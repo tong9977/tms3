@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="full-height">
     <v-card>
       <div class="blue py-1 elevation-2">
         <v-layout row wrap>
           <v-flex xs6>
-            <h3 class="px-4 white--text">เลือกใบงานที่จะใส่ในรถคันนี้</h3>
+            <h3 class="px-4 white--text">เลือกพนักงานที่จะไปกับรถคันนี้</h3>
           </v-flex>
           <v-flex xs6 text-xs-right>
             <v-btn class="green mx-4" @click="OkClick">OK</v-btn>
@@ -80,11 +80,11 @@ export default {
   async mounted() {
     //init here
 
-    this.renderUI();
+    this.ready();
   },
 
   methods: {
-    async renderUI() {
+    async ready() {
       try {
         this.query = {
           query: {
@@ -122,7 +122,13 @@ export default {
     }
   }
 };
-</script> 
+</script>
+<style>
+.full-height {
+  height: 100%;
+  background-color: #ffffff;
+}
+</style>
 
 <!-- Component Docs
 props 0 ตัว
