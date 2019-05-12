@@ -15,6 +15,7 @@ const tripcommand = require('./tripcommand/tripcommand.service.js');
 const usertripcommand = require('./usertripcommand/usertripcommand.service.js');
 const jobtrip = require('./jobtrip/jobtrip.service.js');
 const jobtripcommand = require('./jobtripcommand/jobtripcommand.service.js');
+const blob = require('./blob/blob.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);
@@ -34,4 +35,5 @@ module.exports = function (app) {
   app.configure(usertripcommand);
   app.configure(jobtrip);
   app.configure(jobtripcommand);
+  app.configure(blob);
 };

@@ -25,7 +25,7 @@
                 <v-icon v-if="item.Complete">mdi-check</v-icon>
                 <v-icon v-else>mdi-close</v-icon>
                 <br>
-                {{item.CompletedDate}}
+                {{item.CompletedDate |date}}
               </td>
               <td>
                 <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
@@ -123,6 +123,8 @@
 
 
 <script>
+import { createDateFilter } from "vue-date-fns";
+import locale from "date-fns/locale/th";
 export default {
   data: () => ({
     //--start config
@@ -164,6 +166,9 @@ export default {
         ? "เพิ่ม" + this.objectName
         : "แก้ไข" + this.objectName;
     }
+  },
+   filters: {
+    date: createDateFilter("DD/MM/YYYY HH:MM", { locale })
   },
   async mounted() {
     //init here

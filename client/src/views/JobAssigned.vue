@@ -34,7 +34,7 @@ export default {
   methods: {
    
     GotoDetail(Id) {
-      this.$router.push({ name: "JobDetail", params: { Id: Id } });
+      this.$router.push({ path: `/jobdetail/${Id}` })
     }
   }
 };
