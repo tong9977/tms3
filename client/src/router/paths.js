@@ -127,7 +127,7 @@ export default [
     view: 'JobStatus'  
   },
   {
-    path: '/่trip',
+    path: '/trip',
     name: 'Trip',
     view: 'Trip'
   },

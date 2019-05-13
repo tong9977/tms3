@@ -1,5 +1,5 @@
 ### Find
-http://localhost:3030/jobtrip
+http://localhost:3030/jobtripcommand?JobId=1
 
 ### Insert
 POST http://localhost:3030/jobtripcommand HTTP/1.1

@@ -26,7 +26,7 @@ class Service {
     let start = dateFns.format(date, "YYYY-MM-DDT00:00:00");
     let end = dateFns.format(date, "YYYY-MM-DDT23:59:59");
 
-    var today = new Date();
+    var today = new Date(start);
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();

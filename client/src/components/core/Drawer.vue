@@ -88,7 +88,7 @@ const menuAdmin = [
     text: "จัดการประเภทงาน"
   },
   {
-    to: "/่trip",
+    to: "/trip",
     icon: "mdi-account",
     text: "Trip"
   }

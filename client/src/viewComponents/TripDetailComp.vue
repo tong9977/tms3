@@ -5,7 +5,7 @@
     </v-btn>
     <v-layout row wrap>
       <v-flex xs6>
-        <v-progress-linear color="secondary" height="5" value="58"></v-progress-linear>
+        <v-progress-linear color="secondary" height="5" :value="(weight/weightMax)*100"></v-progress-linear>
       </v-flex>
       <v-flex xs6>
         <p>
@@ -14,7 +14,7 @@
         </p>
       </v-flex>
       <v-flex xs6>
-        <v-progress-linear color="secondary" height="5" value="60"></v-progress-linear>
+        <v-progress-linear color="secondary" height="5" :value="(limit/limitMax)*100"></v-progress-linear>
       </v-flex>
       <v-flex xs6>
         <p>
@@ -24,32 +24,33 @@
       </v-flex>
     </v-layout>
     <v-list two-line v-for="j in Trip.jobs" :key="j.Id">
-      <v-list-tile>
+      <v-list-tile @click="GotoTripDetailMobie(j)">
         <v-list-tile-action>
           <v-icon color="blue">mdi-map-marker</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
-          <v-list-tile-title>{{j.Customer}}</v-list-tile-title>
+          <v-list-tile-title>{{j.Customer}} {{ j.Weight }} Kg. {{ j.CC }} CC</v-list-tile-title>
           <v-list-tile-sub-title>{{j.ContactPerson}} ({{j.Telephone}})</v-list-tile-sub-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
     <v-card-text>
       <v-layout>
-        <v-flex xs6 text-xs-left v-for="u in Trip.users" :key="u.Id">
+         <div >
+          <v-btn color="success" round @click="CallUserDialog">คนขับรถ</v-btn>
+        </div>
+        <div v-for="u in Trip.users" :key="u.Id" class="pa-2">
           <v-avatar size="40" color="grey lighten-4">
             <img :src="u.ImageUrl" alt="avatar">
           </v-avatar>
-        </v-flex>
-        <v-flex xs6 text-xs-right>
-          <v-btn color="success" round class="font-weight-light" @click="CallUserDialog">คนขับรถ</v-btn>
-        </v-flex>
+        </div>  
       </v-layout>
     </v-card-text>
     <v-card-text>
       <v-layout>
         <v-flex xs12>
-          <v-btn @click="onDelete()" block color="primary">ออกรถ</v-btn>
+          <v-btn @click="onDelete()" v-if="!Trip.Approve" block color="primary">ออกรถ</v-btn>
+          <p v-if="Trip.Approve">ออกรถแล้ว</p>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -134,25 +135,15 @@ export default {
   }),
   props: ["Trip"],
   mounted: function() {
-    //alert(this.Trip.users[0].Email);
     this.title =
-      this.Trip.vehicles.LicensePlate + " (" + this.Trip.TripCode + ")";
+      this.Trip.vehicles.LicensePlate + " [" + this.Trip.Id + "]";
     this.subTitle =
       "ขนได้ " +
       this.Trip.vehicles.Limit +
       " กก. " +
       this.Trip.vehicles.LimitCC +
       " cc";
-
-    const collection1 = collect(this.Trip.jobs);
-    let sumWeight = collection1.sum("Weight");
-    this.weight = sumWeight; //Jobs
-    this.weightMax = this.Trip.vehicles.Limit;
-
-    const collection2 = collect(this.Trip.jobs);
-    let sumLimit = collection2.sum("CC");
-    this.limit = sumLimit; //Jobs
-    this.limitMax = this.Trip.vehicles.LimitCC;
+      this.render();
   },
   methods: {
     async render() {
@@ -160,7 +151,17 @@ export default {
       let res = await this.$store.dispatch("trips/find", {
         query: { Id: this.Trip.Id, $eager: "[vehicles,users,jobs]" }
       });
+
       this.Trip = res.data[0];
+      const collection1 = collect(this.Trip.jobs);
+      let sumWeight = collection1.sum("Weight");
+      this.weight = sumWeight; //Jobs
+      this.weightMax = this.Trip.vehicles.Limit;
+
+      const collection2 = collect(this.Trip.jobs);
+      let sumLimit = collection2.sum("CC");
+      this.limit = sumLimit; //Jobs
+      this.limitMax = this.Trip.vehicles.LimitCC;
     },
     //Add Job
     async CallJobDialog() {
@@ -248,10 +249,16 @@ export default {
       } finally {
         this.dialogDelete = false;
       }
+
+      this.render();
     },
     closeDialog() {
       this.dialog = false;
       this.dialogDelete = false;
+    },
+
+    GotoTripDetailMobie(job){
+      this.$router.push({ name: "JobDetailMobile", params: { Id: job.Id } });
     }
   }
 };

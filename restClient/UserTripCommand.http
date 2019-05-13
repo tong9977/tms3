@@ -1,5 +1,5 @@
 ### find by UserId, Start, End
-http://localhost:3030/usertripcommand?UserId=1&Start=2019-05-09&End=2019-05-12
+http://localhost:3030/usertripcommand?UserId=8&Start=2019-05-09&End=2019-05-13
 
 ### Insert
 POST http://localhost:3030/usertripcommand HTTP/1.1
@@ -11,4 +11,4 @@ Content-Type: application/json
 }
 
 ### Delete
-DELETE http://localhost:3030/usertripcommand/?UserId=7&TripId=128
+DELETE http://localhost:3030/usertripcommand/?UserId=1&TripId=128

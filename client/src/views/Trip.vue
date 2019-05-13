@@ -9,6 +9,7 @@
             placeholer="วันเริ่ม"
             v-model="tripDate"
             format="dd-MM-yyyy"
+            @change="DatePickerChage"
           ></ejs-datepicker>
         </v-flex>
       </v-toolbar-title>
@@ -78,6 +79,14 @@ import {
 } from "@syncfusion/ej2-vue-calendars";
 import TripDetailComp from "@/viewComponents/TripDetailComp.vue";
 
+import {
+  startOfDay,
+  endOfDay,
+  endOfMonth,
+  lastDayOfYear,
+  format
+} from "date-fns";
+
 export default {
   components: {
     TripDetailComp
@@ -101,8 +110,13 @@ export default {
   methods: {
     async render() {
       try {
+        var x = startOfDay(new Date(this.tripDate));
+        // var y = startOfDay(new Date(this.tripDate));
+        let start = format(x, "YYYY-MM-DDT00:00:00");
+        // let end = format(y, "YYYY-MM-DDT23:59:59");
+
         let res = await this.$store.dispatch("trips/find", {
-          query: { $eager: "[vehicles,users,jobs]" }
+          query: { TripDate : start, $eager: "[vehicles,users,jobs]" }
         });
         this.trips = res.data;
       } catch (error) {
@@ -139,8 +153,6 @@ export default {
         this.loading = true;
       }
 
-    
-
       try {
         let newTodo = { date: this.tripDate, vehicleId: this.vehicleId };
         await this.$store.dispatch(this.service + "/create", newTodo);
@@ -162,6 +174,10 @@ export default {
     closeDialog() {
       this.dialog = false;
       this.dialogDelete = false;
+    },
+    
+    DatePickerChage(){
+      this.render();
     }
   },
   mounted: function() {
