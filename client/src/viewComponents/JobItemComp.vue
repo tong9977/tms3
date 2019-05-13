@@ -1,9 +1,9 @@
 <template>
-  <v-container fill-height fluid grid-list-xl>
+ 
     <v-layout justify-center wrap>
       <v-flex md12>
         <material-card
-          color="blue"
+          color="green"
           :title="'จัดการ'+objectName"
           :text="'รายการ'+objectName+'ทั้งหมด'"
         >
@@ -118,7 +118,6 @@
         </material-card>
       </v-flex>
     </v-layout>
-  </v-container>
 </template>
 
 
@@ -168,7 +167,7 @@ export default {
     }
   },
    filters: {
-    date: createDateFilter("DD/MM/YYYY HH:MM", { locale })
+    date: createDateFilter("DD/MM/YYYY HH:mm", { locale })
   },
   async mounted() {
     //init here
