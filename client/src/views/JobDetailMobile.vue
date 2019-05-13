@@ -136,6 +136,7 @@
     </v-dialog>
   </v-container>
 </template>
+
 <script>
 import { mapMutations, mapState } from "vuex";
 import JobItemMobileComp from "@/viewComponents/JobItemMobileComp.vue";
@@ -160,7 +161,7 @@ export default {
   }),
   filters: {
     date: createDateFilter("DD/MM/YYYY", { locale }),
-    dateC: createDateFilter("DD/MM/YYYY HH:MM", { locale })
+    dateC: createDateFilter("DD/MM/YYYY HH:mm", { locale })
   },
   props: ["Id"],
   computed: {},
@@ -247,6 +248,6 @@ export default {
       this.$router.push({ name: "Signature", params: { Id: Id } });
     }
   }
-};
+}
 </script> 
 

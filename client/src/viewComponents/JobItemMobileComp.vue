@@ -81,7 +81,8 @@ export default {
   props: ["JobId"],
   computed: {},
   filters: {
-    date: createDateFilter("DD/MM/YYYY HH:MM", { locale })
+   
+    date: createDateFilter("DD/MM/YYYY HH:mm", { locale })
   },
   async mounted() {
     //init here
