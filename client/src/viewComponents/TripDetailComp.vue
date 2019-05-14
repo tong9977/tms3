@@ -261,12 +261,8 @@ export default {
       this.confirmDeleteJobDialog = false;
     },
     async confirmDeleteJob() {
-      alert(this.jobIdSelected + " " + this.Trip.Id);
       try {
-        //await this.$store.dispatch("user/remove", this.deleteItem.Id);
-        await this.$store.dispatch("jobtripcommand/remove", 
-          { JobId: 25, TripId: 170 }
-        );
+        await this.$store.dispatch("jobtripcommand/remove", { JobId: this.jobIdSelected, TripId: this.Trip.Id });
       } catch (err) {
         alert("ไม่สามารถลบได้");
         this.confirmDeleteJobDialog = false;
@@ -315,12 +311,8 @@ export default {
       this.confirmDeleteUserDialog = false;
     },
     async confirmDeleteUser() {
-      alert(this.userIdSelected + " " + this.Trip.Id);
       try {
-        //await this.$store.dispatch("user/remove", this.deleteItem.Id);
-        await this.$store.dispatch("usertripcommand/remove", {
-          query: { UserId: 1, TripId: 170 }
-        });
+        await this.$store.dispatch("usertripcommand/remove", { UserId: this.userIdSelected, TripId: this.Trip.Id } );
       } catch (err) {
         alert("ไม่สามารถลบได้");
         this.confirmDeleteUserDialog = false;
