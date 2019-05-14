@@ -1,6 +1,7 @@
 <template>
   <material-card color="green" :title="title" :text="subTitle" full-width>
     <v-btn flat slot="menu" @click="CallJobDialog">
+      <v-spacer></v-spacer>
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-layout row wrap>
@@ -24,44 +25,84 @@
       </v-flex>
     </v-layout>
     <v-list two-line v-for="j in Trip.jobs" :key="j.Id">
-      <v-list-tile @click="GotoTripDetailMobie(j)">
+      <v-list-tile>
         <v-list-tile-action>
           <v-icon color="blue">mdi-map-marker</v-icon>
         </v-list-tile-action>
-        <v-list-tile-content>
+        <v-list-tile-content @click="GotoTripDetailMobie(j)">
           <v-list-tile-title>{{j.Customer}} {{ j.Weight }} Kg. {{ j.CC }} CC</v-list-tile-title>
           <v-list-tile-sub-title>{{j.ContactPerson}} ({{j.Telephone}})</v-list-tile-sub-title>
         </v-list-tile-content>
+        <v-list-tile-action>
+          <v-btn icon ripple @click="CallDeleteJobDialog(j.Id)">
+            <v-icon color="grey lighten-1">mdi-close-circle</v-icon>
+          </v-btn>
+        </v-list-tile-action>
       </v-list-tile>
     </v-list>
     <v-card-text>
       <v-layout>
-         <div >
+        <div>
           <v-btn color="success" round @click="CallUserDialog">คนขับรถ</v-btn>
         </div>
         <div v-for="u in Trip.users" :key="u.Id" class="pa-2">
-          <v-avatar size="40" color="grey lighten-4">
+          <v-avatar size="40" color="grey lighten-4" @click="CallDeleteUserDialog(u.Id)">
             <img :src="u.ImageUrl" alt="avatar">
           </v-avatar>
-        </div>  
+        </div>
       </v-layout>
     </v-card-text>
+    <!-- Add User -->
+    <v-layout row justify-center>
+      <v-dialog
+        v-model="userNewDialog"
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
+        <UserSelectionComp ref="UserSelectionComp" @success="getUserIdSelected"/>
+      </v-dialog>
+    </v-layout>
+    <!-- dialog สำหรับลบ User -->
+    <v-dialog v-model="confirmDeleteUserDialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">ยืนยันการเอาพนักงานออก</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex>ต้องการเอาพนักงานคนนี้ออกจาก Trip นี้ ใช่หรือไม่?</v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="cancelDeleteUser">ยกเลิก</v-btn>
+          <v-btn
+            color="blue darken-1"
+            flat
+            :loading="loading"
+            @click="confirmDeleteUser()"
+          >ตกลง</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-card-text>
       <v-layout>
         <v-flex xs12>
-          <v-btn @click="onDelete()" v-if="!Trip.Approve" block color="primary">ออกรถ</v-btn>
-          <p v-if="Trip.Approve">ออกรถแล้ว</p>
+          <v-btn @click="CallStartTripDialog()" v-if="!Trip.Approve" block color="primary">อนุมัติ</v-btn>
+          <p v-if="Trip.Approve" class="text-md-center">อนุมัติแล้ว</p>
         </v-flex>
       </v-layout>
     </v-card-text>
-
-    <!-- dialog สำหรับออกรถ -->
-    <v-dialog v-model="dialogDelete" max-width="500px">
+    <!-- dialog สำหรับยินยันการออกรถ -->
+    <v-dialog v-model="confirmStartTripDialog" max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline">ยืนยันการออกรถ</span>
         </v-card-title>
-
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
@@ -69,16 +110,15 @@
             </v-layout>
           </v-container>
         </v-card-text>
-
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="closeDialog">ยกเลิก</v-btn>
+          <v-btn color="blue darken-1" flat @click="cancelStartTrip">ยกเลิก</v-btn>
           <v-btn
             color="blue darken-1"
             flat
             :loading="loading"
             @click="confirmStartTrip"
-          >ยืนยันการออกรถ</v-btn>
+          >ตกลง</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -94,18 +134,31 @@
         <JobSelectionComp ref="JobSelectionComp" @success="getJobIdSelected"/>
       </v-dialog>
     </v-layout>
-
-    <!-- Add User -->
-    <v-layout row justify-center>
-      <v-dialog
-        v-model="userNewDialog"
-        fullscreen
-        hide-overlay
-        transition="dialog-bottom-transition"
-      >
-        <UserSelectionComp ref="UserSelectionComp" @success="getUserIdSelected"/>
-      </v-dialog>
-    </v-layout>
+    <!-- dialog สำหรับลบ Job -->
+    <v-dialog v-model="confirmDeleteJobDialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">ยืนยันการเอาใบงานออก</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex>ต้องการเอาใบงานใบนี้ออกจาก Trip นี้ ใช่หรือไม่?</v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="cancelDeleteJob">ยกเลิก</v-btn>
+          <v-btn
+            color="blue darken-1"
+            flat
+            :loading="loading"
+            @click="confirmDeleteJob()"
+          >ตกลง</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </material-card>
 </template>
 
@@ -122,46 +175,53 @@ export default {
   data: () => ({
     title: "",
     subTitle: "",
-    jobNewDialog: false,
-    userNewDialog: false,
 
     weight: 0,
     weightMax: 0,
     limit: 0,
     limitMax: 0,
 
-    dialog: false,
-    dialogDelete: false
+    confirmStartTripDialog: false,
+
+    userNewDialog: false,
+    confirmDeleteUserDialog: false,
+    userIdSelected: 0,
+
+    jobNewDialog: false,
+    confirmDeleteJobDialog: false,
+    jobIdSelected: 0
   }),
   props: ["Trip"],
   mounted: function() {
-    this.title =
-      this.Trip.vehicles.LicensePlate + " [" + this.Trip.Id + "]";
+    this.title = this.Trip.vehicle.LicensePlate + " [" + this.Trip.Id + "]";
     this.subTitle =
       "ขนได้ " +
-      this.Trip.vehicles.Limit +
+      this.Trip.vehicle.Limit +
       " กก. " +
-      this.Trip.vehicles.LimitCC +
+      this.Trip.vehicle.LimitCC +
       " cc";
-      this.render();
+    this.render();
   },
   methods: {
     async render() {
       //find ใหม่ เอาแค่ตัวเดียวที่เพิ่มแล้วสั่ง this.Trip = ที่ get มาใหม่
       let res = await this.$store.dispatch("trips/find", {
-        query: { Id: this.Trip.Id, $eager: "[vehicles,users,jobs]" }
+        query: { Id: this.Trip.Id, $eager: "[vehicle,users,jobs]" }
       });
 
       this.Trip = res.data[0];
       const collection1 = collect(this.Trip.jobs);
       let sumWeight = collection1.sum("Weight");
       this.weight = sumWeight; //Jobs
-      this.weightMax = this.Trip.vehicles.Limit;
+      this.weightMax = this.Trip.vehicle.Limit;
 
       const collection2 = collect(this.Trip.jobs);
       let sumLimit = collection2.sum("CC");
       this.limit = sumLimit; //Jobs
-      this.limitMax = this.Trip.vehicles.LimitCC;
+      this.limitMax = this.Trip.vehicle.LimitCC;
+
+      this.jobIdSelected = 0;
+      this.userIdSelected = 0;
     },
     //Add Job
     async CallJobDialog() {
@@ -180,12 +240,6 @@ export default {
             "jobtripcommand/create",
             newTodo
           );
-          // alert("sent : " + JSON.stringify(jobId) + "return : " + JSON.stringify(jobIdCreated));
-          // let errorList = 0; //[jobId] collectdiff result;
-          // const collection = collect(jobId);
-          // const diff = collection.diff(jobIdReturn);
-          // errorList = diff.all();
-          // alert(JSON.stringify(errorList));
 
           if (jobId.length != jobIdCreated.length) {
             let error = jobId.length - jobIdCreated.length;
@@ -197,6 +251,25 @@ export default {
         console.log(err);
         alert("ไม่สามารถเพิ่ม Job ได้");
       }
+    },
+    CallDeleteJobDialog(jobId) {
+      this.jobIdSelected = jobId;
+      this.confirmDeleteJobDialog = true;
+    },
+    cancelDeleteJob() {
+      this.jobIdSelected = 0;
+      this.confirmDeleteJobDialog = false;
+    },
+    async confirmDeleteJob() {
+      try {
+        await this.$store.dispatch("jobtripcommand/remove", { JobId: this.jobIdSelected, TripId: this.Trip.Id });
+      } catch (err) {
+        alert("ไม่สามารถลบได้");
+        this.confirmDeleteJobDialog = false;
+      } finally {
+        this.confirmDeleteJobDialog = false;
+      }
+      this.render();
     },
 
     //Add User
@@ -218,25 +291,42 @@ export default {
             "usertripcommand/create",
             newTodo
           );
-
           if (userId.length != userIdCreated.length) {
             let error = userId.length - userIdCreated.length;
-            alert("ไม่สามารถเพิ่มพนักงานคนนี้ได้");
+            alert("ไม่สามารถเพิ่มได้จำนวน " + error + " รายการ");
           }
           this.render();
         }
       } catch (err) {
         console.log(err);
-        alert("ไม่สามารถเพิ่มพนักงานคนนี้ได้");
+        alert("ไม่สามารถเพิ่มพนักงานได้");
       }
     },
-
-    deleteTrip() {
-      alert("Delete");
+    CallDeleteUserDialog(userId) {
+      this.userIdSelected = userId;
+      this.confirmDeleteUserDialog = true;
+    },
+    cancelDeleteUser() {
+      this.userIdSelected = 0;
+      this.confirmDeleteUserDialog = false;
+    },
+    async confirmDeleteUser() {
+      try {
+        await this.$store.dispatch("usertripcommand/remove", { UserId: this.userIdSelected, TripId: this.Trip.Id } );
+      } catch (err) {
+        alert("ไม่สามารถลบได้");
+        this.confirmDeleteUserDialog = false;
+      } finally {
+        this.confirmDeleteUserDialog = false;
+      }
+      this.render();
     },
 
-    async onDelete() {
-      this.dialogDelete = true;
+    async CallStartTripDialog() {
+      this.confirmStartTripDialog = true;
+    },
+    cancelStartTrip() {
+      this.confirmStartTripDialog = false;
     },
     async confirmStartTrip() {
       try {
@@ -247,17 +337,12 @@ export default {
       } catch (err) {
         alert("ไม่สามารถยืนยันการออกรถได้");
       } finally {
-        this.dialogDelete = false;
+        this.confirmStartTripDialog = false;
       }
-
       this.render();
     },
-    closeDialog() {
-      this.dialog = false;
-      this.dialogDelete = false;
-    },
 
-    GotoTripDetailMobie(job){
+    GotoTripDetailMobie(job) {
       this.$router.push({ name: "JobDetailMobile", params: { Id: job.Id } });
     }
   }

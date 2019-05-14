@@ -11,4 +11,4 @@ Content-Type: application/json
 }
 
 ### Delete
-DELETE http://localhost:3030/jobtripcommand/?JobId=1&TripId=130
+DELETE http://localhost:3030/jobtripcommand?JobId=26&TripId=170

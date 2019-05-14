@@ -116,7 +116,7 @@ export default {
         // let end = format(y, "YYYY-MM-DDT23:59:59");
 
         let res = await this.$store.dispatch("trips/find", {
-          query: { TripDate : start, $eager: "[vehicles,users,jobs]" }
+          query: { TripDate : start, $eager: "[vehicle,users,jobs]" }
         });
         this.trips = res.data;
       } catch (error) {
