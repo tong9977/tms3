@@ -24,9 +24,9 @@
               <v-icon color="blue">mdi-car-pickup</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title>วันส่งสินค้า : {{item.TripDate | date}}</v-list-tile-title>
-              <v-list-tile-sub-title>ทะเบียนรถ : {{item.vehicle.LicensePlate}}</v-list-tile-sub-title>
-              <v-list-tile-sub-title>รหัสงาน : {{item.Id}} </v-list-tile-sub-title>
+              <v-list-tile-title> {{item.TripDate | date}} </v-list-tile-title>
+              <v-list-tile-sub-title>TripId : {{item.Id}} [{{item.jobs.length}} ใบงาน] </v-list-tile-sub-title>
+                <v-list-tile-sub-title> <div >{{item.vehicle.LicensePlate}}  <span v-if="item.Approve"> อนุมัติแล้ว</span></div>    </v-list-tile-sub-title>
             </v-list-tile-content>
             <v-list-tile-action></v-list-tile-action>
           </v-list-tile>
@@ -70,8 +70,8 @@ export default {
 
   computed: {},
   filters: {
-    date: createDateFilter("ddd" + " DD MMM YYYY", { locale }),
-    date2: createDateFilter("DD/MMM/YYYY", { locale })
+    date: createDateFilter("dddd" + " DD MMM YYYY", { locale }),
+    date2: createDateFilter("DD MMM YYYY", { locale })
   },
   async mounted() {
     this.render();

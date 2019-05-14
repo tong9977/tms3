@@ -1,25 +1,28 @@
-<template>
+<template >
   <v-container>
     <v-btn color="blue" @click="$router.go(-1)">ย้อนกลับ</v-btn>
-   
-    <material-card color="green" title="รายละเอียดการงานประจำสัปดาห์ ">
+   <!-- 'TripId :' +tripsdetail+ '[' +tripsdetail.jobs.length +'ใบงาน] ' -->
+    <material-card color="green"   
+      :title="'TripId : ' + tripsdetail[0].Id + ' [' +tripsdetail[0].jobs.length +'ใบงาน]' " 
+      :text="tripsdetail[0].vehicle.LicensePlate + ' ' +tripsdetail[0].Approve"
+    >
       <v-list three-line>
         <template v-for="item in tripsdetail">
-          <template v-for="i in item.jobs">
-          <v-list-tile @click="GotoJobList(i.Id)" :key="i">
+          <template v-for="job in item.jobs">
+          <v-list-tile @click="GotoJobList(job.Id)" :key="job.Id">
         
           
                 <v-list-tile-action>
-                  <v-icon color="blue">mdi-file-document</v-icon>
+                  <v-icon color="blue">mdi-map-marker</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                  <v-list-tile-title>วันที่ต้องส่งสินค้า : {{i.RequestedDate | date}}</v-list-tile-title>
-                  <v-list-tile-sub-title>รหัสงาน : {{i.Id}} </v-list-tile-sub-title>
-                  <v-list-tile-sub-title>ลูกค้า : {{i.Customer}} ที่อยู่ : {{i.Address}}</v-list-tile-sub-title>
+                  <v-list-tile-title>{{job.Customer}} [{{job.Id}}] </v-list-tile-title>
+                  <v-list-tile-sub-title>{{job.Address}}</v-list-tile-sub-title>
+                  <v-list-tile-sub-title>{{job.ContactPerson}}</v-list-tile-sub-title>
                 </v-list-tile-content>
              
           </v-list-tile>
-          <v-divider :key="i"></v-divider>
+          <v-divider :key="job.Id"></v-divider>
           </template>
           
         </template>
