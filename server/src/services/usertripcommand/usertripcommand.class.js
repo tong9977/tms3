@@ -25,7 +25,7 @@ class Service {
 
     for (let i = 0; i < rawData.length; i++) {
       let tripIdNow = rawData[i].TripId;
-      let tripData = await trip.query().eager("[vehicles,users, jobs]").where('Id', tripIdNow);
+      let tripData = await trip.query().eager("[vehicle,users, jobs]").where('Id', tripIdNow);
 
       output[0].Trips.push(tripData[0]);
     };

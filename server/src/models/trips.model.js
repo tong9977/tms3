@@ -25,7 +25,7 @@ class trips extends Model {
     const job = require('./job.model')();
 
     return {
-      vehicles: {
+      vehicle: {
         relation: Model.HasOneRelation,
         modelClass: vehicle,
         join: {

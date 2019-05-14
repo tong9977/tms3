@@ -13,7 +13,7 @@ class job extends Model {
 
 
   $beforeInsert() {
-    //this.CreatedDate= this.updatedAt = new Date().toISOString();
+   this.CreatedDate = new Date().toISOString();
   }
 
   $beforeUpdate() {
