@@ -67,12 +67,12 @@
     <v-dialog v-model="confirmDeleteUserDialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">ยืนยันการลบพนักงาน</span>
+          <span class="headline">ยืนยันการเอาพนักงานออก</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex>ต้องการยืนยันการลบพนักงานคนนี้ออก ใช่หรือไม่?</v-flex>
+              <v-flex>ต้องการเอาพนักงานคนนี้ออกจาก Trip นี้ ใช่หรือไม่?</v-flex>
             </v-layout>
           </v-container>
         </v-card-text>
@@ -84,7 +84,7 @@
             flat
             :loading="loading"
             @click="confirmDeleteUser()"
-          >ยืนยันการลบ</v-btn>
+          >ตกลง</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -92,8 +92,8 @@
     <v-card-text>
       <v-layout>
         <v-flex xs12>
-          <v-btn @click="CallStartTripDialog()" v-if="!Trip.Approve" block color="primary">ออกรถ</v-btn>
-          <v-btn v-if="Trip.Approve"  block color="grey">ออกรถแล้ว</v-btn>
+          <v-btn @click="CallStartTripDialog()" v-if="!Trip.Approve" block color="primary">อนุมัติ</v-btn>
+          <p v-if="Trip.Approve" class="text-md-center">อนุมัติแล้ว</p>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -118,7 +118,7 @@
             flat
             :loading="loading"
             @click="confirmStartTrip"
-          >ยืนยันการออกรถ</v-btn>
+          >ตกลง</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -138,12 +138,12 @@
     <v-dialog v-model="confirmDeleteJobDialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">ยืนยันการลบงาน</span>
+          <span class="headline">ยืนยันการเอาใบงานออก</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex>ต้องการยืนยันการลบงานนี้ออก ใช่หรือไม่?</v-flex>
+              <v-flex>ต้องการเอาใบงานใบนี้ออกจาก Trip นี้ ใช่หรือไม่?</v-flex>
             </v-layout>
           </v-container>
         </v-card-text>
@@ -155,7 +155,7 @@
             flat
             :loading="loading"
             @click="confirmDeleteJob()"
-          >ยืนยันการลบ</v-btn>
+          >ตกลง</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
