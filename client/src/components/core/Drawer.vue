@@ -43,7 +43,7 @@ const menuAdmin = [
     text: "DashBoard"
   },
   {
-    to: "/schedule",
+    to: "/trip",
     icon: "mdi-calendar",
     text: "Schedule"
   },
@@ -88,27 +88,22 @@ const menuAdmin = [
     text: "จัดการประเภทงาน"
   },
   {
-    to: "/trip",
-    icon: "mdi-account",
-    text: "Trip"
-  },
-  {
     to: "/่product",
     icon: "mdi-cart",
-    text: "่Product"
+    text: "่สิ้นค้า"
   },
   {
     to: "/่unit",
     icon: "mdi-apps",
-    text: "่Unit"
+    text: "่หน่วย"
   }
 ];
 
 const menuDriver = [
   {
-    to: "/Today",
+    to: "/home",
     icon: "mdi-view-dashboard",
-    text: "Today Trip"
+    text: "งานของฉัน"
   }
 ];
 
