@@ -24,16 +24,23 @@ export default {
         alert("Please provide a signature first.");
       } else {
         const dataURL = this.$refs.signaturePad.saveSignature();
+        console.log(dataURL.data);
+        try {
+          let res = await this.$store.dispatch("blob/create", {
+            uri: dataURL.data
+          });
 
-        let res = await this.$store.dispatch("blob/create", {
-          uri: dataURL.data
-        });
-        await this.$store.dispatch("job/patch", [
-          this.Id,
-          { SignatureId: res.id }
-        ]);
+          console.log(res);
+          await this.$store.dispatch("job/patch", [
+            this.Id,
+            { SignatureId: res.id }
+          ]);
 
-        this.goBack();
+          this.goBack();
+        } catch (error) {
+          console.log(error);
+          alert("ไม่สามารถบันทึกได้");
+        }
       }
     },
     savetoimage() {
