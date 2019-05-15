@@ -9,7 +9,8 @@
       </v-toolbar-title>
     </div>
     <v-spacer></v-spacer>
-    <v-btn icon class="default v-btn--simple" to='/login'>
+    <v-text>{{user.UserName}}</v-text>
+    <v-btn icon class="default v-btn--simple" @click="logout">
       <v-icon>mdi-logout</v-icon>
     </v-btn>
 
@@ -41,6 +42,9 @@ export default {
   beforeDestroy() {
     window.removeEventListener("resize", this.onResponsiveInverted);
   },
+  computed:{
+    ...mapState("auth",["user"])
+  },
 
   methods: {
     ...mapMutations("app", ["setDrawer", "toggleDrawer"]),
@@ -49,6 +53,10 @@ export default {
     },
     onClick() {
       //
+    },
+    async logout(){
+      await this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
     },
     onResponsiveInverted() {
       if (window.innerWidth < 991) {

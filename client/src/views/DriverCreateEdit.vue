@@ -80,7 +80,7 @@
                       type="password"
                       v-model="formModel.Password"
                       data-vv-name="กรุณากรอกรหัสผ่าน"
-                      v-validate="'required|min:8'"
+                      v-validate="'required|min:6'"
                       :error-messages="errors.collect('กรุณากรอกรหัสผ่าน')"
                     />
                   </v-flex>

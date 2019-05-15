@@ -10,6 +10,11 @@ export default [
     view: 'Dashboard'
   },
   {
+    path: '/home',
+    name: 'Home',
+    view: 'Home'
+  },
+  {
     path: '/schedule',
     name: 'Schedule',
     view: 'Schedule'

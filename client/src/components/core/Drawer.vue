@@ -91,20 +91,17 @@ const menuAdmin = [
     to: "/trip",
     icon: "mdi-account",
     text: "Trip"
-  }
-  ,
+  },
   {
     to: "/่product",
     icon: "mdi-cart",
     text: "่Product"
-  }
-  ,
+  },
   {
     to: "/่unit",
     icon: "mdi-apps",
     text: "่Unit"
   }
-  
 ];
 
 const menuDriver = [
@@ -138,8 +135,13 @@ export default {
   mounted() {
     this.onResponsiveInverted();
     window.addEventListener("resize", this.onResponsiveInverted);
-
-    this.links = menuAdmin;
+    const roleId = this.$store.state.auth.user.RoleId;
+    if (roleId === 1) {
+      this.links = menuAdmin;
+    }
+    if (roleId === 2) {
+      this.links = menuDriver;
+    }
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.onResponsiveInverted);
