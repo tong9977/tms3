@@ -33,18 +33,14 @@
                     required
                   />
                 </v-flex>
-                <v-flex xs12 md6>
+                <v-flex xs12 md4>
                   <v-text-field
                     label="รหัสพนักงาน"
                     class="purple-input"
                     v-model="formModel.StaffCode"
-                    data-vv-name="กรุณากรอกรหัสพนักงาน"
-                    v-validate="'numeric'"
-                    :error-messages="errors.collect('กรุณากรอกรหัสพนักงาน')"
-                    required
                   />
                 </v-flex>
-                <v-flex xs12 md6>
+                <v-flex xs12 md4>
                   <v-select
                     v-model="formModel.UserStatusObj"
                     :items="userStatusItems"
@@ -54,9 +50,9 @@
                     return-object
                   ></v-select>
                 </v-flex>
-                <v-flex xs12 md6>
+                <v-flex xs12 md4>
                   <v-text-field
-                    label="๊Login (Email)"
+                    label="๊Email"
                     class="purple-input"
                     v-model="formModel.Email"
                     data-vv-name="กรุณากรอกอีเมล"
@@ -65,27 +61,49 @@
                     required
                   />
                 </v-flex>
-                <v-flex xs12 md6>
-                  <v-text-field
-                    label="Password"
-                    class="purple-input"
-                    type="password"
-                    v-model="formModel.Password"
-                    data-vv-name="กรุณากรอกรหัสผ่าน"
-                    v-validate="'required|min:8'"
-                    :error-messages="errors.collect('กรุณากรอกรหัสผ่าน')"
-                    required
-                  />
-                </v-flex>
+                <template v-if="mode=='create'">
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      label="UserName (Login)"
+                      class="purple-input"
+                      v-model="formModel.UserName"
+                      data-vv-name="กรุณากรอกUserName"
+                      v-validate="'required|min:4'"
+                      :error-messages="errors.collect('กรุณากรอกUserName')"
+                      required
+                    />
+                  </v-flex>
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      label="Password"
+                      class="purple-input"
+                      type="password"
+                      v-model="formModel.Password"
+                      data-vv-name="กรุณากรอกรหัสผ่าน"
+                      v-validate="'required|min:8'"
+                      :error-messages="errors.collect('กรุณากรอกรหัสผ่าน')"
+                    />
+                  </v-flex>
+                </template>
+                <template v-if="mode=='edit'">
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      label="UserName (Login)"
+                      class="purple-input"
+                      v-model="formModel.UserName"
+                      :disabled="true"
+                    />
+                  </v-flex>
+                    <v-flex xs12 md6>
+                      <v-btn color="secondary">เปลี่ยน Password</v-btn>
+                    </v-flex>
+                </template>
+
                 <v-flex xs12>
                   <v-textarea
                     class="purple-input"
                     label="รายละเอียดอื่นๆ"
                     v-model="formModel.Description"
-                    data-vv-name="กรุณากรอกรายละเอียดอื่นๆ"
-                    v-validate="'required|min:2'"
-                    :error-messages="errors.collect('กรุณากรอกรายละเอียดอื่นๆ')"
-                    required
                   />
                 </v-flex>
                 <v-flex xs12 text-xs-center>
@@ -187,6 +205,7 @@ export default {
           let outDTO = Object.assign({}, this.formModel);
           delete outDTO.UserStatusObj;
           delete outDTO.role;
+          delete outDTO.Password;
 
           await this.$store.dispatch(this.service + "/patch", [
             this.Id,
