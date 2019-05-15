@@ -120,6 +120,16 @@
       <v-img v-else :src="signaturePhoto"></v-img>
     </material-card>
 
+    <material-card color="green" title="ปิดงาน">
+      <div>
+        <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId!=3"  block class="blue white--text">กดปิดงาน</v-btn>
+          <p v-if="formModel.JobStatusId==3" class="text-md-center">ปิดงานแล้ว {{formModel.CompletedDate | dateC}} </p>
+      </div>
+     
+    </material-card>
+
+
+  <!--dialog -->
     <v-dialog v-model="dialogimg" max-width="100%" max-height="100%">
       <div style="text-align: center;" class="black white--text">
         <img :src="photo" class="image" width="auto" height="auto">
@@ -131,8 +141,28 @@
       </div>
     </v-dialog>
 
-    <v-dialog v-model="dialog" max-width="1200px">
-      <JobCreateEditDialog @Done="dialog = false" @Success="UpdateFinish" mode="edit" :Id="Id"/>
+    
+
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">งานนี้เสร็จแล้วใช่หรือไม่</span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex>ต้องการปิดงานใช่หรือไม่ ?</v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="dialog=false">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat :loading="loading" @click="saveToServer">ใช่</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </v-container>
 </template>
@@ -154,9 +184,11 @@ export default {
     service: "job",
     loading: false,
     dialog: false,
+    dialogimg: false,
     formModel: {},
     ImgModel: {},
     JobsObj: [],
+    outDTO:{},
     signaturePhoto: ""
   }),
   filters: {
@@ -246,6 +278,32 @@ export default {
     },
     GotoSignature(Id) {
       this.$router.push({ name: "Signature", params: { Id: Id } });
+    },
+    SuccessDialogJob(){
+        this.dialog = true;
+    },
+    async saveToServer(){
+
+     try {
+            
+          let outDTO = Object.assign({}, this.formModel);
+
+          outDTO.JobStatusId=3;
+          await this.$store.dispatch(this.service + "/patch", [
+            this.Id,
+            outDTO
+          ]);
+
+         
+          this.$toast.success('แก้ไขข้อมูลสำเร็จ');
+        } catch (err) {
+          console.log(err);
+          this.$toast.error('ไม่สามารถแก้ไขข้อมูลได้' + err);
+        } finally {
+          this.loading = false;
+          this.dialog = false;
+        }
+
     }
   }
 }

@@ -82,8 +82,8 @@ class Service {
   }
 
   async remove (id, params) {
-    let jobId = params.query.JobId;
-    let tripId = params.query.TripId;
+    let jobId = id.JobId;
+    let tripId = id.TripId;
 
     const jobTrip = require('../../models/jobtrip.model')();
     const numberOfDeletedRows = await jobTrip.query().delete().where('JobId', jobId).where('TripId', tripId);

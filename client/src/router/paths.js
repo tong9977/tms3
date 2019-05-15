@@ -69,7 +69,7 @@ export default [
     path: '/vehicleedit/:id',
     name: 'VehicleEdit',
     view: 'VehicleEdit'
-  },  
+  },
   {
     path: '/vehicletype',
     name: 'VehicleType',
@@ -85,7 +85,7 @@ export default [
     name: 'DriverCreateEdit',
     view: 'DriverCreateEdit'
   },
-  
+
   {
     path: '/driveradd',
     name: 'DriverAdd',
@@ -129,7 +129,7 @@ export default [
   {
     path: '/่jobstatus',
     name: 'JobStatus',
-    view: 'JobStatus'  
+    view: 'JobStatus'
   },
   {
     path: '/trip',
@@ -145,11 +145,21 @@ export default [
     path: '/่unit',
     name: 'Unit',
     view: 'Unit'
-  }  
-  ,
+  },
   {
     path: '/signature/:Id',
     name: 'Signature',
     view: 'Signature'
-  }  
+  },
+  {
+    path: '/mytripmobile/:Id',
+    name: 'MyTripMobile',
+    view: 'MyTripMobile'
+  },
+  {
+    path: '/tripdetailmobile/:Id',
+    name: 'TripDetailMobile',
+    view: 'TripDetailMobile'
+  }
+  
 ]

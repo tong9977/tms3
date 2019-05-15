@@ -1,6 +1,9 @@
 <template>
   <v-container>
     <v-btn color="blue" @click="$router.go(-1)">ย้อนกลับ</v-btn>
+    <v-btn color="blue" class="right mr-2" @click="editItem(item)">
+      <v-icon>mdi-pencil</v-icon>แก้ไข
+    </v-btn>
 
     <material-card color="green" :title="formModel.Customer + ' [JobId:' + formModel.Id +']'">
       <v-flex>
@@ -84,10 +87,8 @@
       </v-flex>
     </material-card>
 
-    
-      <JobItemComp :JobId="Id"/>
-   
-    
+    <JobItemComp :JobId="Id"/>
+
     <material-card color="green" title="รูปการส่งงาน">
       <v-container fluid grid-list-sm>
         <v-layout row wrap>

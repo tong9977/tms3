@@ -13,11 +13,16 @@ class job extends Model {
 
 
   $beforeInsert() {
-    //this.CreatedDate= this.updatedAt = new Date().toISOString();
+   this.CreatedDate = new Date().toISOString();
   }
 
   $beforeUpdate() {
-    //this.updatedAt = new Date().toISOString();
+    if(this.JobStatusId = 3){
+      this.CompletedDate = new Date().toISOString();
+    }else{
+     this.CompletedDate = null;
+    }
+   
   }
   static get relationMappings() {
 
