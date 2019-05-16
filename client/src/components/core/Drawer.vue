@@ -14,19 +14,37 @@
           <v-list-tile-title class="title">TMS-Warehouse</v-list-tile-title>
         </v-list-tile>
         <v-divider/>
-        <v-list-tile
-          v-for="(link, i) in links"
-          :key="i"
-          :to="link.to"
-          :active-class="color"
-          avatar
-          class="v-list-item"
-        >
-          <v-list-tile-action>
-            <v-icon>{{ link.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-title v-text="link.text"/>
-        </v-list-tile>
+        <template v-if="user.RoleId===1">
+          <v-list-tile
+            v-for="(link, i) in links"
+            :key="i"
+            :to="link.to"
+            :active-class="color"
+            avatar
+            class="v-list-item"
+          >
+            <v-list-tile-action>
+              <v-icon>{{ link.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title v-text="link.text"/>
+          </v-list-tile>
+        </template>
+
+        <template v-if="user.RoleId===2">
+          <v-list-tile
+            v-for="(link, i) in links2"
+            :key="i"
+            :to="link.to"
+            :active-class="color"
+            avatar
+            class="v-list-item"
+          >
+            <v-list-tile-action>
+              <v-icon>{{ link.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title v-text="link.text"/>
+          </v-list-tile>
+        </template>
       </v-layout>
     </v-img>
   </v-navigation-drawer>
@@ -110,11 +128,13 @@ const menuDriver = [
 export default {
   data: () => ({
     logo: "",
-    links: [],
+    links: menuAdmin,
+    links2: menuDriver,
     responsive: false
   }),
   computed: {
     ...mapState("app", ["image", "color", "drawerVisible"]),
+    ...mapState("auth", ["user"]),
     inputValue: {
       get() {
         return this.$store.state.app.drawer;
@@ -122,22 +142,13 @@ export default {
       set(val) {
         this.setDrawer(val);
       }
-    },
-    items() {
-      return this.$t("Layout.View.items");
     }
   },
   mounted() {
     this.onResponsiveInverted();
     window.addEventListener("resize", this.onResponsiveInverted);
-    const roleId = this.$store.state.auth.user.RoleId;
-    if (roleId === 1) {
-      this.links = menuAdmin;
-    }
-    if (roleId === 2) {
-      this.links = menuDriver;
-    }
   },
+  created() {},
   beforeDestroy() {
     window.removeEventListener("resize", this.onResponsiveInverted);
   },
