@@ -104,7 +104,12 @@ const menuAdmin = [
     icon: "mdi-apps",
     text: "่Unit"
   }
-  
+  ,
+  {
+    to: "/mytripmobile/:Id",
+    icon: "mdi-apps",
+    text: "MyTripMobile"
+  }
 ];
 
 const menuDriver = [
