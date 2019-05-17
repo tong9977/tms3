@@ -9,13 +9,6 @@ const fs = require('fs-blob-store');
 const blobStorage = fs('public/blobs');
 
 module.exports = function (app) {
-  const Model = createModel(app);
-  const paginate = app.get('paginate');
-
-  const options = {
-    model: Model,
-    paginate
-  };
 
   // Initialize our service with any options it requires
   app.use('/blob', blobService({ Model: blobStorage}));
