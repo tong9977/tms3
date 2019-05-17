@@ -33,18 +33,14 @@
                     required
                   />
                 </v-flex>
-                <v-flex xs12 md6>
+                <v-flex xs12 md4>
                   <v-text-field
                     label="รหัสพนักงาน"
                     class="purple-input"
                     v-model="formModel.StaffCode"
-                    data-vv-name="กรุณากรอกรหัสพนักงาน"
-                    v-validate="'numeric'"
-                    :error-messages="errors.collect('กรุณากรอกรหัสพนักงาน')"
-                    required
                   />
                 </v-flex>
-                <v-flex xs12 md6>
+                <v-flex xs12 md4>
                   <v-select
                     v-model="formModel.UserStatusObj"
                     :items="userStatusItems"
@@ -54,9 +50,9 @@
                     return-object
                   ></v-select>
                 </v-flex>
-                <v-flex xs12 md6>
+                <v-flex xs12 md4>
                   <v-text-field
-                    label="๊Login (Email)"
+                    label="๊Email"
                     class="purple-input"
                     v-model="formModel.Email"
                     data-vv-name="กรุณากรอกอีเมล"
@@ -65,27 +61,49 @@
                     required
                   />
                 </v-flex>
-                <v-flex xs12 md6>
-                  <v-text-field
-                    label="Password"
-                    class="purple-input"
-                    type="password"
-                    v-model="formModel.Password"
-                    data-vv-name="กรุณากรอกรหัสผ่าน"
-                    v-validate="'required|min:8'"
-                    :error-messages="errors.collect('กรุณากรอกรหัสผ่าน')"
-                    required
-                  />
-                </v-flex>
+                <template v-if="mode=='create'">
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      label="UserName (Login)"
+                      class="purple-input"
+                      v-model="formModel.UserName"
+                      data-vv-name="กรุณากรอกUserName"
+                      v-validate="'required|min:4'"
+                      :error-messages="errors.collect('กรุณากรอกUserName')"
+                      required
+                    />
+                  </v-flex>
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      label="Password"
+                      class="purple-input"
+                      type="password"
+                      v-model="formModel.Password"
+                      data-vv-name="กรุณากรอกรหัสผ่าน"
+                      v-validate="'required|min:6'"
+                      :error-messages="errors.collect('กรุณากรอกรหัสผ่าน')"
+                    />
+                  </v-flex>
+                </template>
+                <template v-if="mode=='edit'">
+                  <v-flex xs12 md6>
+                    <v-text-field
+                      label="UserName (Login)"
+                      class="purple-input"
+                      v-model="formModel.UserName"
+                      :disabled="true"
+                    />
+                  </v-flex>
+                    <v-flex xs12 md6>
+                      <v-btn color="secondary" @click="ResetPass(item)">เปลี่ยน Password</v-btn>
+                    </v-flex>
+                </template>
+
                 <v-flex xs12>
                   <v-textarea
                     class="purple-input"
                     label="รายละเอียดอื่นๆ"
                     v-model="formModel.Description"
-                    data-vv-name="กรุณากรอกรายละเอียดอื่นๆ"
-                    v-validate="'required|min:2'"
-                    :error-messages="errors.collect('กรุณากรอกรายละเอียดอื่นๆ')"
-                    required
                   />
                 </v-flex>
                 <v-flex xs12 text-xs-center>
@@ -104,6 +122,11 @@
             <v-btn color="primary" to="/driver">Cancel</v-btn>
             <v-btn color="secondary" @click.stop="saveToServer()" :loading="loading">Save</v-btn>
           </v-card-text>
+
+          <!-- dialog สำหรับ แก้ไข Password -->
+          <v-dialog v-model="dialog" max-width="1200px">
+            <DriverResetPassword @Done="dialog = false" :Id="Id" />
+          </v-dialog>
         </material-card>
       </v-flex>
     </v-layout>
@@ -112,6 +135,8 @@
 
 <script>
 import upload from "../utils/upload";
+
+import DriverResetPassword from "@/viewComponents/DriverResetPassword.vue";
 
 export default {
   data: () => ({
@@ -134,8 +159,12 @@ export default {
 
     formModel: {},
     userStatusItems: [],
+    dialog: false,
     loading: false
   }),
+  components: {
+    DriverResetPassword
+  },
   props: ["mode", "Id"],
   computed: {},
   async mounted() {
@@ -187,6 +216,7 @@ export default {
           let outDTO = Object.assign({}, this.formModel);
           delete outDTO.UserStatusObj;
           delete outDTO.role;
+          delete outDTO.Password;
 
           await this.$store.dispatch(this.service + "/patch", [
             this.Id,
@@ -224,7 +254,9 @@ export default {
     },
     uploadDone(uploadInfo) {
       this.formModel.ImageUrl = uploadInfo.url;
-    }
+    }, async ResetPass(item) {
+      this.dialog = true;
+    },
   }
 };
 </script>

@@ -20,7 +20,7 @@
               </td>
               <td>{{ item.StaffCode }}</td>
               <td>{{ item.FirstName}} {{ item.LastName}}</td>
-              <td>{{ item.Email }}</td>
+              <td>{{ item.UserName }}</td>
               <td>{{ item.role.RoleName }}</td>
               <td>{{ item.Description }}</td>
               <td>
@@ -49,7 +49,7 @@
               <v-card-text>
                 <v-container grid-list-md>
                   <v-layout wrap>
-                    <v-flex>ต้องการลบ {{ deleteItem.Email }} ใช่หรือไม่ ?</v-flex>
+                    <v-flex>ต้องการลบ {{ deleteItem.FirstName }} ใช่หรือไม่ ?</v-flex>
                   </v-layout>
                 </v-container>
               </v-card-text>
@@ -81,7 +81,7 @@ export default {
       { value: "ImageUrl", text: "", sortable: false },
       { value: "StaffCode", text: "รหัสพนักงาน", sortable: false },
       { value: "FirstName", text: "ชื่อ-สกุล", sortable: true },
-      { value: "Email", text: "UserName", sortable: false },
+      { value: "UserName", text: "UserName", sortable: false },
       { value: "RoleName", text: "ตำแหน่ง", sortable: false },
       { value: "Description", text: "รายละเอียด", sortable: false },
       { text: "", sortable: false }

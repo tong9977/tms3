@@ -10,6 +10,11 @@ export default [
     view: 'Dashboard'
   },
   {
+    path: '/home',
+    name: 'Home',
+    view: 'Home'
+  },
+  {
     path: '/schedule',
     name: 'Schedule',
     view: 'Schedule'
@@ -80,7 +85,11 @@ export default [
     name: 'DriverCreateEdit',
     view: 'DriverCreateEdit'
   },
-
+  {
+    path: '/drivermobile/',
+    name: 'DriverMobile',
+    view: 'DriverMobile'
+  },
   {
     path: '/driveradd',
     name: 'DriverAdd',

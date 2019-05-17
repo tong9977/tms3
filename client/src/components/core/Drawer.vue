@@ -43,7 +43,7 @@ const menuAdmin = [
     text: "DashBoard"
   },
   {
-    to: "/schedule",
+    to: "/trip",
     icon: "mdi-calendar",
     text: "Schedule"
   },
@@ -88,35 +88,29 @@ const menuAdmin = [
     text: "จัดการประเภทงาน"
   },
   {
-    to: "/trip",
-    icon: "mdi-account",
-    text: "Trip"
-  }
-  ,
-  {
     to: "/่product",
     icon: "mdi-cart",
-    text: "่Product"
-  }
-  ,
+    text: "่สิ้นค้า"
+  },
   {
     to: "/่unit",
     icon: "mdi-apps",
-    text: "่Unit"
-  }
-  ,
-  {
-    to: "/mytripmobile/:Id",
-    icon: "mdi-apps",
-    text: "MyTripMobile"
+    text: "่หน่วย"
   }
 ];
 
 const menuDriver = [
+  
   {
-    to: "/Today",
+    to: "/home",
     icon: "mdi-view-dashboard",
-    text: "Today Trip"
+    text: "งานของฉัน"
+  },
+  {
+    
+    to: "/drivermobile/",
+    icon: "mdi-account",
+    text: "ข้อมูลของฉัน"
   }
 ];
 
@@ -143,8 +137,13 @@ export default {
   mounted() {
     this.onResponsiveInverted();
     window.addEventListener("resize", this.onResponsiveInverted);
-
-    this.links = menuAdmin;
+    const roleId = this.$store.state.auth.user.RoleId;
+    if (roleId === 1) {
+      this.links = menuAdmin;
+    }
+    if (roleId === 2) {
+      this.links = menuDriver;
+    }
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.onResponsiveInverted);

@@ -15,7 +15,7 @@ import modules from './modules'
 
 import feathersVuex from 'feathers-vuex'
 import feathersClient from '../plugins/feathers-client'
-const { service, auth, FeathersVuex } = feathersVuex(feathersClient, { idField: 'id' })
+const { service, auth, FeathersVuex } = feathersVuex(feathersClient, { idField: 'Id' })
 
 Vue.use(Vuex)
 Vue.use(FeathersVuex)
@@ -24,7 +24,7 @@ Vue.use(FeathersVuex)
 const store = new Vuex.Store({
     modules,
     plugins:[
-        auth({ userService: 'users' }),
+        auth({ userService: 'user',entityIdField:'Id' }),
         service('role',{modelName:'Role',idField: 'Id'}),
         service('user',{modelName:'User',idField: 'Id'}), 
         service('vehicle',{modelName:'Vehicle',idField: 'Id'}),
