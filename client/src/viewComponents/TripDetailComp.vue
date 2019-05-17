@@ -327,8 +327,8 @@ export default {
     },
     async confirmSetLeader() {
       try {
-        alert("L : " + this.leader + " U : " + this.userIdSelected + " T : " + this.Trip.Id);
-        await this.$store.dispatch("usertrip/patch", [
+        // alert("L : " + this.leader + " U : " + this.userIdSelected + " T : " + this.Trip.Id);
+        await this.$store.dispatch("usertripcommand/patch", [
           { UserId: this.userIdSelected, TripId: this.Trip.Id}, { Leader : this.leader }
         ]);
       } catch (err) {

@@ -80,20 +80,25 @@ class Service {
   }
 
   async update(id, data, params) {
-    let userId = id.UserId;
-    let tripId = id.TripId;
 
-    console.log(userId);
-    console.log(tripId);
     return data;
   }
 
   async patch(id, data, params) {
+    let userId = id.UserId;
+    let tripId = id.TripId;
+    let leader = data.Leader;
+    
+    console.log(userId);
+    console.log(tripId);
+    console.log(leader);
 
-    console.log(id);
-    console.log(data);
-    console.log(params);
-    return data;
+    const userTrip = require('../../models/usertrip.model')();
+    const numberOfEditedRows = await userTrip.query().where('UserId', userId).where('TripId', tripId).patch({ Leader : leader});
+
+    console.log('edited', numberOfEditedRows, 'รายการ');
+
+    return { numberOfEditedRows };
   }
 
   async remove(id, params) {
