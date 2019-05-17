@@ -23,6 +23,7 @@ class trips extends Model {
     const vehicle = require('./vehicle.model')();
     const user = require('./user.model')();
     const job = require('./job.model')();
+    const userTrip = require('./usertrip.model')();
 
     return {
       vehicle: {
@@ -59,6 +60,15 @@ class trips extends Model {
             to: 'JobTrip.JobId'
           },
           to: 'Jobs.Id'
+        }
+      },
+
+      usertrips: {
+        relation: Model.HasManyRelation,
+        modelClass: userTrip,
+        join: {
+          from: 'Trips.Id',
+          to: 'UserTrip.TripId'
         }
       },
     }

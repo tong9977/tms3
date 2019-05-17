@@ -80,16 +80,28 @@ class Service {
   }
 
   async update(id, data, params) {
+    let userId = id.UserId;
+    let tripId = id.TripId;
+
+    console.log(userId);
+    console.log(tripId);
     return data;
   }
 
   async patch(id, data, params) {
+
+    console.log(id);
+    console.log(data);
+    console.log(params);
     return data;
   }
 
   async remove(id, params) {
     let userId = id.UserId;
     let tripId = id.TripId;
+
+    console.log(userId);
+    console.log(tripId);
 
     const userTrip = require('../../models/usertrip.model')();
     const numberOfDeletedRows = await userTrip.query().delete().where('UserId', userId).where('TripId', tripId);
