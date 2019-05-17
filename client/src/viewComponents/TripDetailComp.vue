@@ -49,7 +49,7 @@
           <v-avatar size="40" color="grey lighten-4" @click="CallDeleteUserDialog(u.Id)">
             <img :src="u.ImageUrl" alt="avatar">
           </v-avatar>
-          <p><small>หัวหน้า</small></p>
+          <p v-if="isLeader(u.Id)"><small>หัวหน้า</small></p>
         </div>
       </v-layout>
     </v-card-text>
@@ -316,6 +316,14 @@ export default {
     cancel() {
       this.userIdSelected = 0;
       this.confirmDeleteUserDialog = false;
+    },
+    isLeader(userId){
+      let leader = this.Trip.usertrips.filter(x => x.UserId == userId)[0].Leader;
+      if(leader == true){
+        return true;
+      }else{
+        return false;
+      }    
     },
     async confirmSetLeader() {
       try {
