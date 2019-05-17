@@ -53,14 +53,8 @@ export default {
       loading: false
     };
   },
-  computed: {
-    loggingIn() {
-      return this.$store.state.auth.status.loggingIn;
-    }
-  },
   created() {
     ShowBgImage("/img/bg.png");
-    this.$store.dispatch("auth/logout");
   },
   methods: {
     async onLoginClick() {
@@ -77,7 +71,7 @@ export default {
           UserName: this.username,
           Password: this.password
         });
-        console.log(res);
+
         this.$router.push("/home");
       } catch (error) {
         alert('login ไม่สำเร็จ ['  + error.message +']');

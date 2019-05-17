@@ -37,19 +37,26 @@ const router = new Router({
   }
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // หน้าที่ไม่ต้อง login ให้ค่าใน array  public page 
-  const publicPages = ['/login','/signup'];
+  const publicPages = ['/login', '/signup'];
   const authRequired = !publicPages.includes(to.path);
 
-  
+  if (authRequired) {
+    try {
+      await store.dispatch('auth/authenticate');
+    } catch (error) {
+      return next('/login');
+    }
+  }
+
   const user = store.state.auth.user;
 
   if (authRequired && !user) {
     return next('/login');
   }
-  
-  next();
+
+  return next();
 })
 
 Vue.use(Meta)
