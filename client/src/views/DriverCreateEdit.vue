@@ -95,7 +95,7 @@
                     />
                   </v-flex>
                     <v-flex xs12 md6>
-                      <v-btn color="secondary">เปลี่ยน Password</v-btn>
+                      <v-btn color="secondary" @click="ResetPass(item)">เปลี่ยน Password</v-btn>
                     </v-flex>
                 </template>
 
@@ -122,6 +122,11 @@
             <v-btn color="primary" to="/driver">Cancel</v-btn>
             <v-btn color="secondary" @click.stop="saveToServer()" :loading="loading">Save</v-btn>
           </v-card-text>
+
+          <!-- dialog สำหรับ แก้ไข Password -->
+          <v-dialog v-model="dialog" max-width="1200px">
+            <DriverResetPassword @Done="dialog = false" :Id="Id" />
+          </v-dialog>
         </material-card>
       </v-flex>
     </v-layout>
@@ -130,6 +135,8 @@
 
 <script>
 import upload from "../utils/upload";
+
+import DriverResetPassword from "@/viewComponents/DriverResetPassword.vue";
 
 export default {
   data: () => ({
@@ -152,8 +159,12 @@ export default {
 
     formModel: {},
     userStatusItems: [],
+    dialog: false,
     loading: false
   }),
+  components: {
+    DriverResetPassword
+  },
   props: ["mode", "Id"],
   computed: {},
   async mounted() {
@@ -243,7 +254,9 @@ export default {
     },
     uploadDone(uploadInfo) {
       this.formModel.ImageUrl = uploadInfo.url;
-    }
+    }, async ResetPass(item) {
+      this.dialog = true;
+    },
   }
 };
 </script>

@@ -8,6 +8,7 @@ export default {
     }
     if (roleId === 2) {
       this.$router.push('/mytripmobile/'+userId);
+     
     }
   }
 };

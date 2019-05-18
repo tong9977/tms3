@@ -161,6 +161,7 @@
                     item-text="Name"
                     item-value="Id"
                     label="สถานะงาน"
+                    :disabled="true"
                     return-object
                   ></v-select>
                 </v-flex>
@@ -241,8 +242,6 @@ export default {
     dateFormat: "dd-MM-yyyy",
     JobStatus: [],
     JobType: [],
-    JobStatusSelete: { Id: 1 },
-    JobTypesSelete: { Id: 1 },
     items: [],
     total: 0,
     loading: false,

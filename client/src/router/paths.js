@@ -50,6 +50,11 @@ export default [
     view: 'JobDone'
   },
   {
+    path: '/jobclosing',
+    name: 'JobClosing',
+    view: 'JobClosing'
+  },
+  {
     path: '/vehicle',
     name: 'Vehicle',
     view: 'Vehicle'
@@ -85,7 +90,11 @@ export default [
     name: 'DriverCreateEdit',
     view: 'DriverCreateEdit'
   },
-
+  {
+    path: '/drivermobile/',
+    name: 'DriverMobile',
+    view: 'DriverMobile'
+  },
   {
     path: '/driveradd',
     name: 'DriverAdd',
@@ -130,6 +139,11 @@ export default [
     path: '/่jobstatus',
     name: 'JobStatus',
     view: 'JobStatus'
+  },
+  {
+    path: '/joblogtype',
+    name: 'JobLogType',
+    view: 'JobLogType'
   },
   {
     path: '/trip',

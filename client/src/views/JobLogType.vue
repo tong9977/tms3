@@ -7,7 +7,7 @@
           :title="'จัดการ'+objectName"
           :text="'รายการ'+objectName+'ทั้งหมด'"
         >
-          <v-btn flat slot="menu" :to="{ name: 'VehicleCreateEdit', params: { mode: 'create', Id: -1}}">
+          <v-btn flat slot="menu" @click.stop="addItem()">
             <v-icon>mdi-plus</v-icon>เพิ่ม
           </v-btn>
           <v-subheader>มีทั้งหมด {{total}} รายการ</v-subheader>
@@ -18,28 +18,9 @@
             <!-- set column แสดงผลที่นี้ -->
             <template slot="items" slot-scope="{ item }">
               <td>{{ item.Id }}</td>
-              <td>{{ item.LicensePlate }}</td>
-              <td>{{ item.vehicletype.TypeName }}</td>
+              <td>{{ item.Name }}</td>
               <td>
-                {{ item.Limit }}
-                <span>Kg</span>
-              </td>
-              <td>
-                {{ item.LimitCC }}
-                <span>CC</span>
-              </td>
-
-              <td>
-                <v-icon v-if="item.Active">mdi-check</v-icon>
-                <v-icon v-else>mdi-close</v-icon>
-              </td>
-              <td>{{ item.Desciption }}</td>
-              <td>
-                <v-btn
-                  color="blue"
-                  class="font-weight-light"
-                  :to="{ name: 'VehicleCreateEdit', params: { mode: 'edit', Id: item.Id}}"
-                >
+                <v-btn color="blue" class="font-weight-light" @click="editItem(item)">
                   <v-icon>mdi-pencil</v-icon>แก้ไข
                 </v-btn>
                 <v-btn color="red" @click="deleteItem(item)" class="font-weight-light">
@@ -50,7 +31,7 @@
           </v-data-table>
 
           <!-- dialog สำหรับ เพิ่ม แก้ไข -->
-          <v-dialog v-model="dialog" max-width="1200px">
+          <v-dialog v-model="dialog" max-width="500px">
             <v-card>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
@@ -60,62 +41,14 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <!-- set form กรอกข้อมูลที่นี้ -->
-                    <v-flex xs12 md6>
+                    <v-flex>
                       <v-text-field
-                        label="ทะเบียนรถ"
-                        class="purple-input"
-                        v-model="formModel.LicensePlate"
-                        data-vv-name="ทะเบียนรถ"
-                        v-validate="'required'"
-                        :error-messages="errors.collect('ทะเบียนรถ')"
-                      />
-                      <!-- -->
-                    </v-flex>
-                    <v-flex xs12 md6>
-                      <v-select
-                        :items="VehicleStatus"
-                        v-model="formModel.VehicleTypeObj"
-                        item-text="TypeName"
-                        item-value="Id"
-                        label="ประเภท"
-                        return-object
-                      ></v-select>
-                    </v-flex>
-                    <v-flex xs12 md6>
-                      <v-text-field
-                        label="๊น้ำหนักที่รับได้ (kg)"
-                        class="purple-input"
-                        v-model="formModel.Limit"
-                        data-vv-name="น้ำหนักที่รับได้"
-                        v-validate="'required|numeric'"
-                        :error-messages="errors.collect('น้ำหนักที่รับได้')"
-                      />
-                      <!--  -->
-                    </v-flex>
-                    <v-flex xs12 md6>
-                      <v-text-field
-                        label="๊ปริมาตรที่ขนได้ (CC)"
-                        class="purple-input"
-                        v-model="formModel.LimitCC"
-                        data-vv-name="ปริมาตรที่ขนได้"
-                        v-validate="'required'"
-                        :error-messages="errors.collect('ปริมาตรที่ขนได้')"
-                      />
-
-                      <!---->
-                    </v-flex>
-                    <v-flex xs12 md6>
-                      <v-checkbox v-model="formModel.Active" label="ใช้งาน"></v-checkbox>
-                    </v-flex>
-                    <v-flex xs12>
-                      <v-textarea
-                        class="purple-input"
-                        label="รายละเอียดอื่นๆ"
-                        v-model="formModel.Desciption"
-                        data-vv-name="รายละเอียด"
-                        v-validate="'required'"
-                        :error-messages="errors.collect('รายละเอียด')"
-                      />
+                        v-model="formModel.Name"
+                        data-vv-name="ประเภทหน่วยนับที่ต้องการ"
+                        v-validate="'required|min:2'"
+                        :error-messages="errors.collect('ประเภทหน่วยนับที่ต้องการ')"
+                        label="กรอกประเภทหน่วยนับ"
+                      ></v-text-field>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -162,33 +95,23 @@
 export default {
   data: () => ({
     //--start config
-    service: "vehicle",
-    objectName: "รถ",
+    service: "joblogtype",
+    objectName: "ประเภทหน่วยนับ",
     headers: [
       { value: "Id", text: "Id", sortable: true },
-      { value: "LicensePlate", text: "ทะเบียนรถ", sortable: false },
-      { value: "Type", text: "ประเภท", sortable: true },
-      { value: "Limit", text: "น้ำหนักที่ขนได้", sortable: true },
-      { value: "LimitCC", text: "ปริมาตรที่ขนได้", sortable: true },
-      { value: "Active", text: "ใช้งาน", sortable: true },
-      { value: "Desciption", text: "รายละเอียด", sortable: true },
+      { value: "Name", text: "รายละเอียดหน่วยนับ", sortable: true },
       { text: "", sortable: false }
     ],
     defaultValue: {
-      LicensePlate: "",
-      Limit: "",
-      LimitCC: "",
-      Desciption: "",
-      Active: false,
-      VehicleTypeObj: {}
+      Name: ""
     },
-    query: { $sort: { Id: -1 } },
+    query: { sort: { Id: -1 } },
     //--end config
 
-    items: [],
-    VehicleStatus: [],
-    VehicleTypesSelete: { Id: 1 },
+    items: [], // data ที่มาจากการ find ของ server
     total: 0,
+    inDTO: {}, // data ที่มาจากการ get ของ server
+    outDTO: {}, // data ที่เป็น Object ที่จะส่งไป create หรือ update ที่ server
     loading: false,
     dialog: false,
     dialogDelete: false,
@@ -206,8 +129,6 @@ export default {
     //init here
 
     this.renderUI();
-
-    
   },
   methods: {
     async renderUI() {
@@ -221,19 +142,6 @@ export default {
       } catch (error) {
         console.log(error);
         alert("ไม่สามารถขอข้อมูลจาก server ได้");
-      }
-
-      try {
-        const { Vehicle } = this.$FeathersVuex;
-
-        Vehicle.find({ query: { $eager: "vehicletype" } }).then(res => {
-          this.vehicle = res.data;
-        });
-
-        var vehicletype = await this.$store.dispatch("vehicletype/find", {});
-        this.vehicleStatus = vehicletype;
-      } catch (err) {
-        alert("ไม่สามารถต่อ server ได้");
       }
     },
     async addItem() {
@@ -265,13 +173,12 @@ export default {
       this.loading = true;
       if (this.mode === "edit") {
         try {
-          let temp = Object.assign({}, this.formModel);
-          //alert(JSON.stringify(temp))
-          temp.VehicleTypeId = this.formModel.VehiclaeTypeObj.Id;
-          delete temp.VehicleTypeObj;
+          this.outDTO = Object.assign({}, this.formModel);
+          // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
+
           await this.$store.dispatch(this.service + "/patch", [
-            temp.Id,
-            temp
+            this.formModel.Id,
+            this.outDTO
           ]);
           this.renderUI();
         } catch (err) {
@@ -282,15 +189,11 @@ export default {
         }
       } else {
         //Add Data
-
         try {
-          //alert(JSON.stringify(this.formModel))
+          this.outDTO = Object.assign({}, this.formModel);
+          // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
 
-          let temp = Object.assign({}, this.formModel);
-          //alert(JSON.stringify(temp))
-          temp.VehicleTypeId = this.formModel.VehicleTypeObj.Id;
-          delete temp.VehicleTypeObj;
-          this.$store.dispatch(this.service + "/create", temp);
+          this.$store.dispatch(this.service + "/create", this.outDTO);
           this.renderUI();
         } catch (err) {
           console.log(err);

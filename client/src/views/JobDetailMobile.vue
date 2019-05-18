@@ -123,7 +123,7 @@
     <material-card color="green" title="ปิดงาน">
       <div>
         <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId!=3"  block class="blue white--text">กดปิดงาน</v-btn>
-          <p v-if="formModel.JobStatusId==3" class="text-md-center">ปิดงานแล้ว {{formModel.CompletedDate | dateC}} </p>
+          <p v-if="formModel.JobStatusId==3" class="text-xs-center">ปิดงานแล้ว {{formModel.CompletedDate | dateC}} </p>
       </div>
      
     </material-card>
@@ -283,7 +283,7 @@ export default {
             
           let outDTO = Object.assign({}, this.formModel);
 
-          outDTO.JobStatusId=3;
+          outDTO.JobStatusId = 3;
           await this.$store.dispatch(this.service + "/patch", [
             this.Id,
             outDTO

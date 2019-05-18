@@ -81,6 +81,11 @@ const menuAdmin = [
     text: "ใบงานเสร็จสิ้น"
   },
   {
+    to: "/jobclosing",
+    icon: "mdi-clipboard-check",
+    text: "ใบงานปิดแล้ว"
+  },
+  {
     to: "/vehicle",
     icon: "mdi-car-estate",
     text: "จัดการรถ"
@@ -114,14 +119,26 @@ const menuAdmin = [
     to: "/่unit",
     icon: "mdi-apps",
     text: "่หน่วย"
+  },
+  {
+    to: "/joblogtype",
+    icon: "mdi-apps",
+    text: "LogType"
   }
 ];
 
 const menuDriver = [
+  
   {
     to: "/home",
     icon: "mdi-view-dashboard",
     text: "งานของฉัน"
+  },
+  {
+    
+    to: "/drivermobile/",
+    icon: "mdi-account",
+    text: "ข้อมูลของฉัน"
   }
 ];
 

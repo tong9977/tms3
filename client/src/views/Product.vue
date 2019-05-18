@@ -92,6 +92,8 @@
 
 
 <script>
+import {Message} from "@/utils/Message";
+
 export default {
   data: () => ({
     //--start config
@@ -127,19 +129,25 @@ export default {
   },
   async mounted() {
     //init here
-
+    this.setAge();
     this.renderUI();
+  
   },
   methods: {
     async renderUI() {
+     
+     
       try {
+        
         var res = await this.$store.dispatch(
           this.service + "/find",
           this.query
         );
         this.total = res.total;
         this.items = res.data;
+       
       } catch (error) {
+        
         console.log(error);
         alert("ไม่สามารถขอข้อมูลจาก server ได้");
       }
@@ -180,10 +188,13 @@ export default {
             this.formModel.Id,
             this.outDTO
           ]);
+          Message.UpdateSuccess()
           this.renderUI();
+          
         } catch (err) {
           console.log(err);
-          alert("ไม่สามารถแก้ไขข้อมูลได้");
+          Message.UpdateError()
+          //alert("ไม่สามารถแก้ไขข้อมูลได้");
         } finally {
           this.loading = false;
         }
@@ -194,10 +205,14 @@ export default {
           // hook ที่จะแก้ข้อมูลก่อนส่งไป server ใส่ที่นี้
 
           this.$store.dispatch(this.service + "/create", this.outDTO);
+          
           this.renderUI();
+           Message.AddSuccess();
         } catch (err) {
+          
+           Message.AddError(error);
           console.log(err);
-          alert("ไม่สามารถเพิ่มข้อมูลได้");
+         // alert("ไม่สามารถเพิ่มข้อมูลได้");
         } finally {
           this.loading = false;
         }
@@ -208,16 +223,27 @@ export default {
       this.loading = true;
       try {
         await this.$store.dispatch(this.service + "/remove", this.formModel.Id);
+        Message.DeleteSuccess()
+       
         this.renderUI();
+        
       } catch (err) {
         console.log(err);
-        alert("ไม่สามารถลบข้อมูลได้");
+        Message.DeleteError()
+        
+        //alert("ไม่สามารถลบข้อมูลได้");
       } finally {
         this.loading = false;
         this.dialogDelete = false;
       }
+    },
+    async setAge(){
+        Message();
+       // Message.AddSuccess()
+        //Message.UpdateError()
     }
   }
+
 };
 </script> 
 
