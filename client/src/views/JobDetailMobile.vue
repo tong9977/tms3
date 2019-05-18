@@ -112,12 +112,12 @@
     </material-card>
 
     <material-card color="green" title="ลายเซ็นลูกค้า">
-      <div v-if="!!!formModel.SignatureId">
+      <div v-if="!!!formModel.SignatureUrl">
         <v-btn block class="blue white--text" @click="GotoSignature(Id)">
           <v-icon>mdi-pen</v-icon>ให้ลูกค้าเซ็นชื่อ
         </v-btn>
       </div>
-      <v-img v-else :src="'http://localhost:3030/blobs/'  + formModel.SignatureId"></v-img>
+      <v-img v-else :src="formModel.SignatureUrl"></v-img>
     </material-card>
 
     <material-card color="green" title="ปิดงาน">

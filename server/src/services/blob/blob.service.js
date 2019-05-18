@@ -1,12 +1,10 @@
 // Initializes the `blob` service on path `/blob`
-const createService = require('feathers-objection');
-const createModel = require('../../models/blob.model');
 const hooks = require('./blob.hooks');
 
 
 const blobService  = require('feathers-blob');
 const fs = require('fs-blob-store');
-const blobStorage = fs('public/blobs');
+const blobStorage = fs('public/uploads');
 
 module.exports = function (app) {
 
