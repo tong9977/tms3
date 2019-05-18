@@ -49,6 +49,7 @@
           <v-avatar size="40" color="grey lighten-4" @click="CallDeleteUserDialog(u.Id)">
             <img :src="u.ImageUrl" alt="avatar">
           </v-avatar>
+          <p v-if="isLeader(u.Id)"><small>หัวหน้า</small></p>
         </div>
       </v-layout>
     </v-card-text>
@@ -67,8 +68,22 @@
     <v-dialog v-model="confirmDeleteUserDialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">ยืนยันการเอาพนักงานออก</span>
+          <span class="headline">ดำเนินการ</span>
         </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex>
+                <v-checkbox v-model="leader" label="หัวหน้า"></v-checkbox>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="cancel">ยกเลิก</v-btn>
+          <v-btn color="blue darken-1" flat :loading="loading" @click="confirmSetLeader()">ยืนยัน</v-btn>
+        </v-card-actions>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
@@ -78,13 +93,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="cancelDeleteUser">ยกเลิก</v-btn>
-          <v-btn
-            color="blue darken-1"
-            flat
-            :loading="loading"
-            @click="confirmDeleteUser()"
-          >ตกลง</v-btn>
+          <v-btn color="blue darken-1" flat @click="cancel">ยกเลิก</v-btn>
+          <v-btn color="blue darken-1" flat :loading="loading" @click="confirmDeleteUser()">ยืนยัน</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -113,12 +123,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="cancelStartTrip">ยกเลิก</v-btn>
-          <v-btn
-            color="blue darken-1"
-            flat
-            :loading="loading"
-            @click="confirmStartTrip"
-          >ตกลง</v-btn>
+          <v-btn color="blue darken-1" flat :loading="loading" @click="confirmStartTrip">ตกลง</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -150,12 +155,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" flat @click="cancelDeleteJob">ยกเลิก</v-btn>
-          <v-btn
-            color="blue darken-1"
-            flat
-            :loading="loading"
-            @click="confirmDeleteJob()"
-          >ตกลง</v-btn>
+          <v-btn color="blue darken-1" flat :loading="loading" @click="confirmDeleteJob()">ตกลง</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -183,13 +183,14 @@ export default {
 
     confirmStartTripDialog: false,
 
+    jobNewDialog: false,
+    confirmDeleteJobDialog: false,
+    jobIdSelected: 0,
+
     userNewDialog: false,
     confirmDeleteUserDialog: false,
     userIdSelected: 0,
-
-    jobNewDialog: false,
-    confirmDeleteJobDialog: false,
-    jobIdSelected: 0
+    leader: false
   }),
   props: ["Trip"],
   mounted: function() {
@@ -206,7 +207,7 @@ export default {
     async render() {
       //find ใหม่ เอาแค่ตัวเดียวที่เพิ่มแล้วสั่ง this.Trip = ที่ get มาใหม่
       let res = await this.$store.dispatch("trips/find", {
-        query: { Id: this.Trip.Id, $eager: "[vehicle,users,jobs]" }
+        query: { Id: this.Trip.Id, $eager: "[vehicle,users,jobs,usertrips]" }
       });
 
       this.Trip = res.data[0];
@@ -262,7 +263,10 @@ export default {
     },
     async confirmDeleteJob() {
       try {
-        await this.$store.dispatch("jobtripcommand/remove", { JobId: this.jobIdSelected, TripId: this.Trip.Id });
+        await this.$store.dispatch("jobtripcommand/remove", {
+          JobId: this.jobIdSelected,
+          TripId: this.Trip.Id
+        });
       } catch (err) {
         alert("ไม่สามารถลบได้");
         this.confirmDeleteJobDialog = false;
@@ -304,15 +308,43 @@ export default {
     },
     CallDeleteUserDialog(userId) {
       this.userIdSelected = userId;
+      this.leader = this.Trip.usertrips.filter(
+        x => x.UserId == userId
+      )[0].Leader;
       this.confirmDeleteUserDialog = true;
     },
-    cancelDeleteUser() {
+    cancel() {
       this.userIdSelected = 0;
       this.confirmDeleteUserDialog = false;
     },
+    isLeader(userId){
+      let leader = this.Trip.usertrips.filter(x => x.UserId == userId)[0].Leader;
+      if(leader == true){
+        return true;
+      }else{
+        return false;
+      }    
+    },
+    async confirmSetLeader() {
+      try {
+        // alert("L : " + this.leader + " U : " + this.userIdSelected + " T : " + this.Trip.Id);
+        await this.$store.dispatch("usertripcommand/patch", [
+          { UserId: this.userIdSelected, TripId: this.Trip.Id}, { Leader : this.leader }
+        ]);
+      } catch (err) {
+        alert("ไม่สามารถเซตเป็นหัวหน้างานได้");
+        this.confirmDeleteUserDialog = false;
+      } finally {
+        this.confirmDeleteUserDialog = false;
+      }
+      this.render();
+    },
     async confirmDeleteUser() {
       try {
-        await this.$store.dispatch("usertripcommand/remove", { UserId: this.userIdSelected, TripId: this.Trip.Id } );
+        await this.$store.dispatch("usertripcommand/remove", {
+          UserId: this.userIdSelected,
+          TripId: this.Trip.Id
+        });
       } catch (err) {
         alert("ไม่สามารถลบได้");
         this.confirmDeleteUserDialog = false;

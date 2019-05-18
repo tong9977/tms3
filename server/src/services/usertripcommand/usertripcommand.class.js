@@ -80,16 +80,33 @@ class Service {
   }
 
   async update(id, data, params) {
+
     return data;
   }
 
   async patch(id, data, params) {
-    return data;
+    let userId = id.UserId;
+    let tripId = id.TripId;
+    let leader = data.Leader;
+    
+    console.log(userId);
+    console.log(tripId);
+    console.log(leader);
+
+    const userTrip = require('../../models/usertrip.model')();
+    const numberOfEditedRows = await userTrip.query().where('UserId', userId).where('TripId', tripId).patch({ Leader : leader});
+
+    console.log('edited', numberOfEditedRows, 'รายการ');
+
+    return { numberOfEditedRows };
   }
 
   async remove(id, params) {
     let userId = id.UserId;
     let tripId = id.TripId;
+
+    console.log(userId);
+    console.log(tripId);
 
     const userTrip = require('../../models/usertrip.model')();
     const numberOfDeletedRows = await userTrip.query().delete().where('UserId', userId).where('TripId', tripId);
