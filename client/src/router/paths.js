@@ -50,6 +50,11 @@ export default [
     view: 'JobDone'
   },
   {
+    path: '/jobclosing',
+    name: 'JobClosing',
+    view: 'JobClosing'
+  },
+  {
     path: '/vehicle',
     name: 'Vehicle',
     view: 'Vehicle'
@@ -134,6 +139,11 @@ export default [
     path: '/่jobstatus',
     name: 'JobStatus',
     view: 'JobStatus'
+  },
+  {
+    path: '/joblogtype',
+    name: 'JobLogType',
+    view: 'JobLogType'
   },
   {
     path: '/trip',

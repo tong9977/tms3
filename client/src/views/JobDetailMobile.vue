@@ -288,7 +288,7 @@ export default {
             
           let outDTO = Object.assign({}, this.formModel);
 
-          outDTO.JobStatusId=3;
+          outDTO.JobStatusId = 3;
           await this.$store.dispatch(this.service + "/patch", [
             this.Id,
             outDTO

@@ -138,7 +138,7 @@ export default {
         );
         this.User = res;
       } catch (error) {
-        console.log(error);
+        console.log(error); 
         this.$toast.error("ไม่สามารถขอข้อมูลจาก server ได้");
       }
     },

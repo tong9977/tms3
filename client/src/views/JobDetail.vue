@@ -89,6 +89,8 @@
 
     <JobItemComp :JobId="Id"/>
 
+    <JobListLogComp :JobId="Id"/>
+
     <material-card color="green" title="รูปการส่งงาน">
       <v-container fluid grid-list-sm>
         <v-layout row wrap>
@@ -121,6 +123,35 @@
       <v-img v-else :src="signaturePhoto"></v-img>
     </material-card>
 
+    <material-card color="green" title="ปิดงาน">
+      <div>
+        <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId!=4"  block class="blue white--text">กดปิดงาน</v-btn>
+          <p v-if="formModel.JobStatusId==4" class="text-xs-center">ปิดงานแล้ว {{formModel.CompletedDate | dateC}} </p>
+      </div>
+     
+    </material-card>
+
+     <v-dialog v-model="dialogJob" max-width="500px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">งานนี้เสร็จแล้วใช่หรือไม่</span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex>ต้องการปิดงานใช่หรือไม่ ?</v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="dialogJob=false">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat :loading="loading" @click="saveToServer">ใช่</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="dialogimg" max-width="100%" max-height="100%">
       <div style="text-align: center;" class="black white--text">
         <img :src="photo" class="image" width="auto" height="auto">
@@ -149,20 +180,24 @@ import locale from "date-fns/locale/th";
 import PictureInput from "vue-picture-input";
 import upload from "../utils/upload";
 import Lightbox from "vue-my-photos";
+import JobListLogComp from "@/viewComponents/JobListLogComp.vue";
 
 export default {
   components: {
     JobItemComp,
     JobCreateEditDialog,
-    JobItemMobileComp
+    JobItemMobileComp,
+    JobListLogComp
   },
   data: () => ({
     service: "job",
     loading: false,
     dialog: false,
     dialogimg: false,
+    dialogJob:false,
     formModel: {},
     ImgModel: {},
+    outDTO:{},
     JobsObj: []
   }),
   filters: {
@@ -244,6 +279,34 @@ export default {
     },
     GotoSignature(Id) {
       this.$router.push({ name: "Signature", params: { Id: Id } });
+    },
+     SuccessDialogJob(){
+        this.dialogJob = true;
+    },async saveToServer(){
+       
+     try {
+            
+          let tempJobStatusId = Object.assign({}, this.formModel);
+          tempJobStatusId.JobStatusId = 4;
+
+          alert(JSON.stringify(tempJobStatusId.JobStatusId+"ID NAAAAA"))
+          await this.$store.dispatch(this.service + "/patch", [
+            this.formModel.Id,
+            tempJobStatusId
+          ]);
+
+          
+
+         
+          this.$toast.success('แก้ไขข้อมูลสำเร็จ');
+        } catch (err) {
+          console.log(err);
+          this.$toast.error('ไม่สามารถแก้ไขข้อมูลได้' + err);
+        } finally {
+          this.loading = false;
+          this.dialogJob = false;
+        }
+
     }
   }
 };

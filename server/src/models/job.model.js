@@ -22,6 +22,12 @@ class job extends Model {
     }else{
      this.CompletedDate = null;
     }
+
+    if(this.JobStatusId = 4){
+      this.CompletedDate = new Date().toISOString();
+    }else{
+     this.CompletedDate = null;
+    }
    
   }
   static get relationMappings() {

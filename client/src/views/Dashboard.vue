@@ -35,6 +35,18 @@
         />
       </v-flex>
 
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="purple darken-4"
+          icon="mdi-clipboard-check-outline"
+          title="ใบงานปิดแล้ว"
+          value="0"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+
     </v-layout>
   </v-container>
 </template>

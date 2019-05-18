@@ -90,11 +90,11 @@ export default {
     objectName: "รถ",
     query: { $sort: { Id: -1 } },
     defaultValue: {
-    Active: true,
-    LicensePlate: "",
-    Limit: "",
-    LimitCC: "",
-    Desciption: "",
+      Active: true,
+      LicensePlate: "",
+      Limit: "",
+      LimitCC: "",
+      Desciption: "",
       VehicleTypesObj: { Id: 1 },
     },
     //--end config
