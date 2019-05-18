@@ -204,19 +204,11 @@ export default {
   methods: {
     async renderUI() {
       try {
-        var res = await this.$store.dispatch(this.service + "/get", this.Id);
+        let res = await this.$store.dispatch(this.service + "/get", this.Id);
         this.formModel = res;
 
-        this.signaturePhoto ='http://localhost:3030/blobs/'  +  this.formModel.SignatureId;
-        /*
-        if (this.formModel.SignatureId) {
-          let res = await this.$store.dispatch(
-            "blob/get",
-            this.formModel.SignatureId
-          );
-          this.signaturePhoto = res.uri;
-        }
-        */
+  
+        
       } catch (error) {
         console.log(error);
         this.$toast.error(error);

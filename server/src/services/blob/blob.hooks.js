@@ -1,4 +1,6 @@
+const { authenticate } = require('@feathersjs/authentication').hooks;
 
+const debugContext = require('../../hooks/debug-context');
 
 module.exports = {
   before: {
