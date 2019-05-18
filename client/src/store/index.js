@@ -44,7 +44,10 @@ const store = new Vuex.Store({
         service('product',{idField:'Id'}),
         service('unit',{idField:'Id'}),
         service('upload',{idField:'Id'}),
-        service('blob')
+        service('blob'),
+        service('todayjobcommand',{idField:'Id'}),
+        service('monthjobcommand',{idField:'Id'}),
+        
     ]
 })
 

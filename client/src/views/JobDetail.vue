@@ -88,7 +88,7 @@
     </material-card>
 
     <JobItemComp :JobId="Id"/>
-
+    <TripListComp :JobId="Id"/>
     <JobListLogComp :JobId="Id"/>
 
     <material-card color="green" title="รูปการส่งงาน">
@@ -181,13 +181,14 @@ import PictureInput from "vue-picture-input";
 import upload from "../utils/upload";
 import Lightbox from "vue-my-photos";
 import JobListLogComp from "@/viewComponents/JobListLogComp.vue";
-
+import TripListComp from "@/viewComponents/TripListComp.vue";
 export default {
   components: {
     JobItemComp,
     JobCreateEditDialog,
     JobItemMobileComp,
-    JobListLogComp
+    JobListLogComp,
+    TripListComp
   },
   data: () => ({
     service: "job",

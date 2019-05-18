@@ -1,7 +1,7 @@
 <template>
   <v-layout justify-center wrap>
     <v-flex md12>
-      <material-card color="green" title="จัดการ Log">
+      <material-card color="green" title="จัดการ Log" text="รายละเอียดของ Log">
         <v-btn flat slot="menu" @click="addItem()">
           <v-icon>mdi-plus</v-icon>เพิ่ม
         </v-btn>
@@ -107,8 +107,8 @@ export default {
     objectName: "Log",
     headers: [
       { value: "Id", text: "Id", sortable: true },
-      { value: "LogName", text: "Log Name", sortable: true },
-      { value: "Description", text: "ลายละเอียด", sortable: true },
+      { value: "LogName", text: "ชื่อประเภท Log ", sortable: true },
+      { value: "Description", text: "รายละเอียด", sortable: true },
       { value: "CreatedDate", text: "วันที่สร้าง", sortable: true },
       { text: "", sortable: false }
     ],
