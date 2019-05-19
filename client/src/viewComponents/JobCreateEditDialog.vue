@@ -132,7 +132,7 @@
                   <span style="font-size:9pt">วันส่งของ</span>
                   <ejs-datepicker
                     style="padding-bottom:5px;"
-                    v-model="formModel.RequestedDate"
+                    v-model="formModel.JobDate"
                     :format="dateFormat"
                   ></ejs-datepicker>
                 </v-flex>

@@ -56,6 +56,8 @@ import {
 import { createDateFilter } from "vue-date-fns";
 import locale from "date-fns/locale/th";
 
+import { mapMutations,mapState } from "vuex";
+
 export default {
   components: {},
 
@@ -68,13 +70,16 @@ export default {
     end: ""
   }),
 
-  computed: {},
+  computed: {
+    ...mapState("auth",["user"])
+  },
   filters: {
     date: createDateFilter("dddd" + " DD MMM YYYY", { locale }),
     date2: createDateFilter("DD MMM YYYY", { locale })
   },
   async mounted() {
     this.render();
+
   },
   methods: {
     async render() {
@@ -83,9 +88,9 @@ export default {
         var y = endOfWeek(new Date(this.tripDate), { weekStartsOn: 1 });
         this.start = format(x, "YYYY-MM-DD");
         this.end = format(y, "YYYY-MM-DD");
-
+        
         let res = await this.$store.dispatch("usertripcommand/find", {
-          query: { UserId: 8, Start: this.start, End: this.end }
+          query: { UserId: this.user.Id, Start: this.start, End: this.end }
         });
 
        // this.total = res[0].Trips[0].jobs.length;

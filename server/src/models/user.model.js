@@ -13,10 +13,10 @@ class user extends Model {
   }
   //Add New สำหรับคำนวณ ตัวอย่าง function ชื่อ total ผลลัพธ์ได้ column total
   static get virtualAttributes() {
-    return ['fullName','isAdmin'];
+    return ['FullName','isAdmin'];
   }
 
-  fullName() {
+  FullName() {
     return this.FirstName + ' ' + this.LastName;
   }
 

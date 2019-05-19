@@ -101,9 +101,8 @@
 
 <script>
 import upload from "../utils/upload";
-
 import DriverResetPassword from "@/viewComponents/DriverResetPassword.vue";
-
+import { mapMutations,mapState } from "vuex";
 export default {
   data: () => ({
     service: "user",
@@ -112,7 +111,6 @@ export default {
     //--end config
 
     User: [],
-    IdDriver: "",
     dialog: false,
     loading: false
   }),
@@ -121,12 +119,11 @@ export default {
     DriverResetPassword
   },
 
-  computed: {},
+  computed: {
+      ...mapState("auth",["user"])
+  },
   async mounted() {
-    const User = this.$store.state.auth.user;
-
-    //alert(JSON.stringify(User.Id))
-    this.IdDriver = User.Id;
+    
     this.renderUI();
   },
   methods: {
@@ -134,7 +131,7 @@ export default {
       try {
         var res = await this.$store.dispatch(
           this.service + "/get",
-          this.IdDriver
+          this.user.Id
         );
         this.User = res;
       } catch (error) {

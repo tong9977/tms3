@@ -67,7 +67,7 @@
       </v-flex>
       <v-flex>
         <v-icon>mdi-calendar-clock</v-icon>
-        วันส่งของ : {{formModel.RequestedDate | date}}
+        วันส่งของ : {{formModel.JobDate | date}}
       </v-flex>
       <v-flex>
         <v-icon>mdi-calendar-plus</v-icon>
