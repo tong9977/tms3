@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import uploadBlob from "../utils/uploadBlob";
+
 export default {
   props: ["Id"],
   methods: {
@@ -26,14 +28,12 @@ export default {
         const dataURL = this.$refs.signaturePad.saveSignature();
         console.log(dataURL.data);
         try {
-          let res = await this.$store.dispatch("blob/create", {
-            uri: dataURL.data
-          });
 
+          let res =  await uploadBlob(dataURL.data);
           console.log(res);
           await this.$store.dispatch("job/patch", [
             this.Id,
-            { SignatureId: res.id }
+            {SignatureUrl: res.data.Url}
           ]);
 
           this.goBack();

@@ -112,12 +112,12 @@
     </material-card>
 
     <material-card color="green" title="ลายเซ็นลูกค้า">
-      <div v-if="!!!signaturePhoto">
+      <div v-if="!!!formModel.SignatureUrl">
         <v-btn block class="blue white--text" @click="GotoSignature(Id)">
           <v-icon>mdi-pen</v-icon>ให้ลูกค้าเซ็นชื่อ
         </v-btn>
       </div>
-      <v-img v-else :src="signaturePhoto"></v-img>
+      <v-img v-else :src="formModel.SignatureUrl"></v-img>
     </material-card>
 
     <material-card color="green" title="ปิดงาน">
@@ -204,19 +204,14 @@ export default {
   methods: {
     async renderUI() {
       try {
-        var res = await this.$store.dispatch(this.service + "/get", this.Id);
+        let res = await this.$store.dispatch(this.service + "/get", this.Id);
         this.formModel = res;
 
-        if (this.formModel.SignatureId) {
-          let res = await this.$store.dispatch(
-            "blob/get",
-            this.formModel.SignatureId
-          );
-          this.signaturePhoto = res.uri;
-        }
+  
+        
       } catch (error) {
         console.log(error);
-        this.$toast.error("ไม่สามารถขอข้อมูลจาก server ได้");
+        this.$toast.error(error);
       }
 
       try {

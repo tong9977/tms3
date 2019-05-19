@@ -24,7 +24,7 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   routes: paths.map(path => route(path.path, path.view, path.name)).concat([
-    { path: '*', redirect: '/dashboard' }
+    { path: '*', redirect: '/home' }
   ]),
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -45,6 +45,7 @@ router.beforeEach(async (to, from, next) => {
   if (authRequired) {
     try {
       await store.dispatch('auth/authenticate');
+
     } catch (error) {
       return next('/login');
     }
