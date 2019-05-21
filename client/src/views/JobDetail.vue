@@ -120,12 +120,10 @@
     </material-card>
 
     <material-card color="green" title="ลายเซ็นลูกค้า">
-      <div v-if="!!!signaturePhoto">
-        <v-btn block class="blue white--text" @click="GotoSignature(Id)">
-          <v-icon>mdi-pen</v-icon>ให้ลูกค้าเซ็นชื่อ
-        </v-btn>
-      </div>
-      <v-img v-else :src="formModel.SignatureUrl"></v-img>
+      
+      <v-img  :src="formModel.SignatureUrl"></v-img>
+
+      
     </material-card>
 
     <material-card color="green" title="ปิดงาน">
@@ -208,7 +206,8 @@ export default {
     formModel: {},
     ImgModel: {},
     outDTO: {},
-    JobsObj: []
+    JobsObj: [],
+    signaturePhoto: ""
   }),
   filters: {
     date: createDateFilter("DD/MM/YYYY", { locale }),
