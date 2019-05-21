@@ -17,17 +17,7 @@ class job extends Model {
   }
 
   $beforeUpdate() {
-    if(this.JobStatusId = 3){
-      this.FinishedDate = new Date().toISOString();
-    }else{
-     this.FinishedDate = null;
-    }
-
-    if(this.JobStatusId = 4){
-      this.CompletedDate = new Date().toISOString();
-    }else{
-     this.CompletedDate = null;
-    }
+    
    
   }
   static get relationMappings() {

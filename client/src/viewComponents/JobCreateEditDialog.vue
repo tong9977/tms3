@@ -325,7 +325,7 @@ export default {
           
           outDTO.JobStatusId = this.formModel.JobStatusObj.Id;
           outDTO.JobTypeId = this.formModel.JobTypeObj.Id;
-
+          delete outDTO.JobStatusId;
           delete outDTO.JobStatusObj;
           delete outDTO.JobTypeObj;
 
@@ -352,7 +352,7 @@ export default {
           //alert(JSON.stringify(temp))
           temp.JobStatusId = this.formModel.JobStatusObj.Id;
           temp.JobTypeId = this.formModel.JobTypeObj.Id;
-
+          temp.JobStatusId = 1;
           delete temp.JobStatusObj;
           delete temp.JobTypeObj;
           let newjob = await  this.$store.dispatch(this.service + "/create", temp);

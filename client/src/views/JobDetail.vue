@@ -45,6 +45,24 @@
     </material-card>
 
     <material-card color="green" title="ข้อมูลรายละเอียด">
+
+
+      <v-flex>
+        <v-icon>mdi-calendar-plus</v-icon>
+        CreateDate : {{formModel.CreatedDate | date}} [{{formModel.CreatedBy}}]
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-clock</v-icon>
+        JobDate : {{formModel.JobDate | date}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-clock</v-icon>
+        FinishedDate : {{formModel.FinishedDate | date}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-clock</v-icon>
+        CompletedDate : {{formModel.CompletedDate | date}}
+      </v-flex>
       <v-flex>
         <v-icon>mdi-weight-kilogram</v-icon>
         น้ำหนักที่ขนได้ : {{formModel.Weight}} Kg.
@@ -65,18 +83,9 @@
         <v-icon>mdi-rename-box</v-icon>
         ชื่อเส้นทาง : {{formModel.RouteName}}
       </v-flex>
-      <v-flex>
-        <v-icon>mdi-calendar-clock</v-icon>
-        วันส่งของ : {{formModel.JobDate | date}}
-      </v-flex>
-      <v-flex>
-        <v-icon>mdi-calendar-plus</v-icon>
-        สร้างวันที่ : {{formModel.CreatedDate | date}}
-      </v-flex>
-      <v-flex>
-        <v-icon>mdi-account-alert</v-icon>
-        สร้างโดย : {{formModel.CreatedBy}}
-      </v-flex>
+      
+      
+      
       <v-flex>
         <v-icon>mdi-truck</v-icon>
         จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
