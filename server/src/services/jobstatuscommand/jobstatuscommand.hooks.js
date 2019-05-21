@@ -1,5 +1,9 @@
 
 
+const sms = require('../../hooks/sms');
+
+const line = require('../../hooks/line');
+
 module.exports = {
   before: {
     all: [],
@@ -17,7 +21,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [sms(), line()],
     remove: []
   },
 

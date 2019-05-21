@@ -125,7 +125,7 @@
           <v-icon>mdi-pen</v-icon>ให้ลูกค้าเซ็นชื่อ
         </v-btn>
       </div>
-      <v-img v-else :src="signaturePhoto"></v-img>
+      <v-img v-else :src="formModel.SignatureUrl"></v-img>
     </material-card>
 
     <material-card color="green" title="ปิดงาน">
@@ -298,25 +298,7 @@ export default {
     async saveToServer() {
       try {
         let outDTO = Object.assign({}, this.formModel);
-        this.SaveName();
         let a = await this.$store.dispatch("jobstatuscommand/patch", [ this.Id, outDTO]);
-
-        this.renderUI();
-        this.$toast.success("แก้ไขข้อมูลสำเร็จ");
-      } catch (err) {
-        console.log(err);
-        this.$toast.error("ไม่สามารถแก้ไขข้อมูลได้" + err);
-      } finally {
-        this.loading = false;
-        this.dialog = false;
-      }
-    },
-    async SaveName() {
-      try {
-        let outDTO = Object.assign({}, this.formModel);
-       
-        outDTO.CompletedBy = this.user.FullName;
-        let jobs = await this.$store.dispatch("job/patch", [this.Id, outDTO]);
         this.renderUI();
         this.$toast.success("แก้ไขข้อมูลสำเร็จ");
       } catch (err) {
