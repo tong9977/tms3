@@ -291,6 +291,7 @@ export default {
       this.$router.push({ name: "Signature", params: { Id: Id } });
     },
      SuccessDialogJob(){
+       
         this.dialogJob = true;
     },async saveToServer(){
        

@@ -72,17 +72,17 @@ const menuAdmin = [
   },
   {
     to: "/jobassigned",
-    icon: "mdi-clipboard-account",
+    icon: "mdi-map-marker",
     text: "ใบงานมอบหมายแล้ว"
   },
   {
     to: "/jobdone",
-    icon: "mdi-clipboard-check-outline",
+    icon: "mdi-check",
     text: "ใบงานเสร็จสิ้น"
   },
   {
     to: "/jobclosing",
-    icon: "mdi-clipboard-check",
+    icon: "mdi-check-all",
     text: "ใบงานปิดแล้ว"
   },
   {

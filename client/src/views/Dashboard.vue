@@ -17,7 +17,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="blue"
-          icon="mdi-clipboard-account"
+          icon="mdi-map-marker"
           title="ใบงานมอบหมายแล้ว"
           :value="JobAllTotal[0].AllJob[1]"
           small-value="ใบ"
@@ -28,7 +28,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="green"
-          icon="mdi-clipboard-check-outline"
+          icon="mdi-check"
           title="ใบงานเสร็จสิ้น"
           :value="JobAllTotal[0].AllJob[2]"
           small-value="ใบ"
@@ -40,7 +40,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="purple darken-4"
-          icon="mdi-clipboard-check"
+          icon="mdi-check-all"
           title="ใบงานปิดแล้ว"
           :value="JobAllTotal[0].AllJob[3]"
           small-value="ใบ"
@@ -66,7 +66,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="blue"
-          icon="mdi-clipboard-account"
+          icon="mdi-map-marker"
           title="ใบงานมอบหมายแล้ว"
           :value="JobTodayTotal[0].TodayJob[1]"
           small-value="ใบ"
@@ -77,7 +77,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="green"
-          icon="mdi-clipboard-check-outline"
+          icon="mdi-check"
           title="ใบงานเสร็จสิ้น"
           :value="JobTodayTotal[0].TodayJob[2]"
           small-value="ใบ"
@@ -89,7 +89,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="purple darken-4"
-          icon="mdi-clipboard-check"
+          icon="mdi-check-all"
           title="ใบงานปิดแล้ว"
           :value="JobTodayTotal[0].TodayJob[3]"
           small-value="ใบ"
@@ -115,7 +115,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="blue"
-          icon="mdi-clipboard-account"
+          icon="mdi-map-marker"
           title="ใบงานมอบหมายแล้ว"
           :value="JobMonthTotal[0].MonthJob[1]"
           small-value="ใบ"
@@ -126,7 +126,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="green"
-          icon="mdi-clipboard-check-outline"
+          icon="mdi-check"
           title="ใบงานเสร็จสิ้น"
          :value="JobMonthTotal[0].MonthJob[2]"
           small-value="ใบ"
@@ -138,7 +138,7 @@
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="purple darken-4"
-          icon="mdi-clipboard-check"
+          icon="mdi-check-all"
           title="ใบงานปิดแล้ว"
           :value="JobMonthTotal[0].MonthJob[3]"
           small-value="ใบ"

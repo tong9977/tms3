@@ -230,7 +230,7 @@ export default {
       CreatedBy: "",
       CreatedDate: "",
       CompletedBy: "",
-      TripCredit: "",
+      TripCredit: "1",
       JobTypeObj: { Id: 1 },
       JobStatusObj: { Id: 1 }
     },
@@ -350,9 +350,9 @@ export default {
           //alert(JSON.stringify(this.formModel))
           let temp = Object.assign({}, this.formModel);
           //alert(JSON.stringify(temp))
-          temp.JobStatusId = this.formModel.JobStatusObj.Id;
           temp.JobTypeId = this.formModel.JobTypeObj.Id;
           temp.JobStatusId = 1;
+          
           delete temp.JobStatusObj;
           delete temp.JobTypeObj;
           let newjob = await  this.$store.dispatch(this.service + "/create", temp);

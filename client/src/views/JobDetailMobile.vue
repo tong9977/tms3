@@ -41,7 +41,25 @@
       </v-flex>
     </material-card>
 
-    <material-card color="green" title="ข้อมูลรายละเอียด">
+     <material-card color="green" title="ข้อมูลรายละเอียด">
+
+
+      <v-flex>
+        <v-icon>mdi-calendar-plus</v-icon>
+        CreateDate : {{formModel.CreatedDate | date}} [{{formModel.CreatedBy}}]
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-clock</v-icon>
+        JobDate : {{formModel.JobDate | date}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-clock</v-icon>
+        FinishedDate : {{formModel.FinishedDate | date}}
+      </v-flex>
+      <v-flex>
+        <v-icon>mdi-calendar-clock</v-icon>
+        CompletedDate : {{formModel.CompletedDate | date}}
+      </v-flex>
       <v-flex>
         <v-icon>mdi-weight-kilogram</v-icon>
         น้ำหนักที่ขนได้ : {{formModel.Weight}} Kg.
@@ -62,18 +80,9 @@
         <v-icon>mdi-rename-box</v-icon>
         ชื่อเส้นทาง : {{formModel.RouteName}}
       </v-flex>
-      <v-flex>
-        <v-icon>mdi-calendar-clock</v-icon>
-        วันส่งของ : {{formModel.RequestedDate | date}}
-      </v-flex>
-      <v-flex>
-        <v-icon>mdi-calendar-plus</v-icon>
-        สร้างวันที่ : {{formModel.CreatedDate | date}}
-      </v-flex>
-      <v-flex>
-        <v-icon>mdi-account-alert</v-icon>
-        สร้างโดย : {{formModel.CreatedBy}}
-      </v-flex>
+      
+      
+      
       <v-flex>
         <v-icon>mdi-truck</v-icon>
         จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
@@ -122,8 +131,8 @@
 
     <material-card color="green" title="ปิดงาน">
       <div>
-        <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId!=3"  block class="blue white--text">กดปิดงาน</v-btn>
-          <p v-if="formModel.JobStatusId==3" class="text-xs-center">ปิดงานแล้ว {{formModel.CompletedDate | dateC}} </p>
+        <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId<=2"  block class="blue white--text">กดปิดงาน</v-btn>
+          <p v-else class="text-xs-center">ปิดงานแล้ว {{formModel.FinishedDate | dateC}} </p>
       </div>
      
     </material-card>

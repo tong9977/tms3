@@ -70,9 +70,10 @@ class Service {
               }
             }
           }
+          
         }
       }
-
+        console.log(params); //params.connection.user.user.FirstName
     return numberOfAddedRows;
   }
 
