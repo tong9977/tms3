@@ -91,6 +91,13 @@ class Service {
     const jobTrip = require('../../models/jobtrip.model')();
     const numberOfDeletedRows = await jobTrip.query().delete().where('JobId', jobId).where('TripId', tripId);
 
+    const job = require('../../models/job.model')();
+    await job.query().findById(jobId).patch({JobStatusId: 1});
+
+    let j = await job.query().where('Id', jobId);
+    let tripTotal = j[0].TripCredit + 1;
+    await job.query().findById(jobId).patch({TripCredit: tripTotal});
+
     console.log('removed', numberOfDeletedRows, 'รายการ');
 
     return { numberOfDeletedRows };
