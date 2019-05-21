@@ -26,8 +26,27 @@ class Service {
     return data;
   }
 
-  async patch (id, data, params) {
-    return data;
+  async patch (id,data,params) {
+    
+    
+   let jobId = id; 
+   
+    
+   const job = require('../../models/job.model')();
+    let status = await job.query().findById(jobId);
+    if( status.JobStatusId == 2){
+      let newStatus = status.JobStatusId + 1;
+      let newTime = new Date();
+    await job.query().findById(jobId).patch({JobStatusId: newStatus,FinishedDate:newTime});
+    
+    }else if(status.JobStatusId == 3){
+      let newStatus = status.JobStatusId + 1;
+      let newTime = new Date();
+    await job.query().findById(jobId).patch({JobStatusId: newStatus,CompletedDate:newTime});
+    }
+    
+    //console.log(data)
+    return status;
   }
 
   async remove (id, params) {

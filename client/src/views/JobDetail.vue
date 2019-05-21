@@ -45,8 +45,6 @@
     </material-card>
 
     <material-card color="green" title="ข้อมูลรายละเอียด">
-
-
       <v-flex>
         <v-icon>mdi-calendar-plus</v-icon>
         CreateDate : {{formModel.CreatedDate | date}} [{{formModel.CreatedBy}}]
@@ -83,9 +81,7 @@
         <v-icon>mdi-rename-box</v-icon>
         ชื่อเส้นทาง : {{formModel.RouteName}}
       </v-flex>
-      
-      
-      
+
       <v-flex>
         <v-icon>mdi-truck</v-icon>
         จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
@@ -134,13 +130,17 @@
 
     <material-card color="green" title="ปิดงาน">
       <div>
-        <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId!=4"  block class="blue white--text">กดปิดงาน</v-btn>
-          <p v-if="formModel.JobStatusId==4" class="text-xs-center">ปิดงานแล้ว {{formModel.CompletedDate | dateC}} </p>
+        <v-btn
+          @click="SuccessDialogJob()"
+          v-if="formModel.JobStatusId<=3"
+          block
+          class="blue white--text"
+        >กดปิดงาน</v-btn>
+        <p v-else class="text-xs-center">ปิดงานแล้ว {{formModel.CompletedDate| dateC}}</p>
       </div>
-     
     </material-card>
 
-     <v-dialog v-model="dialogJob" max-width="500px">
+    <v-dialog v-model="dialogJob" max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline">งานนี้เสร็จแล้วใช่หรือไม่</span>
@@ -204,10 +204,10 @@ export default {
     loading: false,
     dialog: false,
     dialogimg: false,
-    dialogJob:false,
+    dialogJob: false,
     formModel: {},
     ImgModel: {},
-    outDTO:{},
+    outDTO: {},
     JobsObj: []
   }),
   filters: {
@@ -215,7 +215,9 @@ export default {
     dateC: createDateFilter("DD/MM/YYYY HH:mm", { locale })
   },
   props: ["Id"],
-  computed: {},
+  computed: {
+     ...mapState("auth", ["user"])
+  },
   async mounted() {
     //init here
     this.renderUI();
@@ -263,7 +265,7 @@ export default {
 
         temp.JobId = this.formModel.Id;
 
-        // alert(JSON.stringify(temp.JobId))
+        
 
         this.$store.dispatch("upload/create", temp);
         this.$toast.success("อัพโหลดรูปภาพสำเร็จ");
@@ -282,7 +284,7 @@ export default {
       this.renderUI();
     },
     ImgDialog(item) {
-      //alert(JSON.stringify(item.Url))
+     
       this.photo = item.Url;
       this.dateCreate = item.CreatedDate;
       this.dialogimg = true;
@@ -290,34 +292,40 @@ export default {
     GotoSignature(Id) {
       this.$router.push({ name: "Signature", params: { Id: Id } });
     },
-     SuccessDialogJob(){
+    SuccessDialogJob() {
+      this.dialogJob = true;
+    },
+    async saveToServer() {
+      try {
+        let outDTO = Object.assign({}, this.formModel);
+        this.SaveName();
+        let a = await this.$store.dispatch("jobstatuscommand/patch", [ this.Id, outDTO]);
+
+        this.renderUI();
+        this.$toast.success("แก้ไขข้อมูลสำเร็จ");
+      } catch (err) {
+        console.log(err);
+        this.$toast.error("ไม่สามารถแก้ไขข้อมูลได้" + err);
+      } finally {
+        this.loading = false;
+        this.dialog = false;
+      }
+    },
+    async SaveName() {
+      try {
+        let outDTO = Object.assign({}, this.formModel);
        
-        this.dialogJob = true;
-    },async saveToServer(){
-       
-     try {
-            
-          let tempJobStatusId = Object.assign({}, this.formModel);
-          tempJobStatusId.JobStatusId = 4;
-
-         
-          await this.$store.dispatch(this.service + "/patch", [
-            this.formModel.Id,
-            tempJobStatusId
-          ]);
-
-          
-
-         
-          this.$toast.success('แก้ไขข้อมูลสำเร็จ');
-        } catch (err) {
-          console.log(err);
-          this.$toast.error('ไม่สามารถแก้ไขข้อมูลได้' + err);
-        } finally {
-          this.loading = false;
-          this.dialogJob = false;
-        }
-
+        outDTO.CompletedBy = this.user.FullName;
+        let jobs = await this.$store.dispatch("job/patch", [this.Id, outDTO]);
+        this.renderUI();
+        this.$toast.success("แก้ไขข้อมูลสำเร็จ");
+      } catch (err) {
+        console.log(err);
+        this.$toast.error("ไม่สามารถแก้ไขข้อมูลได้" + err);
+      } finally {
+        this.loading = false;
+        this.dialogJob = false;
+      }
     }
   }
 };
