@@ -14,15 +14,24 @@
             <td>{{item.vehicle.LicensePlate}} </td>
             <td > 
                <!-- <span v-for="leader in item.usertrips" :key="leader.Id"> </span> -->
-                <span v-for="driver in item.users" :key="driver.Id">
-                     
-                [ {{ driver.FirstName}} ]  
-                     </span>
+                
+                
                
+
+               <ul>
+            <li  v-for="driver in item.users" :key="driver.Id">
+               {{ driver.FullName}} 
+              
+            </li>
+          </ul>
                 </td>
-            <td> <v-icon v-if="item.Complete">mdi-check</v-icon>
-                <v-icon v-else>mdi-close</v-icon></td>
+            <td> <v-icon v-if="item.Approve">mdi-check</v-icon> 
+                <v-icon v-else>mdi-close</v-icon>
+                [{{item.ApprovedBy}}]
+                </td>
           </template>
+
+          
         </v-data-table>
       </material-card>
     </v-flex>
@@ -43,7 +52,7 @@ export default {
       { value: "TripDate", text: "วันที่ส่งของ", sortable: true },
       { value: "LicensePlate", text: "ทะเบียนรถ", sortable: true },
       { value: "User", text: "คนขับรถ", sortable: true },
-      { value: "Complete", text: "สถานะของงาน", sortable: true },
+      { value: "Approve", text: "อนุมัติ", sortable: true },
       { text: "", sortable: false }
     ],
     defaultValue: {},
@@ -70,7 +79,7 @@ export default {
       try {
         let IdTrip = this.$route.params.Id;
         let res = await this.$store.dispatch("jobtripcommand/find", {
-          query: { JobId: 27 }
+          query: { JobId: this.JobId }
         });
 
         this.total = res[0].Trips.length;
