@@ -1,16 +1,14 @@
 <template>
-
-  <v-container fill-height fluid grid-list-xl>
-    
-    <v-layout wrap>
-     
-
+  <v-container grid-list-xl>
+    <!-- ############# -->
+    <v-subheader>ใบงานทั้งหมด</v-subheader>
+    <v-layout wrap row lg12>
       <v-flex sm6 xs12 md6 lg3>
         <material-stats-card
           color="orange"
           icon="mdi-clipboard-outline"
           title="ใบงานใหม่"
-          :value="jobNewsCount"
+          :value="JobAllTotal[0].AllJob[0]"
           small-value="ใบ"
           sub-icon="mdi-update"
           sub-text="Just Updated"
@@ -21,7 +19,7 @@
           color="blue"
           icon="mdi-clipboard-account"
           title="ใบงานมอบหมายแล้ว"
-          value="0"
+          :value="JobAllTotal[0].AllJob[1]"
           small-value="ใบ"
           sub-icon="mdi-update"
           sub-text="Just Updated"
@@ -32,7 +30,7 @@
           color="green"
           icon="mdi-clipboard-check-outline"
           title="ใบงานเสร็จสิ้น"
-          value="0"
+          :value="JobAllTotal[0].AllJob[2]"
           small-value="ใบ"
           sub-icon="mdi-update"
           sub-text="Just Updated"
@@ -44,14 +42,111 @@
           color="purple darken-4"
           icon="mdi-clipboard-check"
           title="ใบงานปิดแล้ว"
-          value="0"
+          :value="JobAllTotal[0].AllJob[3]"
           small-value="ใบ"
           sub-icon="mdi-update"
           sub-text="Just Updated"
         />
       </v-flex>
     </v-layout>
-    
+    <!-- ############# -->
+    <v-subheader>ใบงานวันนี้</v-subheader>
+    <v-layout wrap row lg12>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="orange"
+          icon="mdi-clipboard-outline"
+          title="ใบงานใหม่"
+          :value="JobTodayTotal[0].TodayJob[0]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="blue"
+          icon="mdi-clipboard-account"
+          title="ใบงานมอบหมายแล้ว"
+          :value="JobTodayTotal[0].TodayJob[1]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="green"
+          icon="mdi-clipboard-check-outline"
+          title="ใบงานเสร็จสิ้น"
+          :value="JobTodayTotal[0].TodayJob[2]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="purple darken-4"
+          icon="mdi-clipboard-check"
+          title="ใบงานปิดแล้ว"
+          :value="JobTodayTotal[0].TodayJob[3]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+    </v-layout>
+    <!-- ############# -->
+    <v-subheader>ใบงานเดือนนี้</v-subheader>
+    <v-layout wrap row lg12>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="orange"
+          icon="mdi-clipboard-outline"
+          title="ใบงานใหม่"
+          :value="JobMonthTotal[0].MonthJob[0]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="blue"
+          icon="mdi-clipboard-account"
+          title="ใบงานมอบหมายแล้ว"
+          :value="JobMonthTotal[0].MonthJob[1]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="green"
+          icon="mdi-clipboard-check-outline"
+          title="ใบงานเสร็จสิ้น"
+         :value="JobMonthTotal[0].MonthJob[2]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+
+      <v-flex sm6 xs12 md6 lg3>
+        <material-stats-card
+          color="purple darken-4"
+          icon="mdi-clipboard-check"
+          title="ใบงานปิดแล้ว"
+          :value="JobMonthTotal[0].MonthJob[3]"
+          small-value="ใบ"
+          sub-icon="mdi-update"
+          sub-text="Just Updated"
+        />
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -60,27 +155,45 @@ import { mapGetters } from "vuex";
 import { GridPlugin } from "@syncfusion/ej2-vue-grids";
 
 export default {
-  data() {
-    return {
-      data: [
-        { OrderID: 10248, CustomerID: "VINET", Freight: 32.38 },
-        { OrderID: 10249, CustomerID: "TOMSP", Freight: 11.61 },
-        { OrderID: 10250, CustomerID: "HANAR", Freight: 65.83 },
-        { OrderID: 10251, CustomerID: "VICTE", Freight: 41.34 },
-        { OrderID: 10252, CustomerID: "SUPRD", Freight: 51.3 },
-        { OrderID: 10253, CustomerID: "HANAR", Freight: 58.17 },
-        { OrderID: 10254, CustomerID: "CHOPS", Freight: 22.98 },
-        { OrderID: 10255, CustomerID: "RICSU", Freight: 148.33 },
-        { OrderID: 10256, CustomerID: "WELLI", Freight: 13.97 }
-      ]
-    };
-  },
-  computed: {
-    ...mapGetters("tms", ["jobNewsCount"])
+  data: () => ({
+    JobAllTotal: [],
+    JobTodayTotal: [],
+    JobMonthTotal: []
+    
+  }),
+  computed: {},
+  async mounted() {
+    this.render();
   },
   methods: {
-    complete(index) {
-      this.list[index] = !this.list[index];
+    async render() {
+      try {
+        let res = await this.$store.dispatch("alljobtotalcommand/find", {});
+
+        this.JobAllTotal = res;
+      } catch (error) {
+        console.log(error);
+        alert("ไม่สามารถติดต่อ server ได้");
+      }
+
+      try {
+        let res = await this.$store.dispatch("todayjobcommand/find", {});
+
+        this.JobTodayTotal = res;
+      } catch (error) {
+        console.log(error);
+        alert("ไม่สามารถติดต่อ server ได้");
+      }
+
+
+      try {
+        let res = await this.$store.dispatch("monthjobcommand/find", {});
+
+        this.JobMonthTotal = res;
+      } catch (error) {
+        console.log(error);
+        alert("ไม่สามารถติดต่อ server ได้");
+      }
     }
   }
 };

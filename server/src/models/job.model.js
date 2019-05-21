@@ -18,9 +18,9 @@ class job extends Model {
 
   $beforeUpdate() {
     if(this.JobStatusId = 3){
-      this.CompletedDate = new Date().toISOString();
+      this.FinishedDate = new Date().toISOString();
     }else{
-     this.CompletedDate = null;
+     this.FinishedDate = null;
     }
 
     if(this.JobStatusId = 4){

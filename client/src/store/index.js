@@ -47,8 +47,9 @@ const store = new Vuex.Store({
         service('blob'),
         service('todayjobcommand',{idField:'Id'}),
         service('monthjobcommand',{idField:'Id'}),
-        
-    ]
+        service('alljobtotalcommand',{idField:'Id'}),
+        service('ratequestion',{idField:'Id'}),
+    ] 
 })
 
 export default store

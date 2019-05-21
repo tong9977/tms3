@@ -290,7 +290,7 @@ export default {
           let tempJobStatusId = Object.assign({}, this.formModel);
           tempJobStatusId.JobStatusId = 4;
 
-          alert(JSON.stringify(tempJobStatusId.JobStatusId+"ID NAAAAA"))
+         
           await this.$store.dispatch(this.service + "/patch", [
             this.formModel.Id,
             tempJobStatusId

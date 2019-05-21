@@ -124,6 +124,11 @@ const menuAdmin = [
     to: "/joblogtype",
     icon: "mdi-apps",
     text: "LogType"
+  },
+  {
+    to: "/ratequestion",
+    icon: "mdi-file-question",
+    text: "RateQuestions"
   }
 ];
 

@@ -175,5 +175,11 @@ export default [
     name: 'TripDetailMobile',
     view: 'TripDetailMobile'
   }
+  ,
+  {
+    path: '/ratequestion',
+    name: 'RateQuestion',
+    view: 'RateQuestion'
+  }
   
 ]

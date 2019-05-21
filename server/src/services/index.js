@@ -20,6 +20,8 @@ const joblog = require('./joblog/joblog.service.js');
 const joblogtype = require('./joblogtype/joblogtype.service.js');
 const todayjobcommand = require('./todayjobcommand/todayjobcommand.service.js');
 const monthjobcommand = require('./monthjobcommand/monthjobcommand.service.js');
+const alljobtotalcommand = require('./alljobtotalcommand/alljobtotalcommand.service.js');
+const ratequestion = require('./ratequestion/ratequestion.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(role);
@@ -44,4 +46,6 @@ module.exports = function (app) {
   app.configure(joblogtype);
   app.configure(todayjobcommand);
   app.configure(monthjobcommand);
+  app.configure(alljobtotalcommand);
+  app.configure(ratequestion);
 };
