@@ -27,7 +27,9 @@
     <v-list two-line v-for="j in Trip.jobs" :key="j.Id">
       <v-list-tile>
         <v-list-tile-action>
-          <v-icon color="blue">mdi-map-marker</v-icon>
+          <v-icon color="green" v-if="j.JobStatusId == 2">mdi-map-marker</v-icon>
+          <v-icon color="green" v-if="j.JobStatusId == 3">mdi-check</v-icon>
+          <v-icon color="green" v-if="j.JobStatusId == 4">mdi-check-all</v-icon>
         </v-list-tile-action>
         <v-list-tile-content @click="GotoTripDetailMobie(j)">
           <v-list-tile-title>{{j.Customer}} {{ j.Weight }} Kg. {{ j.CC }} CC</v-list-tile-title>
