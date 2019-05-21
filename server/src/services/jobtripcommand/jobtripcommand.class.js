@@ -58,6 +58,9 @@ class Service {
             if (jt.length == 0) {
               await jobTrip.query().insert({ JobId: jobid, TripId: tripId, TripDate: t[0].TripDate });
               numberOfAddedRows.push(jobid);
+              
+              await job.query().findById(jobid).patch({JobDate: t[0].TripDate});
+
               if(j[0].TripCredit > 0){
                 let tripTotal = j[0].TripCredit - 1;
                 await job.query().findById(jobid).patch({TripCredit: tripTotal})
