@@ -47,8 +47,7 @@ export default {
         console.log(res);
         let uploadInfo = res.data[0];
 
-        uploadInfo.url =
-          "http://localhost:3030/uploads/" + res.data[0].filename;
+        console.log(uploadInfo)
         this.$emit("success", uploadInfo);
       } catch (error) {
         console.log(error);
