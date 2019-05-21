@@ -85,6 +85,9 @@ class Service {
   }
 
   async patch(id, data, params) {
+    //get login
+    console.log(params);
+
     let userId = id.UserId;
     let tripId = id.TripId;
     let leader = data.Leader;
