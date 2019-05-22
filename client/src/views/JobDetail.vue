@@ -126,6 +126,11 @@
       
     </material-card>
 
+        <material-card color="green" title="ผลประเมิน">
+          <RateComp :JobId="formModel.Id" mode="view" ref="RateComp"/>
+
+    </material-card>
+
     <material-card color="green" title="ปิดงาน">
       <div>
         <v-btn
@@ -189,6 +194,7 @@ import upload from "../utils/upload";
 import Lightbox from "vue-my-photos";
 import JobListLogComp from "@/viewComponents/JobListLogComp.vue";
 import TripListComp from "@/viewComponents/TripListComp.vue";
+import RateComp from "@/viewComponents/RateComp.vue";
 export default {
   components: {
     JobItemComp,

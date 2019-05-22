@@ -53,7 +53,7 @@ export default {
     rateResult: [],
     rateTotal: []
   }),
-  props: ["JobId"],
+  props: ["JobId","mode"],
   mounted: function() {
     this.render();
   },
