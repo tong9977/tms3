@@ -5,6 +5,7 @@
 module.exports = function (options = {}) {
   return async context => {
     const job = context.result;
+    console.log(job);
     console.log("Email : " + job.Email);
 
     const nodemailer = require('nodemailer');
@@ -21,8 +22,10 @@ module.exports = function (options = {}) {
     let mailOptions = {
       from: 'icesoftware2016m@gmail.com',                // sender
       to: 'suriyapong_s@hotmail.com',                // list of receivers
-      subject: 'Hello from sender',              // Mail subject
-      html: '<b>Do you receive this mail?</b>'   // HTML body
+      subject: 'รายการผลการออก Trip เลขที่ใบงาน ' + job.Id,              // Mail subject
+      html: '<b>เลขที่ใบงาน : ' + job.Id +'</b>' 
+      + '<br/><b>ลูกค้า : ' + job.Customer + '</b>'
+       // HTML body
     };
 
     transporter.sendMail(mailOptions, function (err, info) {
@@ -31,7 +34,6 @@ module.exports = function (options = {}) {
       else
         console.log(info);
     });
-
 
     return context;
   };
