@@ -48,6 +48,9 @@
       <v-flex>
         <v-icon>mdi-calendar-plus</v-icon>
         CreateDate : {{formModel.CreatedDate | date}} [{{formModel.CreatedBy}}]
+        <br/>
+        <v-icon>mdi-calendar-plus</v-icon>
+        CreateDate : <GobalDateTime Formate="DD/MM/YYYY" :DateTimeString="formModel.CreatedDate"></GobalDateTime> [{{formModel.CreatedBy}}]
       </v-flex>
       <v-flex>
         <v-icon>mdi-calendar-clock</v-icon>
@@ -191,6 +194,7 @@ import Lightbox from "vue-my-photos";
 import JobListLogComp from "@/viewComponents/JobListLogComp.vue";
 import TripListComp from "@/viewComponents/TripListComp.vue";
 import RateComp from "@/viewComponents/RateComp.vue";
+import GobalDateTime from "@/viewComponents/GobalDateTime.vue";
 
 export default {
   components: {
@@ -200,6 +204,7 @@ export default {
     JobListLogComp,
     TripListComp,
     RateComp,
+    GobalDateTime,
   },
   data: () => ({
     service: "job",

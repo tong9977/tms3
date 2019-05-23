@@ -25,6 +25,7 @@ class job extends Model {
     const jobtype = require('./jobtype.model')();
     const jobstatus = require('./jobstatus.model')();
     const jobitem = require('./jobitem.model')();
+    const upload = require('./upload.model')();
     return {
       jobtype: {
         relation: Model.HasOneRelation,
@@ -48,6 +49,14 @@ class job extends Model {
         join: {
           from: 'Jobs.Id',
           to: 'JobItems.JobId'
+        }
+      },
+      uploads: {
+        relation: Model.HasManyRelation,
+        modelClass: upload,
+        join: {
+          from: 'Jobs.Id',
+          to: 'Uploads.JobId'
         }
       }
     }

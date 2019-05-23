@@ -46,7 +46,7 @@ class Service {
       let newTime = new Date();
       await job.query().findById(jobId).patch({ JobStatusId: newStatus, CompletedDate: newTime, CompletedBy: Fullname });
     }
-    let Job = await job.query().findById(jobId).eager("[jobstatus,jobtype,jobitem]");
+    let Job = await job.query().findById(jobId).eager("[jobstatus,jobtype,jobitem,uploads]");
 
 
     return Job;
