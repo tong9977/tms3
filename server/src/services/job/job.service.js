@@ -12,7 +12,7 @@ module.exports = function (app) {
     paginate,
     id:'Id',
     whitelist: ['$eager', '$joinRelation'],
-    allowedEager: '[jobstatus,jobtype,jobitem]'
+    allowedEager: '[jobstatus,jobtype,jobitem,uploads]'
   };
 
   // Initialize our service with any options it requires

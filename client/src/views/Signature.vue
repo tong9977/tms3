@@ -9,13 +9,22 @@
         <VueSignaturePad id="signature" width="800px" height="300px" ref="signaturePad"/>
       </v-card>
     </v-flex>
+    <v-flex xs12>
+      <v-card>
+        <RateComp :JobId="Id" mode="rate" ref="RateComp"/>
+      </v-card>
+    </v-flex>
   </v-flex>
 </template>
 
 <script>
 import uploadBlob from "../utils/uploadBlob";
+import RateComp from "@/viewComponents/RateComp.vue";
 
 export default {
+  components: {
+    RateComp,
+  },
   props: ["Id"],
   methods: {
     goBack() {

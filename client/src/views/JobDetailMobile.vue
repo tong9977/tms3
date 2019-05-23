@@ -41,9 +41,7 @@
       </v-flex>
     </material-card>
 
-     <material-card color="green" title="ข้อมูลรายละเอียด">
-
-
+    <material-card color="green" title="ข้อมูลรายละเอียด">
       <v-flex>
         <v-icon>mdi-calendar-plus</v-icon>
         CreateDate : {{formModel.CreatedDate | date}} [{{formModel.CreatedBy}}]
@@ -80,9 +78,7 @@
         <v-icon>mdi-rename-box</v-icon>
         ชื่อเส้นทาง : {{formModel.RouteName}}
       </v-flex>
-      
-      
-      
+
       <v-flex>
         <v-icon>mdi-truck</v-icon>
         จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
@@ -96,7 +92,7 @@
     <material-card color="green" title="รายการที่ต้องทำ">
       <JobItemMobileComp :JobId="Id"/>
     </material-card>
-    
+
     <material-card color="green" title="รูปการส่งงาน">
       <v-container fluid grid-list-sm>
         <v-layout row wrap>
@@ -131,14 +127,17 @@
 
     <material-card color="green" title="ปิดงาน">
       <div>
-        <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId<=2"  block class="blue white--text">กดปิดงาน</v-btn>
-          <p v-else class="text-xs-center">ปิดงานแล้ว {{formModel.FinishedDate | dateC}} </p>
+        <v-btn
+          @click="SuccessDialogJob()"
+          v-if="formModel.JobStatusId<=2"
+          block
+          class="blue white--text"
+        >กดปิดงาน</v-btn>
+        <p v-else class="text-xs-center">ปิดงานแล้ว {{formModel.FinishedDate | dateC}}</p>
       </div>
-     
     </material-card>
 
-
-  <!--dialog -->
+    <!--dialog -->
     <v-dialog v-model="dialogimg" max-width="100%" max-height="100%">
       <div style="text-align: center;" class="black white--text">
         <img :src="photo" class="image" width="auto" height="auto">
@@ -149,8 +148,6 @@
         </v-text>
       </div>
     </v-dialog>
-
-    
 
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
@@ -197,7 +194,7 @@ export default {
     formModel: {},
     ImgModel: {},
     JobsObj: [],
-    outDTO:{},
+    outDTO: {},
     signaturePhoto: ""
   }),
   filters: {
@@ -205,7 +202,9 @@ export default {
     dateC: createDateFilter("DD/MM/YYYY HH:mm", { locale })
   },
   props: ["Id"],
-  computed: {},
+  computed: {
+    ...mapState("auth", ["user"])
+  },
   async mounted() {
     //init here
     this.renderUI();
@@ -215,9 +214,6 @@ export default {
       try {
         let res = await this.$store.dispatch(this.service + "/get", this.Id);
         this.formModel = res;
-
-  
-        
       } catch (error) {
         console.log(error);
         this.$toast.error(error);
@@ -283,33 +279,27 @@ export default {
     GotoSignature(Id) {
       this.$router.push({ name: "Signature", params: { Id: Id } });
     },
-    SuccessDialogJob(){
-        this.dialog = true;
+    SuccessDialogJob() {
+      this.dialog = true;
     },
-    async saveToServer(){
-
-     try {
-            
-          let outDTO = Object.assign({}, this.formModel);
-
-          outDTO.JobStatusId = 3;
-          await this.$store.dispatch(this.service + "/patch", [
-            this.Id,
-            outDTO
-          ]);
-
-         
-          this.$toast.success('แก้ไขข้อมูลสำเร็จ');
-        } catch (err) {
-          console.log(err);
-          this.$toast.error('ไม่สามารถแก้ไขข้อมูลได้' + err);
-        } finally {
-          this.loading = false;
-          this.dialog = false;
-        }
-
+    async saveToServer() {
+      try {
+        let outDTO = Object.assign({}, this.formModel);
+        let a = await this.$store.dispatch("jobstatuscommand/patch", [
+          this.Id,
+          outDTO
+        ]);
+        this.renderUI();
+        this.$toast.success("แก้ไขข้อมูลสำเร็จ");
+      } catch (err) {
+        console.log(err);
+        this.$toast.error("ไม่สามารถแก้ไขข้อมูลได้" + err);
+      } finally {
+        this.loading = false;
+        this.dialog = false;
+      }
     }
   }
-}
+};
 </script> 
 

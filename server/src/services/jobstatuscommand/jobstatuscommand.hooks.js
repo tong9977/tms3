@@ -1,5 +1,11 @@
 
 
+const sms = require('../../hooks/sms');
+
+const line = require('../../hooks/line');
+
+const email = require('../../hooks/email');
+
 module.exports = {
   before: {
     all: [],
@@ -17,7 +23,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [sms(), line(), email()],
     remove: []
   },
 

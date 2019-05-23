@@ -49,6 +49,7 @@ const store = new Vuex.Store({
         service('monthjobcommand',{idField:'Id'}),
         service('alljobtotalcommand',{idField:'Id'}),
         service('ratequestion',{idField:'Id'}),
+        service('jobstatuscommand',{idField:'Id'}),
     ] 
 })
 

@@ -45,11 +45,12 @@
     </material-card>
 
     <material-card color="green" title="ข้อมูลรายละเอียด">
-
-
       <v-flex>
         <v-icon>mdi-calendar-plus</v-icon>
         CreateDate : {{formModel.CreatedDate | date}} [{{formModel.CreatedBy}}]
+        <br/>
+        <v-icon>mdi-calendar-plus</v-icon>
+        CreateDate : <GobalDateTime Formate="DD/MM/YYYY" :DateTimeString="formModel.CreatedDate"></GobalDateTime> [{{formModel.CreatedBy}}]
       </v-flex>
       <v-flex>
         <v-icon>mdi-calendar-clock</v-icon>
@@ -83,9 +84,7 @@
         <v-icon>mdi-rename-box</v-icon>
         ชื่อเส้นทาง : {{formModel.RouteName}}
       </v-flex>
-      
-      
-      
+
       <v-flex>
         <v-icon>mdi-truck</v-icon>
         จำนวนในการส่ง : {{formModel.TripCredit}} รอบ
@@ -124,23 +123,26 @@
     </material-card>
 
     <material-card color="green" title="ลายเซ็นลูกค้า">
-      <div v-if="!!!signaturePhoto">
-        <v-btn block class="blue white--text" @click="GotoSignature(Id)">
-          <v-icon>mdi-pen</v-icon>ให้ลูกค้าเซ็นชื่อ
-        </v-btn>
-      </div>
-      <v-img v-else :src="signaturePhoto"></v-img>
+      <v-img :src="formModel.SignatureUrl"></v-img>
+    </material-card>
+
+    <material-card color="green" title="ผลประเมิน">
+      <RateComp :JobId="formModel.Id" mode="view" ref="RateComp"/>
     </material-card>
 
     <material-card color="green" title="ปิดงาน">
       <div>
-        <v-btn @click="SuccessDialogJob()" v-if="formModel.JobStatusId!=4"  block class="blue white--text">กดปิดงาน</v-btn>
-          <p v-if="formModel.JobStatusId==4" class="text-xs-center">ปิดงานแล้ว {{formModel.CompletedDate | dateC}} </p>
+        <v-btn
+          @click="SuccessDialogJob()"
+          v-if="formModel.JobStatusId<=3"
+          block
+          class="blue white--text"
+        >กดปิดงาน</v-btn>
+        <p v-else class="text-xs-center">ปิดงานแล้ว {{formModel.CompletedDate| dateC}}</p>
       </div>
-     
     </material-card>
 
-     <v-dialog v-model="dialogJob" max-width="500px">
+    <v-dialog v-model="dialogJob" max-width="500px">
       <v-card>
         <v-card-title>
           <span class="headline">งานนี้เสร็จแล้วใช่หรือไม่</span>
@@ -191,31 +193,39 @@ import upload from "../utils/upload";
 import Lightbox from "vue-my-photos";
 import JobListLogComp from "@/viewComponents/JobListLogComp.vue";
 import TripListComp from "@/viewComponents/TripListComp.vue";
+import RateComp from "@/viewComponents/RateComp.vue";
+import GobalDateTime from "@/viewComponents/GobalDateTime.vue";
+
 export default {
   components: {
     JobItemComp,
     JobCreateEditDialog,
     JobItemMobileComp,
     JobListLogComp,
-    TripListComp
+    TripListComp,
+    RateComp,
+    GobalDateTime,
   },
   data: () => ({
     service: "job",
     loading: false,
     dialog: false,
     dialogimg: false,
-    dialogJob:false,
+    dialogJob: false,
     formModel: {},
     ImgModel: {},
-    outDTO:{},
-    JobsObj: []
+    outDTO: {},
+    JobsObj: [],
+    signaturePhoto: ""
   }),
   filters: {
     date: createDateFilter("DD/MM/YYYY", { locale }),
     dateC: createDateFilter("DD/MM/YYYY HH:mm", { locale })
   },
   props: ["Id"],
-  computed: {},
+  computed: {
+    ...mapState("auth", ["user"])
+  },
   async mounted() {
     //init here
     this.renderUI();
@@ -263,8 +273,6 @@ export default {
 
         temp.JobId = this.formModel.Id;
 
-        // alert(JSON.stringify(temp.JobId))
-
         this.$store.dispatch("upload/create", temp);
         this.$toast.success("อัพโหลดรูปภาพสำเร็จ");
         this.renderUI();
@@ -282,7 +290,6 @@ export default {
       this.renderUI();
     },
     ImgDialog(item) {
-      //alert(JSON.stringify(item.Url))
       this.photo = item.Url;
       this.dateCreate = item.CreatedDate;
       this.dialogimg = true;
@@ -290,34 +297,25 @@ export default {
     GotoSignature(Id) {
       this.$router.push({ name: "Signature", params: { Id: Id } });
     },
-     SuccessDialogJob(){
-       
-        this.dialogJob = true;
-    },async saveToServer(){
-       
-     try {
-            
-          let tempJobStatusId = Object.assign({}, this.formModel);
-          tempJobStatusId.JobStatusId = 4;
-
-         
-          await this.$store.dispatch(this.service + "/patch", [
-            this.formModel.Id,
-            tempJobStatusId
-          ]);
-
-          
-
-         
-          this.$toast.success('แก้ไขข้อมูลสำเร็จ');
-        } catch (err) {
-          console.log(err);
-          this.$toast.error('ไม่สามารถแก้ไขข้อมูลได้' + err);
-        } finally {
-          this.loading = false;
-          this.dialogJob = false;
-        }
-
+    SuccessDialogJob() {
+      this.dialogJob = true;
+    },
+    async saveToServer() {
+      try {
+        let outDTO = Object.assign({}, this.formModel);
+        let a = await this.$store.dispatch("jobstatuscommand/patch", [
+          this.Id,
+          outDTO
+        ]);
+        this.renderUI();
+        this.$toast.success("แก้ไขข้อมูลสำเร็จ");
+      } catch (err) {
+        console.log(err);
+        this.$toast.error("ไม่สามารถแก้ไขข้อมูลได้" + err);
+      } finally {
+        this.loading = false;
+        this.dialogJob = false;
+      }
     }
   }
 };

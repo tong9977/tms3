@@ -265,10 +265,7 @@ export default {
     },
     async confirmDeleteJob() {
       try {
-        await this.$store.dispatch("jobtripcommand/remove", {
-          JobId: this.jobIdSelected,
-          TripId: this.Trip.Id
-        });
+        await this.$store.dispatch("jobtripcommand/remove", { JobId: this.jobIdSelected, TripId: this.Trip.Id  });
       } catch (err) {
         alert("ไม่สามารถลบได้");
         this.confirmDeleteJobDialog = false;
