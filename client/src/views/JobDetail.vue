@@ -120,10 +120,11 @@
     </material-card>
 
     <material-card color="green" title="ลายเซ็นลูกค้า">
-      
-      <v-img  :src="formModel.SignatureUrl"></v-img>
+      <v-img :src="formModel.SignatureUrl"></v-img>
+    </material-card>
 
-      
+    <material-card color="green" title="ผลประเมิน">
+      <RateComp :JobId="formModel.Id" mode="view" ref="RateComp"/>
     </material-card>
 
     <material-card color="green" title="ปิดงาน">
@@ -189,13 +190,16 @@ import upload from "../utils/upload";
 import Lightbox from "vue-my-photos";
 import JobListLogComp from "@/viewComponents/JobListLogComp.vue";
 import TripListComp from "@/viewComponents/TripListComp.vue";
+import RateComp from "@/viewComponents/RateComp.vue";
+
 export default {
   components: {
     JobItemComp,
     JobCreateEditDialog,
     JobItemMobileComp,
     JobListLogComp,
-    TripListComp
+    TripListComp,
+    RateComp,
   },
   data: () => ({
     service: "job",
@@ -215,7 +219,7 @@ export default {
   },
   props: ["Id"],
   computed: {
-     ...mapState("auth", ["user"])
+    ...mapState("auth", ["user"])
   },
   async mounted() {
     //init here
@@ -264,8 +268,6 @@ export default {
 
         temp.JobId = this.formModel.Id;
 
-        
-
         this.$store.dispatch("upload/create", temp);
         this.$toast.success("อัพโหลดรูปภาพสำเร็จ");
         this.renderUI();
@@ -283,7 +285,6 @@ export default {
       this.renderUI();
     },
     ImgDialog(item) {
-     
       this.photo = item.Url;
       this.dateCreate = item.CreatedDate;
       this.dialogimg = true;
@@ -297,7 +298,10 @@ export default {
     async saveToServer() {
       try {
         let outDTO = Object.assign({}, this.formModel);
-        let a = await this.$store.dispatch("jobstatuscommand/patch", [ this.Id, outDTO]);
+        let a = await this.$store.dispatch("jobstatuscommand/patch", [
+          this.Id,
+          outDTO
+        ]);
         this.renderUI();
         this.$toast.success("แก้ไขข้อมูลสำเร็จ");
       } catch (err) {

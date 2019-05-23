@@ -11,7 +11,7 @@
     </v-flex>
     <v-flex xs12>
       <v-card>
-        <RateComp :JobId="Id" width="800px" height="300px" ref="RateComp"/>
+        <RateComp :JobId="Id" mode="rate" ref="RateComp"/>
       </v-card>
     </v-flex>
   </v-flex>
