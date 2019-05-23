@@ -20,10 +20,7 @@ module.exports = function (options = {}) {
       if (job.Telephone.length == 10) {
         SendSMS(job.Telephone, content);
       }
-
     }
-
-
 
     //console.log(job);
     return context;

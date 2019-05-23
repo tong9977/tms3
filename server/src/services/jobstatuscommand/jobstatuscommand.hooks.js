@@ -23,7 +23,7 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [sms(), line(), email()],
+    patch: [sms()],
     remove: []
   },
 
